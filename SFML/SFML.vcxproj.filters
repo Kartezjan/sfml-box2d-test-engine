@@ -53,5 +53,11 @@
     <ClInclude Include="virtue_management.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
