@@ -50,8 +50,8 @@ int main()
 	physical_entities.push_back(&player);
 
 	auto process_virtues = [](abstract_entity* target, complete_message_storage& message_queue) {
-		for (size_t i = 0; i < target->virtues.size(); ++i) {
-			target->virtues[i]->send_message(target, message_queue);
+		for (auto e : target->virtues) {
+			e->send_message(target, message_queue);
 		}
 	};
 
@@ -62,9 +62,8 @@ int main()
 
 		process_virtues(&user_input, message_queues);
 
-		for (size_t i = 0; i < physical_entities.size(); ++i) {
-			process_virtues(physical_entities[i], message_queues);
-		}
+		for (auto e : physical_entities) 
+			process_virtues(e, message_queues);
 
 		process_virtues(&physics, message_queues);
 
@@ -78,7 +77,7 @@ int main()
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && universe_clock.getElapsedTime() - last_box_removal >= cooldown)
 		{
-			if (physical_entities.size() > 1) {
+			if (physical_entities.size() > 2) {
 				death_queue.push(physical_entities.back());
 				physical_entities.pop_back();
 			}

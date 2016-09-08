@@ -9,7 +9,7 @@
 
 class abstract_entity;
 
-enum class force_type { APPLY_TO_CENTER };
+enum class force_type { APPLY_FORCE_TO_CENTER, APPLY_IMPULS_TO_CENTER };
 
 struct message {
 	bool delete_this_message = false;

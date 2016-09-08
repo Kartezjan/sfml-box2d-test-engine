@@ -7,8 +7,8 @@
 #include <SFML\Graphics.hpp>
 #include <Box2D\Box2D.h>
 
-#include "event_managment.h"
-#include "virtue_managment.h"
+#include "event_management.h"
+#include "virtue_management.h"
 #include "entities.h"
 #include "physics.h"
 #include "config.h"

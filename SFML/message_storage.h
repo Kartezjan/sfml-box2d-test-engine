@@ -1,4 +1,6 @@
-/* BASED ON: https://github.com/TeamHypersomnia/Augmentations/blob/master/augs/entity_system/storage_for_message_queues.h */
+/* BASED ON: https://github.com/TeamHypersomnia/Augmentations/blob/master/augs/entity_system/storage_for_message_queues.h
+	Author: Patryk Czachurski 
+*/
 
 #pragma once
 
