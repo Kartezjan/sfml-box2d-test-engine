@@ -99,7 +99,7 @@ void spawns_objects::send_message(abstract_entity* source) {
 		if (msg.key == input_key::RMB && cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_removal_timestamp >= cooldown) {
 			previous_removal_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 			msg.delete_this_message = true;
-			for (size_t i = cosmos.physical_objects.size() - 1; i >= 0; --i)
+			for (int i = cosmos.physical_objects.size() - 1; i >= 0; --i)
 				if (cosmos.physical_objects[i]->name == "box") {
 					cosmos.death_queue.push(cosmos.physical_objects[i]);
 					cosmos.physical_objects.erase(cosmos.physical_objects.begin() + i);

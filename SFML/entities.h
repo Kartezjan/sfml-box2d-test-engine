@@ -7,9 +7,9 @@ class virtue;
 class abstract_entity {
 public:
 	~abstract_entity();
+	std::string name;
 	std::vector<virtue*> virtues;
 	b2Body* physical_body = nullptr; //an abstract entity has no physical body.
-	std::string name;
 };
 
 class entity : public abstract_entity, public sf::Drawable, public sf::Transformable {
