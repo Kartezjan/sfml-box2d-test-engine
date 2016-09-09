@@ -11,7 +11,14 @@ body_properties create_player(b2World& World, float X, float Y) {
 
 	b2CircleShape* shape_circle = new b2CircleShape;
 	shape_circle->m_radius = 16.0f / SCALE;
-	//ddshape_circle->m_p.Set(32.0f / SCALE, 0.f / SCALE);
+	shape_circle->m_p.Set(-16.0f / SCALE, 0.f / SCALE);
+
+	b2CircleShape* shape_circle2 = new b2CircleShape;
+	shape_circle2->m_radius = 16.0f / SCALE;
+
+	b2CircleShape* shape_circle3 = new b2CircleShape;
+	shape_circle3->m_radius = 16.0f / SCALE;
+	shape_circle3->m_p.Set(16.0f / SCALE, 0.f / SCALE);
 
 	b2FixtureDef fixture_def;
 	fixture_def.density = 1.f;
@@ -23,9 +30,17 @@ body_properties create_player(b2World& World, float X, float Y) {
 	fixture_def2.friction = 0.7f;
 	fixture_def2.shape = shape_circle;
 
+	auto fixture_def3 = fixture_def2;
+	fixture_def3.shape = shape_circle2;
+
+	auto fixture_def4 = fixture_def2;
+	fixture_def4.shape = shape_circle3;
+
 	player_properties.body_def = body_def;
 	player_properties.fixtures.push_back(fixture_def);
 	player_properties.fixtures.push_back(fixture_def2);
+	player_properties.fixtures.push_back(fixture_def3);
+	player_properties.fixtures.push_back(fixture_def4);
 
 	return player_properties;
 }

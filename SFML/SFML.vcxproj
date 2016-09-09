@@ -134,6 +134,7 @@
     <ClInclude Include="physics.h" />
     <ClInclude Include="resource_manager.h" />
     <ClInclude Include="source.h" />
+    <ClInclude Include="vec2.h" />
     <ClInclude Include="virtue_management.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>

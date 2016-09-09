@@ -74,6 +74,8 @@ physical_entity::physical_entity(body_properties& body_properties, std::string n
 			circles.push_back(circle);
 		}
 	}
+	//rendered_convexes.resize(convexes.size());
+	//rendered_circles.resize(circles.size());
 }
 
 void physical_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -91,14 +93,12 @@ void physical_entity::update() {
 
 	for (auto fixture = physical_body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
 		auto pos = getShapePosition(fixture->GetShape());
-		pos += physical_body->GetPosition();
+		auto body_pos = physical_body->GetPosition();
+		pos += body_pos;
+		helper::rotate(pos, b2Vec2(body_pos.x, body_pos.y), physical_body->GetAngle());
 		if (fixture->GetShape()->m_type == fixture->GetShape()->e_polygon) {
-			b2PolygonShape* shape = (b2PolygonShape*)fixture->GetShape();
 			convexes[convex_count].setPosition(sf::Vector2f(pos.x * SCALE, pos.y * SCALE));
 			convexes[convex_count].setRotation(physical_body->GetAngle() * 180 / b2_pi);
-			convexes[convex_count].setOrigin(physical_body->GetPosition().x * SCALE, physical_body->GetPosition().y * SCALE);
-			convexes[convex_count].setRotation(physical_body->GetAngle() * 180 / b2_pi);
-			convexes[convex_count].setOrigin(sf::Vector2f(shape->m_centroid.x * SCALE, shape->m_centroid.y * SCALE));
 			++convex_count;
 		}
 		else {

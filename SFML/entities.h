@@ -52,5 +52,7 @@ private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	sf::Texture texture;
 	std::vector<sf::ConvexShape> convexes;
+	//std::vector<sf::ConvexShape> rendered_convexes;
 	std::vector<sf::CircleShape> circles;
+	//std::vector<sf::CircleShape> rendered_circles;
 };
