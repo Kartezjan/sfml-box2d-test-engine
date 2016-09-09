@@ -25,18 +25,18 @@ void destroy_all_doomed_objects(std::queue<abstract_entity*>& death_queue) {
 	}
 }
 
-int main()
+void main()
 {
 	sf::Time cooldown(sf::milliseconds(300));
 	sf::Time last_box_creation(sf::Time::Zero);
 	sf::Time last_box_removal(sf::Time::Zero);
 	sf::Clock universe_clock;
 
-	/** Prepare the window */
+	//Prepare the window 
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
 	window.setFramerateLimit(60);
 
-	/** Prepare textures */
+	// Prepare textures
 	resource_manager resources;
 	sf::Texture ground_texture;
 	sf::Texture box_texture;
@@ -45,9 +45,8 @@ int main()
 	resources.textures.push_back(ground_texture);
 	resources.textures.push_back(box_texture);
 
-	/** Prepare the world */
+	// Prepare the world
 	universe universe(b2Vec2(0.0f, 9.8f), resources);
-	//std::vector<entity*> physical_entities;
 
 	abstract_entity user_input;
 	user_input.virtues.push_back(new produces_user_input(universe));
@@ -57,6 +56,7 @@ int main()
 	nature.virtues.push_back(new spawns_objects(universe));
 
 	universe.physical_objects.push_back(new sprite_entity(ground_texture, sf::Vector2f(400.f, 8.f), create_ground(universe.world, 400.f, 500.f), "ground"));
+
 	sf::Font font;
 	font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf");
 	sf::Text mouse_position_info;
@@ -68,6 +68,7 @@ int main()
 	universe.physical_objects.push_back(new image_entity(&mouse_position_info, "GUI_MOUSE_POS"));
 	sprite_entity player(box_texture, sf::Vector2f(16.f, 16.f), create_box(universe.world, 60, 60), "player");
 	player.virtues.push_back(new controllable(universe));
+	player.physical_body->GetFixtureList()->SetRestitution(0.9f);
 	universe.physical_objects.push_back(&player);
 
 	auto process_virtues = [&universe_clock](abstract_entity* target) {
@@ -79,17 +80,23 @@ int main()
 	{
 		universe.mouse_pos = sf::Mouse::getPosition(window);
 		mouse_position_info.setString(mouse_cords_info(window));
+		//Get desired input from the user
 		process_virtues(&user_input);
-		for (auto e : universe.physical_objects)
-			process_virtues(e);
+		//Invoke all physical entities' virtues (actions) 
+		for (auto entity : universe.physical_objects)
+			process_virtues(entity);
+		// Apply entities' changes to the world
 		process_virtues(&nature);
+
+		//clear message queues
 		universe.message_queues = complete_message_storage();
-		universe.world.Step(1 / 60.f, 8, 3);
 		destroy_all_doomed_objects(universe.death_queue);
+
+
+		universe.world.Step(1/60.f, 8, 3);
+
 		window.clear(sf::Color::White);
 		update_and_render_all_objects(window, universe.physical_objects);
 		window.display();
 	}
-
-	return 0;
 }
