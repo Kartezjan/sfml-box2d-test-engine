@@ -7,7 +7,7 @@ body_properties create_player(b2World& World, float X, float Y) {
 	body_def.type = b2_dynamicBody;
 
 	b2PolygonShape* shape = new b2PolygonShape;
-	shape->SetAsBox((64.f / 2) / SCALE, (64.f / 2) / SCALE, b2Vec2(0.f / SCALE,-48.f / SCALE),0 / SCALE);
+	shape->SetAsBox((64.f / 2) / SCALE, (64.f / 2) / SCALE, b2Vec2(0.f / SCALE,-48.f / SCALE), 0);
 
 	b2CircleShape* shape_circle = new b2CircleShape;
 	shape_circle->m_radius = 16.0f / SCALE;
@@ -62,7 +62,6 @@ b2Body* create_ground(b2World& world, float x, float y) {
 }
 
 b2Body* create_physical_body(body_properties& properties) {
-	b2PolygonShape meme = *(b2PolygonShape*)properties.fixtures[0].shape;
 	b2Body* body = properties.world.CreateBody(&properties.body_def);
 	size_t i = 0;
 	for (auto fixture : properties.fixtures)
