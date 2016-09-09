@@ -1,6 +1,6 @@
 #include "source.h"
 
-void update_and_render_all_objects(sf::RenderWindow& Window, std::vector<entity*>& entity_list) {
+void update_and_render_all_objects(sf::RenderWindow& Window, std::vector<renderable_entity*>& entity_list) {
 	for (size_t i = 0; i < entity_list.size(); ++i) {
 		entity_list[i]->update();
 		Window.draw(*entity_list[i]);
@@ -27,11 +27,6 @@ void destroy_all_doomed_objects(std::queue<abstract_entity*>& death_queue) {
 
 void main()
 {
-	sf::Time cooldown(sf::milliseconds(300));
-	sf::Time last_box_creation(sf::Time::Zero);
-	sf::Time last_box_removal(sf::Time::Zero);
-	sf::Clock universe_clock;
-
 	//Prepare the window 
 	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
 	window.setFramerateLimit(60);
@@ -66,12 +61,12 @@ void main()
 	mouse_position_info.setFillColor(sf::Color::Black);
 	mouse_position_info.setPosition(sf::Vector2f(0, 0));
 	universe.physical_objects.push_back(new image_entity(&mouse_position_info, "GUI_MOUSE_POS"));
-	sprite_entity player(box_texture, sf::Vector2f(16.f, 16.f), create_box(universe.world, 60, 60), "player");
+
+	physical_entity player(create_player(universe.world, 370, 480), "player", universe.resources.textures[1]);
 	player.virtues.push_back(new controllable(universe));
-	player.physical_body->GetFixtureList()->SetRestitution(0.9f);
 	universe.physical_objects.push_back(&player);
 
-	auto process_virtues = [&universe_clock](abstract_entity* target) {
+	auto process_virtues = [](abstract_entity* target) {
 		for (auto e : target->virtues) 
 			e->send_message(target);
 	};

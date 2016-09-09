@@ -10,5 +10,5 @@
 #include "resource_manager.h"
 
 
-void update_and_render_all_objects(sf::RenderWindow& Window, std::vector<entity*>& entity_list);
-void remove_objects(std::queue<entity*>& death_queue, b2World& world);
+void update_and_render_all_objects(sf::RenderWindow& Window, std::vector<renderable_entity*>& entity_list);
+void remove_objects(std::queue<renderable_entity*>& death_queue, b2World& world);
