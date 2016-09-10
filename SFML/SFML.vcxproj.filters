@@ -30,6 +30,12 @@
     <ClCompile Include="virtue_management.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utillity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="car.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entities.h">
@@ -60,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utillity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="car.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

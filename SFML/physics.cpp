@@ -7,42 +7,56 @@ body_properties create_player(b2World& World, float X, float Y) {
 	body_def.type = b2_dynamicBody;
 
 	b2PolygonShape* shape = new b2PolygonShape;
-	shape->SetAsBox((64.f / 2) / SCALE, (64.f / 2) / SCALE, b2Vec2(0.f / SCALE,-48.f / SCALE), 0);
+	shape->SetAsBox((120.f / 2) / SCALE, (32.f / 2) / SCALE, b2Vec2(0.f / SCALE,-48.f / SCALE), 0);
 
-	b2CircleShape* shape_circle = new b2CircleShape;
-	shape_circle->m_radius = 16.0f / SCALE;
-	shape_circle->m_p.Set(-16.0f / SCALE, 0.f / SCALE);
-
-	b2CircleShape* shape_circle2 = new b2CircleShape;
-	shape_circle2->m_radius = 16.0f / SCALE;
-
-	b2CircleShape* shape_circle3 = new b2CircleShape;
-	shape_circle3->m_radius = 16.0f / SCALE;
-	shape_circle3->m_p.Set(16.0f / SCALE, 0.f / SCALE);
 
 	b2FixtureDef fixture_def;
 	fixture_def.density = 1.f;
 	fixture_def.friction = 0.7f;
 	fixture_def.shape = shape;
 
-	b2FixtureDef fixture_def2;
-	fixture_def2.density = 1.f;
-	fixture_def2.friction = 0.7f;
-	fixture_def2.shape = shape_circle;
-
-	auto fixture_def3 = fixture_def2;
-	fixture_def3.shape = shape_circle2;
-
-	auto fixture_def4 = fixture_def2;
-	fixture_def4.shape = shape_circle3;
-
 	player_properties.body_def = body_def;
 	player_properties.fixtures.push_back(fixture_def);
-	player_properties.fixtures.push_back(fixture_def2);
-	player_properties.fixtures.push_back(fixture_def3);
-	player_properties.fixtures.push_back(fixture_def4);
 
 	return player_properties;
+}
+
+body_properties create_circle(b2World& World, float X, float Y, float radius, float density, float friction) {
+	body_properties circle_properties(World);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
+	body_def.type = b2_dynamicBody;
+
+	b2CircleShape* shape_circle = new b2CircleShape;
+	shape_circle->m_radius = radius / SCALE;
+
+	b2FixtureDef fixture_def;
+	fixture_def.density = density;
+	fixture_def.friction = friction;
+	fixture_def.shape = shape_circle;
+
+	circle_properties.body_def = body_def;
+	circle_properties.fixtures.push_back(fixture_def);
+	return circle_properties;
+}
+
+body_properties create_ground(b2World& World, float X, float Y, float width, float heigh) {
+	body_properties ground_properties(World);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
+	body_def.type = b2_staticBody;
+
+	b2PolygonShape* shape = new b2PolygonShape;
+	shape->SetAsBox((width / 2) / SCALE, (heigh / 2) / SCALE, b2Vec2(0.f / SCALE, 0.f / SCALE), 0);
+
+	b2FixtureDef fixture_def;
+	fixture_def.density = 500.f;
+	fixture_def.shape = shape;
+
+	ground_properties.body_def = body_def;
+	ground_properties.fixtures.push_back(fixture_def);
+
+	return ground_properties;
 }
 
 b2Body* create_box(b2World& world, int mouse_x, int mouse_y) {
@@ -61,7 +75,7 @@ b2Body* create_box(b2World& world, int mouse_x, int mouse_y) {
 	return body;
 }
 
-b2Body* create_ground(b2World& world, float x, float y) {
+b2Body* create_ground2(b2World& world, float x, float y) {
 	b2BodyDef body_def;
 	body_def.position = b2Vec2(x / SCALE, y / SCALE);
 	body_def.type = b2_staticBody;

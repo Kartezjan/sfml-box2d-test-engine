@@ -19,6 +19,7 @@ void sprite_entity::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 }
 
 sprite_entity::sprite_entity(sf::Texture& box_texture, sf::Vector2f box_origin, b2Body* physics, std::string n_name) {
+	type = entity_type::OTHER;
 	name = n_name;
 	physical_body = physics;
 	texture = box_texture;
@@ -35,9 +36,11 @@ image_entity::~image_entity() {
 	delete visual_object;
 }
 
-image_entity::image_entity(sf::Drawable* object, std::string n_name) {
+image_entity::image_entity(sf::Drawable* object, std::string n_name, content_type n_type, sf::RenderWindow& win_ref) : window(win_ref) {
+	type = entity_type::IMAGE;
 	visual_object = object;
 	name = n_name;
+	image_type = n_type;
 }
 
 void image_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -47,10 +50,16 @@ void image_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 void image_entity::update() {
-
+	if (image_type == content_type::TEXT) {
+		sf::Text* text_object = (sf::Text*)visual_object;
+		text_object->setPosition(window.mapPixelToCoords(sf::Vector2i(0, 0)));
+		float scale = window.getView().getSize().x / window.getSize().x;
+		text_object->setScale(sf::Vector2f(scale, scale));
+	}
 }
 
 physical_entity::physical_entity(body_properties& body_properties, std::string n_name, sf::Texture& box_texture) {
+	type = entity_type::PHYSICAL;
 	texture = box_texture;
 	name = n_name;
 	physical_body = create_physical_body(body_properties);
@@ -95,7 +104,7 @@ void physical_entity::update() {
 		auto pos = getShapePosition(fixture->GetShape());
 		auto body_pos = physical_body->GetPosition();
 		pos += body_pos;
-		helper::rotate(pos, b2Vec2(body_pos.x, body_pos.y), physical_body->GetAngle());
+		utillity::rotate(pos, b2Vec2(body_pos.x, body_pos.y), physical_body->GetAngle());
 		if (fixture->GetShape()->m_type == fixture->GetShape()->e_polygon) {
 			convexes[convex_count].setPosition(sf::Vector2f(pos.x * SCALE, pos.y * SCALE));
 			convexes[convex_count].setRotation(physical_body->GetAngle() * 180 / b2_pi);

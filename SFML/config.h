@@ -9,18 +9,7 @@
 
 #define SCALE 30.f
 
-namespace helper {
-	template <class vec, class d>
-	vec& rotate(vec& v, const vec& origin, d angle) {
-		auto s = sin(angle);
-		auto c = cos(angle);
-		vec rotated;
-
-		v -= origin;
-
-		rotated.x = v.x * c - v.y * s;
-		rotated.y = v.x * s + v.y * c;
-
-		return v = (rotated + origin);
-	}
-};
+#define DEG_TO_RAD 0.01745329251994329576923690768489
+#define RAD_TO_DEG (1.0/0.01745329251994329576923690768489)
+#define DEG_TO_RADf 0.01745329251994329576923690768489f
+#define RAD_TO_DEGf (1.0f/0.01745329251994329576923690768489f)
