@@ -11,7 +11,7 @@ body_properties create_player(b2World& World, float X, float Y) {
 
 
 	b2FixtureDef fixture_def;
-	fixture_def.density = 1.f;
+	fixture_def.density = 10.f;
 	fixture_def.friction = 0.7f;
 	fixture_def.shape = shape;
 
@@ -90,11 +90,12 @@ b2Body* create_ground2(b2World& world, float x, float y) {
 	return body;
 }
 
-b2Body* create_physical_body(body_properties& properties) {
+b2Body* create_physical_body(body_properties& properties, physical_entity* target) {
 	b2Body* body = properties.world.CreateBody(&properties.body_def);
 	size_t i = 0;
 	for (auto fixture : properties.fixtures)
 		body->CreateFixture(&fixture);
+	body->SetUserData(target);
 	return body;
 }
 

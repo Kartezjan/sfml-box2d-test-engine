@@ -62,7 +62,7 @@ physical_entity::physical_entity(body_properties& body_properties, std::string n
 	type = entity_type::PHYSICAL;
 	texture = box_texture;
 	name = n_name;
-	physical_body = create_physical_body(body_properties);
+	physical_body = create_physical_body(body_properties, this);
 	for (auto fixture : body_properties.fixtures) {
 		if (fixture.shape->m_type == fixture.shape->e_polygon) {
 			const b2PolygonShape shape = *(b2PolygonShape*)fixture.shape;
@@ -83,8 +83,6 @@ physical_entity::physical_entity(body_properties& body_properties, std::string n
 			circles.push_back(circle);
 		}
 	}
-	//rendered_convexes.resize(convexes.size());
-	//rendered_circles.resize(circles.size());
 }
 
 void physical_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {

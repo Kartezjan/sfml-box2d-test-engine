@@ -15,7 +15,6 @@ void setup_car(physical_entity& body_car, physical_entity& wheel_front, physical
 	revoluteJointDef_back_wheel.localAnchorA.Set(back_wheel_pos.x / SCALE, back_wheel_pos.y / SCALE);
 	revoluteJointDef_back_wheel.localAnchorB.Set(0, 0);
 	revoluteJointDef_back_wheel.maxMotorTorque = maxTorgue;
-	revoluteJointDef_back_wheel.motorSpeed = 0;
 
 
 	cosmos.world.CreateJoint(&revoluteJointDef_front_wheel);
@@ -53,18 +52,7 @@ void controllable_car::send_message(abstract_entity* source) {
 					if (relative->name == "front_wheel" || relative->name == "back_wheel") {
 						auto front_wheel = (physical_entity*)relative;
 						b2RevoluteJoint* joint = (b2RevoluteJoint*)front_wheel->get_physical_body()->GetJointList()->joint;
-						joint->EnableMotor(true);
 						joint->SetMotorSpeed(0);
-					}
-				}
-			}
-			else if (is_space_pressed) {
-				is_space_pressed = false;
-				for (auto relative : source->relatives) {
-					if (relative->name == "front_wheel" || relative->name == "back_wheel") {
-						auto front_wheel = (physical_entity*)relative;
-						b2RevoluteJoint* joint = (b2RevoluteJoint*)front_wheel->get_physical_body()->GetJointList()->joint;
-						joint->EnableMotor(false);
 					}
 				}
 			}

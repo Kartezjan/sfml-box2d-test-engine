@@ -77,11 +77,11 @@ void main()
 	physical_entity player(create_player(universe.world, 370, 480), "player", universe.resources.textures[3]);
 	universe.physical_objects.push_back(&player);
 
-	physical_entity front_wheel(create_circle(universe.world, 370, 480, 26.f, 1.f, 0.7f), "front_wheel", universe.resources.textures[2]);
-	physical_entity back_wheel(create_circle(universe.world, 370, 480, 26.f, 1.f, 0.7f), "back_wheel", universe.resources.textures[2]);
+	physical_entity front_wheel(create_circle(universe.world, 370, 480, 26.f, 1.f, 20.f), "front_wheel", universe.resources.textures[2]);
+	physical_entity back_wheel(create_circle(universe.world, 370, 480, 26.f, 1.f, 20.f), "back_wheel", universe.resources.textures[2]);
 	universe.physical_objects.push_back(&front_wheel);
 	universe.physical_objects.push_back(&back_wheel);
-	setup_car(player, front_wheel, back_wheel, b2Vec2(64.f,-30.f), b2Vec2(-64.f,-30.f), 50, universe);
+	setup_car(player, front_wheel, back_wheel, b2Vec2(64.f,-30.f), b2Vec2(-64.f,-30.f), 100, universe);
 	player.virtues.push_back(new center_of_attention(universe));
 
 	auto process_virtues = [](abstract_entity* target) {
