@@ -16,6 +16,7 @@ void destroy_all_doomed_objects(std::queue<abstract_entity*>& death_queue) {
 
 void main()
 {
+
 	//Prepare the window 
 	sf::RenderWindow window(sf::VideoMode(1024, 768, 32), "Test");
 
@@ -52,12 +53,18 @@ void main()
 	camera.virtues.push_back(new controlls_view(50, universe, view, window));
 	camera.virtues.push_back(new tracks_object(universe, view, window));
 
+	abstract_entity contact_handler;
+	contact_handler.virtues.push_back(new handles_contacts(universe));
+
 	abstract_entity nature;
 	nature.virtues.push_back(new applies_force(universe));
 	nature.virtues.push_back(new spawns_objects(universe));
+	nature.virtues.push_back(new adds_to_death_queue(universe));
 
 	//universe.physical_objects.push_back(new sprite_entity(ground_texture, sf::Vector2f(400.f, 8.f), create_ground2(universe.world, 400.f, 500.f), "ground"));
+	universe.physical_objects.push_back(new physical_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures[0]));
 	universe.physical_objects.push_back(new physical_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures[0]));
+	universe.physical_objects.push_back(new physical_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures[0]));
 
 	sf::Font font;
 	font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf");
@@ -77,11 +84,13 @@ void main()
 	physical_entity player(create_player(universe.world, 370, 480), "player", universe.resources.textures[3]);
 	universe.physical_objects.push_back(&player);
 
-	physical_entity front_wheel(create_circle(universe.world, 370, 480, 26.f, 1.f, 20.f), "front_wheel", universe.resources.textures[2]);
-	physical_entity back_wheel(create_circle(universe.world, 370, 480, 26.f, 1.f, 20.f), "back_wheel", universe.resources.textures[2]);
+	printf("%X\n", &player);
+
+	physical_entity front_wheel(create_circle(universe.world, 370, 480, 26.f, 50.f, 0.7f), "front_wheel", universe.resources.textures[2]);
+	physical_entity back_wheel(create_circle(universe.world, 370, 480, 26.f, 50.f, 0.7f), "back_wheel", universe.resources.textures[2]);
 	universe.physical_objects.push_back(&front_wheel);
 	universe.physical_objects.push_back(&back_wheel);
-	setup_car(player, front_wheel, back_wheel, b2Vec2(64.f,-30.f), b2Vec2(-64.f,-30.f), 100, universe);
+	setup_car(player, front_wheel, back_wheel, b2Vec2(64.f,-30.f), b2Vec2(-64.f,-30.f), 700, universe);
 	player.virtues.push_back(new center_of_attention(universe));
 
 	auto process_virtues = [](abstract_entity* target) {
@@ -94,19 +103,17 @@ void main()
 		//Get input from the user
 		process_virtues(&user_input);
 		process_virtues(&camera);
+		process_virtues(&contact_handler);
 		//Invoke all physical entities' virtues (actions) 
 		for (auto entity : universe.physical_objects)
 			process_virtues(entity);
 		// Apply entities' changes to the world
 		process_virtues(&nature);
 
-		//clear message queues
-	//	universe.message_queues = complete_message_storage();
-		universe.message_queues.delete_marked(universe.message_queues.get_queue<input_message>());
-		universe.message_queues.delete_marked(universe.message_queues.get_queue<camera_message>());
-		universe.message_queues.delete_marked(universe.message_queues.get_queue<force_message>());
-		destroy_all_doomed_objects(universe.death_queue);
+		universe.message_queues.check_all_lifetimes();
+		universe.message_queues.delete_all_marked();
 
+		destroy_all_doomed_objects(universe.death_queue);
 
 		universe.world.Step(1/60.f, 8, 3);
 

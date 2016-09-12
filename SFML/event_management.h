@@ -15,8 +15,11 @@ enum class event_type { TRACKED_OBJECT_POS, FREE_CAMERA };
 
 enum class move_direction { LEFT, RIGHT };
 
+enum class contact_type { AABB_CONTACT, COLLISION };
+
 struct message {
 	bool delete_this_message = false;
+	size_t lifetime = 1000; //in cycles
 };
 
 struct input_message : public message {
@@ -35,4 +38,14 @@ struct camera_message : public message {
 	move_direction direction;
 };
 
-typedef message_storage<input_message, force_message, camera_message> complete_message_storage;
+struct contact_message : public message {
+	contact_type contact_type;
+	b2Fixture* fixtureA;
+	b2Fixture* fixtureB;
+};
+
+struct death_message : public message {
+	abstract_entity* target;
+};
+
+typedef message_storage<input_message, force_message, camera_message, contact_message, death_message> complete_message_storage;

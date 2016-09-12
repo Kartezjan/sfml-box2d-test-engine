@@ -12,5 +12,5 @@ public:
 	void send_message(abstract_entity* source);
 private:
 	float acceleration;
-	bool is_space_pressed = false;
+	size_t previous_timestamp = 0;
 };

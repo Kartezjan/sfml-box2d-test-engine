@@ -19,6 +19,12 @@
     <Filter Include="Source Files\virtues">
       <UniqueIdentifier>{238cfa5e-4f66-4385-aa8b-d340f9479c53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\misc">
+      <UniqueIdentifier>{5cb3cedf-aeca-4532-a5ca-fdf20713bad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\misc">
+      <UniqueIdentifier>{8160d9ff-dc8a-4f5b-8782-749505ce296e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -49,6 +55,12 @@
       <Filter>Source Files\virtues</Filter>
     </ClCompile>
     <ClCompile Include="user_input.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
+    <ClCompile Include="templates.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="contacts.cpp">
       <Filter>Source Files\virtues</Filter>
     </ClCompile>
   </ItemGroup>
@@ -96,6 +108,12 @@
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
     <ClInclude Include="user_input.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="templates.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="contacts.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>

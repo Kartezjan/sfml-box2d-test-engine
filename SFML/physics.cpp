@@ -1,18 +1,42 @@
 #include "physics.h"
 
-body_properties create_player(b2World& World, float X, float Y) {
-	body_properties player_properties(World);
+body_properties create_ramp(b2World& world, float X, float Y) {
+	body_properties ramp_properties(world);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
+	body_def.type = b2_staticBody;
+
+	b2Vec2 vertices[5];
+	vertices[0] = b2Vec2( (5000 - 400) / SCALE, 100 / SCALE);
+	vertices[1] = b2Vec2(5000 / SCALE, 100 / SCALE);
+	vertices[2] = b2Vec2(5000 / SCALE, -60 / SCALE);
+	b2PolygonShape* shape = new b2PolygonShape;
+	shape->Set(vertices, 3);
+
+	b2FixtureDef fixture_def;
+	fixture_def.density = 500.f;
+	fixture_def.shape = shape;
+
+	ramp_properties.body_def = body_def;
+	ramp_properties.fixtures.push_back(fixture_def);
+
+	return ramp_properties;
+}
+
+body_properties create_player(b2World& world, float X, float Y) {
+	body_properties player_properties(world);
 	b2BodyDef body_def;
 	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
 	body_def.type = b2_dynamicBody;
 
 	b2PolygonShape* shape = new b2PolygonShape;
-	shape->SetAsBox((120.f / 2) / SCALE, (32.f / 2) / SCALE, b2Vec2(0.f / SCALE,-48.f / SCALE), 0);
+	shape->SetAsBox((200.f / 2) / SCALE, (70.f / 2) / SCALE, b2Vec2(0.f / SCALE,-80.f / SCALE), 0);
 
 
 	b2FixtureDef fixture_def;
 	fixture_def.density = 10.f;
 	fixture_def.friction = 0.7f;
+	fixture_def.restitution = 0.4f;
 	fixture_def.shape = shape;
 
 	player_properties.body_def = body_def;
@@ -40,8 +64,8 @@ body_properties create_circle(b2World& World, float X, float Y, float radius, fl
 	return circle_properties;
 }
 
-body_properties create_ground(b2World& World, float X, float Y, float width, float heigh) {
-	body_properties ground_properties(World);
+body_properties create_ground(b2World& world, float X, float Y, float width, float heigh) {
+	body_properties ground_properties(world);
 	b2BodyDef body_def;
 	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
 	body_def.type = b2_staticBody;
@@ -59,35 +83,23 @@ body_properties create_ground(b2World& World, float X, float Y, float width, flo
 	return ground_properties;
 }
 
-b2Body* create_box(b2World& world, int mouse_x, int mouse_y) {
+body_properties create_box(b2World& world, int X, int Y) {
+	body_properties box_properties(world);
 	b2BodyDef body_def;
-	body_def.position = b2Vec2(mouse_x / SCALE, mouse_y / SCALE);
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
 	body_def.type = b2_dynamicBody;
-	b2Body* body = world.CreateBody(&body_def);
 
-	b2PolygonShape shape;
-	shape.SetAsBox((32.f / 2) / SCALE, (32.f / 2) / SCALE);
+	b2PolygonShape* shape = new b2PolygonShape;
+	shape->SetAsBox((32.f / 2) / SCALE, (32.f / 2) / SCALE);
 	b2FixtureDef fixture_def;
 	fixture_def.density = 1.f;
 	fixture_def.friction = 0.7f;
-	fixture_def.shape = &shape;
-	body->CreateFixture(&fixture_def);
-	return body;
-}
+	fixture_def.shape = shape;
 
-b2Body* create_ground2(b2World& world, float x, float y) {
-	b2BodyDef body_def;
-	body_def.position = b2Vec2(x / SCALE, y / SCALE);
-	body_def.type = b2_staticBody;
-	b2Body* body = world.CreateBody(&body_def);
+	box_properties.body_def = body_def;
+	box_properties.fixtures.push_back(fixture_def);
 
-	b2PolygonShape shape;
-	shape.SetAsBox((800.f / 2) / SCALE, (16.f / 2) / SCALE);
-	b2FixtureDef fixture_def;
-	fixture_def.density = 0.f;
-	fixture_def.shape = &shape;
-	body->CreateFixture(&fixture_def);
-	return body;
+	return box_properties;
 }
 
 b2Body* create_physical_body(body_properties& properties, physical_entity* target) {
@@ -99,7 +111,7 @@ b2Body* create_physical_body(body_properties& properties, physical_entity* targe
 	return body;
 }
 
-b2Vec2 getShapePosition(const b2Shape *shape) {
+b2Vec2 get_shape_position(const b2Shape *shape) {
 	if (shape->m_type == b2Shape::e_circle)
 	{
 		return static_cast<const b2CircleShape*>(shape)->m_p;

@@ -1,4 +1,5 @@
-#include "virtue_management.h"
+//#include "virtue_management.h"
+#include "contacts.h"
 
 void controllable::send_message(abstract_entity* source) {
 	auto& keyboard_events = cosmos.message_queues.get_queue<input_message>();
@@ -69,7 +70,9 @@ void spawns_objects::send_message(abstract_entity* source) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				cosmos.physical_objects.push_back(new sprite_entity(cosmos.resources.textures[1], sf::Vector2f(16.f, 16.f), create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box"));
+				auto box = new physical_entity(create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures[1]);
+				//box->virtues.push_back(new destroys_upon_collision(cosmos));
+				cosmos.physical_objects.push_back(box);
 			}
 		}
 		if (msg.key == input_key::RMB) {
@@ -87,3 +90,11 @@ void spawns_objects::send_message(abstract_entity* source) {
 	}
 }
 
+void adds_to_death_queue::send_message(abstract_entity* source) {
+	auto& death_queue = cosmos.message_queues.get_queue<death_message>();
+	for (auto& msg : death_queue) {
+		msg.delete_this_message = true;
+		cosmos.death_queue.push(msg.target);
+		cosmos.physical_objects.erase(std::remove_if(cosmos.physical_objects.begin(), cosmos.physical_objects.end(), [msg](const abstract_entity* entity) {return entity == msg.target;} ) );
+	}
+}

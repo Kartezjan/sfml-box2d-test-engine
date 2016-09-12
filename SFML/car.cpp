@@ -16,43 +16,30 @@ void setup_car(physical_entity& body_car, physical_entity& wheel_front, physical
 	revoluteJointDef_back_wheel.localAnchorB.Set(0, 0);
 	revoluteJointDef_back_wheel.maxMotorTorque = maxTorgue;
 
-
 	cosmos.world.CreateJoint(&revoluteJointDef_front_wheel);
 	cosmos.world.CreateJoint(&revoluteJointDef_back_wheel);
 
-	body_car.relatives.push_back(&wheel_front);
-	body_car.relatives.push_back(&wheel_back);
-
-	body_car.virtues.push_back(new controllable_car(cosmos, 300 * DEG_TO_RAD));
+	body_car.virtues.push_back(new controllable_car(cosmos, 45 * DEG_TO_RAD));
+	printf("%X", body_car);
 }
 
 void controllable_car::send_message(abstract_entity* source) {
 	if (source->get_type() == entity_type::PHYSICAL) {
-		auto input_messages = cosmos.message_queues.get_queue<input_message>();
-		for (auto msg : input_messages) {
-			if (msg.key == input_key::W || msg.key == input_key::S) {
-					for (auto relative : source->relatives) {
-						if (relative->name == "front_wheel" || relative->name == "back_wheel") {
-							auto front_wheel = (physical_entity*)relative;
-							b2RevoluteJoint* joint = (b2RevoluteJoint*)front_wheel->get_physical_body()->GetJointList()->joint;
-							if (joint) {
-								joint->EnableMotor(true);
-								if (msg.key == input_key::W)
-									joint->SetMotorSpeed(joint->GetMotorSpeed() + acceleration);
-								else if (msg.key == input_key::S)
-									joint->SetMotorSpeed(joint->GetMotorSpeed() - acceleration);
-							}
-						}
-					}
-
-			}
-			if (msg.key == input_key::SPACE) {
-				for (auto relative : source->relatives) {
-					is_space_pressed = true;
-					if (relative->name == "front_wheel" || relative->name == "back_wheel") {
-						auto front_wheel = (physical_entity*)relative;
-						b2RevoluteJoint* joint = (b2RevoluteJoint*)front_wheel->get_physical_body()->GetJointList()->joint;
-						joint->SetMotorSpeed(0);
+		auto& input_messages = cosmos.message_queues.get_queue<input_message>();
+		for (auto& msg : input_messages) {
+			if (msg.key == input_key::W || msg.key == input_key::S || msg.key == input_key::SPACE) {
+				msg.delete_this_message = true;
+				for (auto joint_edge = source->get_physical_body()->GetJointList(); joint_edge; joint_edge = joint_edge->next) {
+					auto wheel = (physical_entity*)joint_edge->joint->GetBodyB()->GetUserData();
+					if (wheel->name == "front_wheel" || wheel->name == "back_wheel") {
+						auto joint = (b2RevoluteJoint*)joint_edge->joint;
+						joint->EnableMotor(true);
+						if(msg.key == input_key::W)
+							joint->SetMotorSpeed(joint->GetMotorSpeed() + acceleration);
+						else if(msg.key == input_key::S)
+							joint->SetMotorSpeed(joint->GetMotorSpeed() - acceleration);
+						else if (msg.key == input_key::SPACE)
+							joint->SetMotorSpeed(0);
 					}
 				}
 			}
@@ -60,4 +47,5 @@ void controllable_car::send_message(abstract_entity* source) {
 	}
 	else
 		printf("Only a physical entity can be a car\n");
+		
 }

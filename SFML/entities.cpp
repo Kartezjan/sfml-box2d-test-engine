@@ -99,7 +99,7 @@ void physical_entity::update() {
 	size_t circle_count = 0;
 
 	for (auto fixture = physical_body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
-		auto pos = getShapePosition(fixture->GetShape());
+		auto pos = get_shape_position(fixture->GetShape());
 		auto body_pos = physical_body->GetPosition();
 		pos += body_pos;
 		utillity::rotate(pos, b2Vec2(body_pos.x, body_pos.y), physical_body->GetAngle());

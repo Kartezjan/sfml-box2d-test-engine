@@ -12,5 +12,6 @@
 #include "camera.h"
 #include "GUI.h"
 #include "user_input.h"
+#include "contacts.h"
 
 void update_and_render_all_renderable_objects(sf::RenderWindow& Window, std::vector<renderable_entity*>& entity_list);

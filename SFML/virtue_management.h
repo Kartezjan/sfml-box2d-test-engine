@@ -50,3 +50,7 @@ private:
 	size_t previous_removal_timestamp = 0;
 };
 
+class adds_to_death_queue : public virtue {
+	using virtue::virtue;
+	void send_message(abstract_entity* source);
+};

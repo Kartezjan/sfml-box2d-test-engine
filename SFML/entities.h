@@ -15,7 +15,6 @@ public:
 	~abstract_entity();
 	std::string name;
 	std::vector<virtue*> virtues;
-	std::vector<abstract_entity*> relatives;
 	entity_type get_type() { return type; }
 	b2Body* get_physical_body() { return physical_body; };
 protected:
