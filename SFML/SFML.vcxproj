@@ -120,23 +120,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="car.cpp" />
     <ClCompile Include="entities.cpp" />
     <ClCompile Include="event_management.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="user_input.cpp" />
     <ClCompile Include="utillity.cpp" />
     <ClCompile Include="virtue_management.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="car.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="entities.h" />
     <ClInclude Include="event_management.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="message_storage.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="resource_manager.h" />
     <ClInclude Include="source.h" />
+    <ClInclude Include="user_input.h" />
     <ClInclude Include="utillity.h" />
     <ClInclude Include="vec2.h" />
     <ClInclude Include="virtue_management.h" />

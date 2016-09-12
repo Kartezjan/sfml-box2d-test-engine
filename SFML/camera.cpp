@@ -1,6 +1,5 @@
 #include "camera.h"
 
-
 void controlls_view::send_message(abstract_entity* source) {
 	auto& input_messages = cosmos.message_queues.get_queue<input_message>();
 	for (auto& msg : input_messages) {
