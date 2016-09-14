@@ -61,7 +61,6 @@ void main()
 	nature.virtues.push_back(new spawns_objects(universe));
 	nature.virtues.push_back(new adds_to_death_queue(universe));
 
-	//universe.physical_objects.push_back(new sprite_entity(ground_texture, sf::Vector2f(400.f, 8.f), create_ground2(universe.world, 400.f, 500.f), "ground"));
 	universe.physical_objects.push_back(new physical_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures[0]));
 	universe.physical_objects.push_back(new physical_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures[0]));
 	universe.physical_objects.push_back(new physical_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures[0]));
@@ -81,16 +80,14 @@ void main()
 
 	universe.physical_objects.push_back(&mouse_pos_info_gui);
 
-	physical_entity player(create_player(universe.world, 370, 480), "player", universe.resources.textures[3]);
+	physical_entity player(create_player(universe.world, 370, 350), "player", universe.resources.textures[3]);
 	universe.physical_objects.push_back(&player);
 
-	printf("%X\n", &player);
-
-	physical_entity front_wheel(create_circle(universe.world, 370, 480, 26.f, 50.f, 0.7f), "front_wheel", universe.resources.textures[2]);
-	physical_entity back_wheel(create_circle(universe.world, 370, 480, 26.f, 50.f, 0.7f), "back_wheel", universe.resources.textures[2]);
+	physical_entity front_wheel(create_circle(universe.world, 370, 350, 20.f, 10.f, 0.7f), "front_wheel", universe.resources.textures[2]);
+	physical_entity back_wheel(create_circle(universe.world, 370, 350, 20.f, 10.f, 0.7f), "back_wheel", universe.resources.textures[2]);
 	universe.physical_objects.push_back(&front_wheel);
 	universe.physical_objects.push_back(&back_wheel);
-	setup_car(player, front_wheel, back_wheel, b2Vec2(64.f,-30.f), b2Vec2(-64.f,-30.f), 700, universe);
+	setup_car(player, front_wheel, back_wheel, b2Vec2(-100.f,-10.f), b2Vec2(100.f,-10.f), 500, universe);
 	player.virtues.push_back(new center_of_attention(universe));
 
 	auto process_virtues = [](abstract_entity* target) {

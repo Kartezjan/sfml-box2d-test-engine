@@ -18,24 +18,24 @@ void controllable::send_message(abstract_entity* source) {
 			keyboard_events[i].delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= cooldown) {
 				previous_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				message.force = b2Vec2(0.0f, -100.0f);
+				message.force = b2Vec2(0.0f, -1000.0f);
 				message.type = force_type::APPLY_IMPULS_TO_CENTER;
 				send_message(keyboard_events[i], message);
 			}
 		}
 		else if (keyboard_events[i].key == input_key::S) {
 			keyboard_events[i].delete_this_message = true;
-			message.force = b2Vec2(0.0f, 70.0f);
+			message.force = b2Vec2(0.0f, 700.0f);
 			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::A) {
 			keyboard_events[i].delete_this_message = true;
-			message.force = b2Vec2(-70.0f, 0.0f);
+			message.force = b2Vec2(-700.0f, 0.0f);
 			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::D) {
 			keyboard_events[i].delete_this_message = true;
-			message.force = b2Vec2(70.0f, 0.0f);
+			message.force = b2Vec2(700.0f, 0.0f);
 			send_message(keyboard_events[i], message);
 		}
 	}

@@ -27,8 +27,7 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 
 		auto bodyA = (physical_entity*)msg.fixtureA->GetBody()->GetUserData();
 		auto bodyB = (physical_entity*)msg.fixtureB->GetBody()->GetUserData();
-		//if(bodyA == source)
-		//	printf("%s <--> %s\n", bodyA->name.c_str(), bodyB->name.c_str());
+
 		if (bodyA == source || bodyB == source) {
 			msg.delete_this_message = true;
 			auto& death_queue = cosmos.message_queues.get_queue<death_message>();

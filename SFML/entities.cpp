@@ -78,7 +78,7 @@ physical_entity::physical_entity(body_properties& body_properties, std::string n
 			sf::CircleShape circle;
 			const b2CircleShape shape = *(b2CircleShape*)fixture.shape;
 			circle.setRadius(shape.m_radius * SCALE);
-			circle.setOrigin(sf::Vector2f(shape.m_radius * SCALE,shape.m_radius * SCALE));
+			circle.setOrigin(sf::Vector2f(shape.m_radius * SCALE, shape.m_radius * SCALE));
 			circle.setTexture(&texture);
 			circles.push_back(circle);
 		}
@@ -95,8 +95,8 @@ void physical_entity::draw(sf::RenderTarget& target, sf::RenderStates states) co
 }
 
 void physical_entity::update() {
-	size_t convex_count = 0;
-	size_t circle_count = 0;
+	size_t convex_count = convexes.size() - 1;;
+	size_t circle_count = circles.size() - 1;
 
 	for (auto fixture = physical_body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
 		auto pos = get_shape_position(fixture->GetShape());
@@ -106,12 +106,12 @@ void physical_entity::update() {
 		if (fixture->GetShape()->m_type == fixture->GetShape()->e_polygon) {
 			convexes[convex_count].setPosition(sf::Vector2f(pos.x * SCALE, pos.y * SCALE));
 			convexes[convex_count].setRotation(physical_body->GetAngle() * 180 / b2_pi);
-			++convex_count;
+			--convex_count;
 		}
 		else {
 			circles[circle_count].setPosition(sf::Vector2f(pos.x * SCALE, pos.y * SCALE));
 			circles[circle_count].setRotation(physical_body->GetAngle() * 180 / b2_pi);
-			++circle_count;
+			--circle_count;
 		}
 	}
 }
