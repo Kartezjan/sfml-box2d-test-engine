@@ -6,10 +6,11 @@
 
 
 class abstract_entity;
+class image_entity;
 
 enum class force_type { APPLY_FORCE_TO_CENTER, APPLY_IMPULS_TO_CENTER };
 
-enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X};
+enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X, B};
 
 enum class event_type { TRACKED_OBJECT_POS, FREE_CAMERA };
 
@@ -48,4 +49,9 @@ struct death_message : public message {
 	abstract_entity* target;
 };
 
-typedef message_storage<input_message, force_message, camera_message, contact_message, death_message> complete_message_storage;
+struct show_illusion_message : public message {
+	image_entity* illusion_entity;
+	size_t duration;
+};
+
+typedef message_storage<input_message, force_message, camera_message, contact_message, death_message, show_illusion_message> complete_message_storage;

@@ -34,15 +34,22 @@ void main()
 	sf::Texture box_texture;
 	sf::Texture wheel_texture;
 	sf::Texture car_body_texture;
+	sf::Texture bomb_texture;
+	sf::Texture bang_texture;
+
 	ground_texture.loadFromFile("ground.png");
 	box_texture.loadFromFile("box.jpg");
 	wheel_texture.loadFromFile("wheel.png");
 	car_body_texture.loadFromFile("red_car.jpg");
+	bomb_texture.loadFromFile("black.jpg");
+	bang_texture.loadFromFile("bang.png");
 
 	resources.textures.push_back(ground_texture);
 	resources.textures.push_back(box_texture);
 	resources.textures.push_back(wheel_texture);
 	resources.textures.push_back(car_body_texture);
+	resources.textures.push_back(bomb_texture);
+	resources.textures.push_back(bang_texture);
 
 	// Prepare the world
 	universe universe(b2Vec2(0.0f, 9.8f), resources);
@@ -61,6 +68,9 @@ void main()
 	nature.virtues.push_back(new applies_force(universe));
 	nature.virtues.push_back(new spawns_objects(universe));
 	nature.virtues.push_back(new destroys_all_doomed_objects(universe));
+
+	abstract_entity illusion_handler;
+	illusion_handler.virtues.push_back(new shows_illusions(universe, window));
 
 	std::vector<physical_entity*> ground_objects;
 
@@ -124,6 +134,7 @@ void main()
 
 		window.clear(sf::Color::White);
 		update_and_render_scene(window, universe.world);
+		process_virtues(&illusion_handler);
 		update_and_render_GUI_objects(window, GUI_objects);
 		window.display();
 	}

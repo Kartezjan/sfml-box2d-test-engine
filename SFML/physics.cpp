@@ -150,3 +150,14 @@ b2Vec2 get_shape_position(const b2Shape *shape) {
 	}
 	return b2Vec2_zero;
 }
+
+void apply_blast_impulse(b2Body* body, b2Vec2 blastCenter, b2Vec2 applyPoint, float blastPower) {
+	b2Vec2 blastDir = applyPoint - blastCenter;
+	float distance = blastDir.Normalize();
+	//ignore bodies exactly at the blast point - blast direction is undefined
+	if (distance == 0)
+		return;
+	float invDistance = 1 / distance;
+	float impulseMag = blastPower * invDistance * invDistance;
+	body->ApplyLinearImpulse(impulseMag * blastDir, applyPoint, true);
+}

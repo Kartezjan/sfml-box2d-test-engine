@@ -20,9 +20,9 @@ void handles_contacts::send_message(abstract_entity* source) {
 void destroys_upon_collision::send_message(abstract_entity* source) {
 	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
 	for (auto& msg : contact_queue) {
-		if (msg.fixtureA->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureB->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureA->GetBody()->GetType() == b2_staticBody || msg.fixtureB->GetBody()->GetType() == b2_staticBody) {
+		if (msg.fixtureA->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureB->GetBody() == (b2Body*)0xFDFDFDFD) {
 			msg.delete_this_message = true;
-			return;
+			continue;
 		}
 
 		auto bodyA = (physical_entity*)msg.fixtureA->GetBody()->GetUserData();
@@ -42,18 +42,42 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 	}
 }
 
-//void explodes_upon_collision::send_message(abstract_entity* source) {
-//	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
-//	for (auto& msg : contact_queue) {
-//		if (msg.fixtureA->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureB->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureA->GetBody()->GetType() == b2_staticBody || msg.fixtureB->GetBody()->GetType() == b2_staticBody) {
-//			msg.delete_this_message = true;
-//			return;
-//		}
-//
-//		auto bodyA = (physical_entity*)msg.fixtureA->GetBody()->GetUserData();
-//		auto bodyB = (physical_entity*)msg.fixtureB->GetBody()->GetUserData();
-//
-//		if (bodyA == source || bodyB == source) {
-//
-//		}
-//}
+void explodes_upon_collision::send_message(abstract_entity* source) {
+	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
+	for (auto& msg : contact_queue) {
+		if (msg.fixtureA->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureB->GetBody() == (b2Body*)0xFDFDFDFD) {
+			msg.delete_this_message = true;
+			continue;
+		}
+
+		auto bodyA = (physical_entity*)msg.fixtureA->GetBody()->GetUserData();
+		auto bodyB = (physical_entity*)msg.fixtureB->GetBody()->GetUserData();
+
+		if (bodyA == source || bodyB == source) {
+			for (float i = 0; i < num_rays; ++i) {
+				float angle = (i / num_rays * 360 * DEG_TO_RAD);
+				b2Vec2 ray_direction(sinf(angle), cosf(angle) );
+				b2Vec2 ray_end = source->get_physical_body()->GetWorldCenter() + blast_radius * ray_direction;
+				closest_ray_callback callback;
+				cosmos.world.RayCast((b2RayCastCallback*)&callback, source->get_physical_body()->GetWorldCenter(), ray_end);
+				if (callback.m_body) {
+					apply_blast_impulse(callback.m_body, source->get_physical_body()->GetWorldCenter(), callback.contact_point, (blast_power / num_rays));
+					//also produce "BANG!" image
+					sf::RenderWindow useless_window;
+					sf::Drawable* bang_sprite = new sf::Sprite(cosmos.resources.textures[5]);
+
+					static_cast<sf::Sprite*>(bang_sprite)->setOrigin(sf::Vector2f(320.f, 220.f));
+					static_cast<sf::Sprite*>(bang_sprite)->setScale(sf::Vector2f(0.2f, 0.2f));
+					static_cast<sf::Sprite*>(bang_sprite)->setPosition(sf::Vector2f(source->get_physical_body()->GetPosition().x * SCALE, source->get_physical_body()->GetPosition().y * SCALE) );
+
+					image_entity* bang = new image_entity(bang_sprite, "BANG!", image_entity::ILLUSION, useless_window);
+					auto& illu_queue = cosmos.message_queues.get_queue<show_illusion_message>();
+					show_illusion_message msg;
+					msg.illusion_entity = bang;
+					msg.duration = 250;
+					illu_queue.push_back(msg);
+				}
+			}
+		}
+	}
+}

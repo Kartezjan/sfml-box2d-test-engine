@@ -1,7 +1,7 @@
 #include "entities.h"
 
 abstract_entity::~abstract_entity() {
-	if (physical_body != nullptr)
+	if (physical_body)
 		physical_body->GetWorld()->DestroyBody(physical_body);
 	for (auto virtue : virtues)
 		delete virtue;

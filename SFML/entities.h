@@ -31,7 +31,7 @@ private:
 
 class image_entity : public renderable_entity {
 public:
-	enum content_type { TEXT };
+	enum content_type { TEXT, ILLUSION };
 	image_entity(sf::Drawable* object, std::string n_name, content_type n_type, sf::RenderWindow& win_ref);
 	~image_entity();
 	void update(void);
@@ -43,6 +43,8 @@ private:
 	content_type image_type;
 	sf::RenderWindow& window;
 };
+
+
 
 class sprite_entity : public renderable_entity {
 public:

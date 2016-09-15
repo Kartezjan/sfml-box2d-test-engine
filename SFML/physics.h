@@ -26,3 +26,5 @@ body_properties create_box(b2World& world, int X, int Y);
 body_properties create_circle(b2World& World, float X, float Y, float radius, float density, float friction);
 
 body_properties create_ramp(b2World& world, float X, float Y);
+
+void apply_blast_impulse(b2Body* body, b2Vec2 blastCenter, b2Vec2 applyPoint, float blastPower);
