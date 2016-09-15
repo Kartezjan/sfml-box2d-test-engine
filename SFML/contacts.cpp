@@ -29,7 +29,6 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 		auto bodyB = (physical_entity*)msg.fixtureB->GetBody()->GetUserData();
 
 		if (bodyA == source || bodyB == source) {
-			msg.delete_this_message = true;
 			auto& death_queue = cosmos.message_queues.get_queue<death_message>();
 			auto does_exist = std::find_if(death_queue.begin(), death_queue.end(), [source](death_message& msg_in_vector) {
 				return source == msg_in_vector.target;
@@ -42,3 +41,19 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 		}
 	}
 }
+
+//void explodes_upon_collision::send_message(abstract_entity* source) {
+//	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
+//	for (auto& msg : contact_queue) {
+//		if (msg.fixtureA->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureB->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureA->GetBody()->GetType() == b2_staticBody || msg.fixtureB->GetBody()->GetType() == b2_staticBody) {
+//			msg.delete_this_message = true;
+//			return;
+//		}
+//
+//		auto bodyA = (physical_entity*)msg.fixtureA->GetBody()->GetUserData();
+//		auto bodyB = (physical_entity*)msg.fixtureB->GetBody()->GetUserData();
+//
+//		if (bodyA == source || bodyB == source) {
+//
+//		}
+//}

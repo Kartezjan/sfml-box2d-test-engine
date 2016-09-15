@@ -48,9 +48,11 @@ private:
 	size_t cooldown = 300;
 	size_t previous_creation_timestamp = 0;
 	size_t previous_removal_timestamp = 0;
+	std::vector<physical_entity*> spawned_objects;
 };
 
-class adds_to_death_queue : public virtue {
+class destroys_all_doomed_objects : public virtue {
+public:
 	using virtue::virtue;
 	void send_message(abstract_entity* source);
 };

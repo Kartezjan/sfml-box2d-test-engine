@@ -27,12 +27,7 @@ sprite_entity::sprite_entity(sf::Texture& box_texture, sf::Vector2f box_origin, 
 	sprite.setOrigin(box_origin);
 }
 
-sprite_entity::~sprite_entity() {
-	abstract_entity::~abstract_entity();
-}
-
 image_entity::~image_entity() {
-	abstract_entity::~abstract_entity();
 	delete visual_object;
 }
 
@@ -114,9 +109,4 @@ void physical_entity::update() {
 			--circle_count;
 		}
 	}
-}
-
-
-physical_entity::~physical_entity() {
-	abstract_entity::~abstract_entity();
 }

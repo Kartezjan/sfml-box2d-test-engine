@@ -47,7 +47,6 @@ private:
 class sprite_entity : public renderable_entity {
 public:
 	sprite_entity(sf::Texture& box_texture, sf::Vector2f box_origin, b2Body* physics, std::string name);
-	~sprite_entity();
 	void update();
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -58,7 +57,6 @@ private:
 class physical_entity : public renderable_entity {
 public:
 	physical_entity(body_properties& body_properties, std::string n_name, sf::Texture& box_texture);
-	~physical_entity();
 	void update();
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;

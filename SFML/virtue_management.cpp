@@ -71,30 +71,27 @@ void spawns_objects::send_message(abstract_entity* source) {
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				auto box = new physical_entity(create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures[1]);
-				//box->virtues.push_back(new destroys_upon_collision(cosmos));
-				cosmos.physical_objects.push_back(box);
+				spawned_objects.push_back(box);
+				box->virtues.push_back(new destroys_upon_collision(cosmos));
 			}
 		}
 		if (msg.key == input_key::RMB) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_removal_timestamp >= cooldown) {
 				previous_removal_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				for (int i = cosmos.physical_objects.size() - 1; i >= 0; --i)
-					if (cosmos.physical_objects[i]->name == "box") {
-						cosmos.death_queue.push(cosmos.physical_objects[i]);
-						cosmos.physical_objects.erase(cosmos.physical_objects.begin() + i);
-						break;
-					}
+				if (!spawned_objects.empty()) {
+					spawned_objects.back()->~physical_entity();
+					spawned_objects.pop_back();
+				}
 			}
 		}
 	}
 }
 
-void adds_to_death_queue::send_message(abstract_entity* source) {
+void destroys_all_doomed_objects::send_message(abstract_entity* source) {
 	auto& death_queue = cosmos.message_queues.get_queue<death_message>();
 	for (auto& msg : death_queue) {
 		msg.delete_this_message = true;
-		cosmos.death_queue.push(msg.target);
-		cosmos.physical_objects.erase(std::remove_if(cosmos.physical_objects.begin(), cosmos.physical_objects.end(), [msg](const abstract_entity* entity) {return entity == msg.target;} ) );
+		msg.target->~abstract_entity();
 	}
 }
