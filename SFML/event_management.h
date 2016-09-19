@@ -10,7 +10,7 @@ class image_entity;
 
 enum class force_type { APPLY_FORCE_TO_CENTER, APPLY_IMPULS_TO_CENTER };
 
-enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X, B};
+enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X, B, E, Q};
 
 enum class event_type { TRACKED_OBJECT_POS, FREE_CAMERA };
 

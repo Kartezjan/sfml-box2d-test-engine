@@ -9,6 +9,14 @@
 class virtue;
 
 enum class entity_type {ABSTRACT, IMAGE, PHYSICAL, OTHER};
+enum class shape_type { CONVEX, CIRCLE };
+enum class visual_effect_type { ROPE_JOINT };
+
+struct visual_effect {
+	visual_effect_type type;
+	sf::Drawable* visual_object;
+	float property;
+};
 
 class abstract_entity {
 public:
@@ -31,7 +39,7 @@ private:
 
 class image_entity : public renderable_entity {
 public:
-	enum content_type { TEXT, ILLUSION };
+	enum content_type { TEXT, ILLUSION, ROPE };
 	image_entity(sf::Drawable* object, std::string n_name, content_type n_type, sf::RenderWindow& win_ref);
 	~image_entity();
 	void update(void);
@@ -44,25 +52,19 @@ private:
 	sf::RenderWindow& window;
 };
 
-
-
-class sprite_entity : public renderable_entity {
-public:
-	sprite_entity(sf::Texture& box_texture, sf::Vector2f box_origin, b2Body* physics, std::string name);
-	void update();
-private:
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	sf::Texture texture;
-	sf::Sprite sprite;
-};
-
 class physical_entity : public renderable_entity {
 public:
+	struct shape {
+		shape_type type;
+		sf::Drawable* visual_object;
+	};
+	void addVisualEffect(visual_effect effect) { visual_effects.push_back(effect); };
 	physical_entity(body_properties& body_properties, std::string n_name, sf::Texture& box_texture);
+	~physical_entity();
 	void update();
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	sf::Texture texture;
-	std::vector<sf::ConvexShape> convexes;
-	std::vector<sf::CircleShape> circles;
+	std::vector<shape> shapes;
+	std::vector<visual_effect> visual_effects;
 };

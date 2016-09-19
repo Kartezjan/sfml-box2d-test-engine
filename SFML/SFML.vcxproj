@@ -129,6 +129,7 @@
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="templates.cpp" />
+    <ClCompile Include="trebuchet.cpp" />
     <ClCompile Include="user_input.cpp" />
     <ClCompile Include="utillity.cpp" />
     <ClCompile Include="virtue_management.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="physics.h" />
     <ClInclude Include="resource_manager.h" />
     <ClInclude Include="source.h" />
+    <ClInclude Include="trebuchet.h" />
     <ClInclude Include="user_input.h" />
     <ClInclude Include="utillity.h" />
     <ClInclude Include="vec2.h" />

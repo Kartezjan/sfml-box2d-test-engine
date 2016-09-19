@@ -1,5 +1,62 @@
 #include "physics.h"
 
+body_properties create_kinematic_box(b2World& world, int X, int Y, float height, float width) {
+	body_properties box_properties(world);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
+	body_def.type = b2_kinematicBody;
+
+	b2PolygonShape* shape = new b2PolygonShape;
+	shape->SetAsBox((height / 2) / SCALE, (width / 2) / SCALE);
+	b2FixtureDef fixture_def;
+	fixture_def.density = 1.f;
+	fixture_def.friction = 0.7f;
+	fixture_def.shape = shape;
+
+	box_properties.body_def = body_def;
+	box_properties.fixtures.push_back(fixture_def);
+
+	return box_properties;
+}
+
+body_properties create_box(b2World& world, int X, int Y, float height, float width, float density, float friction) {
+	body_properties box_properties(world);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
+	body_def.type = b2_dynamicBody;
+
+	b2PolygonShape* shape = new b2PolygonShape;
+	shape->SetAsBox((height / 2) / SCALE, (width / 2) / SCALE);
+	b2FixtureDef fixture_def;
+	fixture_def.density = density;
+	fixture_def.friction = friction;
+	fixture_def.shape = shape;
+
+	box_properties.body_def = body_def;
+	box_properties.fixtures.push_back(fixture_def);
+
+	return box_properties;
+}
+
+body_properties create_box(b2World& world, int X, int Y, float height, float width, b2Vec2 fixture_pos, float angle, float density, float friction) {
+	body_properties box_properties(world);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
+	body_def.type = b2_dynamicBody;
+
+	b2PolygonShape* shape = new b2PolygonShape;
+	shape->SetAsBox((height / 2) / SCALE, (width / 2) / SCALE, b2Vec2(fixture_pos.x / SCALE, fixture_pos.y / SCALE), angle);
+	b2FixtureDef fixture_def;
+	fixture_def.density = density;//30.f;
+	fixture_def.friction = friction;//0.7f;
+	fixture_def.shape = shape;
+
+	box_properties.body_def = body_def;
+	box_properties.fixtures.push_back(fixture_def);
+
+	return box_properties;
+}
+
 body_properties create_ramp(b2World& world, float X, float Y) {
 	body_properties ramp_properties(world);
 	b2BodyDef body_def;
@@ -32,33 +89,33 @@ body_properties create_player(b2World& world, float X, float Y) {
 	player_properties.body_def = body_def;
 
 	b2Vec2 vertices[4];
-	vertices[0] = b2Vec2(-120 / SCALE, -20 / SCALE);
-	vertices[1] = b2Vec2(120 / SCALE, -20 / SCALE);
-	vertices[2] = b2Vec2(120 / SCALE, -40 / SCALE);
-	vertices[3] = b2Vec2(-120 / SCALE, -40 / SCALE);
+	vertices[0] = b2Vec2(-300 / SCALE, -20 / SCALE);
+	vertices[1] = b2Vec2(300 / SCALE, -20 / SCALE);
+	vertices[2] = b2Vec2(300 / SCALE, -40 / SCALE);
+	vertices[3] = b2Vec2(-300 / SCALE, -40 / SCALE);
 
 	b2PolygonShape* shape = new b2PolygonShape;
 	shape->Set(vertices, 4);
 
-	vertices[0] = b2Vec2(-120 / SCALE, -20 / SCALE);
-	vertices[1] = b2Vec2(-100 / SCALE, -20 / SCALE);
-	vertices[2] = b2Vec2(-100 / SCALE, -100 / SCALE);
-	vertices[3] = b2Vec2(-120 / SCALE, -100 / SCALE);
+	vertices[0] = b2Vec2(-280 / SCALE, -40 / SCALE);
+	vertices[1] = b2Vec2(-260 / SCALE, -40 / SCALE);
+	vertices[2] = b2Vec2(-20 / SCALE, -500 / SCALE);
+	vertices[3] = b2Vec2(0 / SCALE, -500 / SCALE);
 
 	b2PolygonShape* shape2 = new b2PolygonShape;
 	shape2->Set(vertices, 4);
 
 
-	vertices[0] = b2Vec2(100 / SCALE, -20 / SCALE);
-	vertices[1] = b2Vec2(120 / SCALE, -20 / SCALE);
-	vertices[2] = b2Vec2(120 / SCALE, -100 / SCALE);
-	vertices[3] = b2Vec2(100 / SCALE, -100 / SCALE);
+	vertices[0] = b2Vec2(280 / SCALE, -40 / SCALE);
+	vertices[1] = b2Vec2(300 / SCALE, -40 / SCALE);
+	vertices[2] = b2Vec2(20 / SCALE, -500 / SCALE);
+	vertices[3] = b2Vec2(0 / SCALE, -500 / SCALE);
 
 	b2PolygonShape* shape3 = new b2PolygonShape;
 	shape3->Set(vertices, 4);
 
 	b2FixtureDef fixture_def;
-	fixture_def.density = 30.f;
+	fixture_def.density = 800.f;
 	fixture_def.friction = 0.7f;
 	fixture_def.shape = shape;
 	player_properties.fixtures.push_back(fixture_def);
@@ -123,6 +180,7 @@ body_properties create_box(b2World& world, int X, int Y) {
 	fixture_def.density = 1.f;
 	fixture_def.friction = 0.7f;
 	fixture_def.shape = shape;
+	fixture_def.restitution = 0.3f;
 
 	box_properties.body_def = body_def;
 	box_properties.fixtures.push_back(fixture_def);

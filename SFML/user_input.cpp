@@ -60,6 +60,15 @@ void produces_user_input::send_message(abstract_entity* source) {
 		message.key = input_key::B;
 		keyboard_events.push_back(message);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+		message.key = input_key::E;
+		keyboard_events.push_back(message);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+		message.key = input_key::Q;
+		keyboard_events.push_back(message);
+	}
+
 	/*!!!!!!!!!!!!!!!!!!!!!!!*/
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= 300) {
 		previous_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();

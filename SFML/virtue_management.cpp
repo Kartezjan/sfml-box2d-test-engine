@@ -14,8 +14,8 @@ void controllable::send_message(abstract_entity* source) {
 	};
 
 	for (size_t i = 0; i < keyboard_events.size(); ++i) {
+		keyboard_events[i].delete_this_message = true;
 		if (keyboard_events[i].key == input_key::W) {
-			keyboard_events[i].delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= cooldown) {
 				previous_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				message.force = b2Vec2(0.0f, -1000.0f);
@@ -24,18 +24,14 @@ void controllable::send_message(abstract_entity* source) {
 			}
 		}
 		else if (keyboard_events[i].key == input_key::S) {
-			keyboard_events[i].delete_this_message = true;
 			message.force = b2Vec2(0.0f, 700.0f);
 			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::A) {
-			keyboard_events[i].delete_this_message = true;
-			message.force = b2Vec2(-700.0f, 0.0f);
-			send_message(keyboard_events[i], message);
+			source->get_physical_body()->SetTransform(source->get_physical_body()->GetPosition(), -90 * DEG_TO_RAD);
 		}
 		else if (keyboard_events[i].key == input_key::D) {
-			keyboard_events[i].delete_this_message = true;
-			message.force = b2Vec2(700.0f, 0.0f);
+			source->get_physical_body()->SetTransform(source->get_physical_body()->GetPosition(), 90 * DEG_TO_RAD);
 			send_message(keyboard_events[i], message);
 		}
 	}
@@ -93,6 +89,7 @@ void spawns_objects::send_message(abstract_entity* source) {
 				bomb->virtues.push_back(new explodes_upon_collision(cosmos, 200.f, 1e+5F ));
 			}
 		}
+
 	}
 }
 
