@@ -25,6 +25,12 @@
     <Filter Include="Source Files\misc">
       <UniqueIdentifier>{8160d9ff-dc8a-4f5b-8782-749505ce296e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\testbeds">
+      <UniqueIdentifier>{bca96816-29a4-4d2b-bbba-33c693503b4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\testbeds">
+      <UniqueIdentifier>{9f0d598c-9a00-4f2c-b951-3739e5dca106}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -37,9 +43,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="event_management.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="virtue_management.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utillity.cpp">
@@ -65,6 +68,15 @@
     </ClCompile>
     <ClCompile Include="trebuchet.cpp">
       <Filter>Source Files\virtues</Filter>
+    </ClCompile>
+    <ClCompile Include="testbeds.cpp">
+      <Filter>Source Files\testbeds</Filter>
+    </ClCompile>
+    <ClCompile Include="gun.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
+    <ClCompile Include="virtue_management.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +107,6 @@
     <ClInclude Include="resource_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vec2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utillity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -120,6 +129,12 @@
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
     <ClInclude Include="trebuchet.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="testbeds.h">
+      <Filter>Header Files\testbeds</Filter>
+    </ClInclude>
+    <ClInclude Include="gun.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>

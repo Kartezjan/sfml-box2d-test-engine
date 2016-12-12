@@ -18,6 +18,8 @@ enum class move_direction { LEFT, RIGHT };
 
 enum class contact_type { AABB_CONTACT, COLLISION };
 
+enum class action_type { GUN_SHOT};
+
 struct message {
 	bool delete_this_message = false;
 	size_t lifetime = 1000; //in cycles
@@ -43,9 +45,12 @@ struct contact_message : public message {
 	contact_type contact_type;
 	b2Fixture* fixtureA;
 	b2Fixture* fixtureB;
+	b2Vec2 point;
+	b2Vec2 normal;
 };
 
 struct death_message : public message {
+	//std::shared_ptr<abstract_entity> target;
 	abstract_entity* target;
 };
 
@@ -54,4 +59,8 @@ struct show_illusion_message : public message {
 	size_t duration;
 };
 
-typedef message_storage<input_message, force_message, camera_message, contact_message, death_message, show_illusion_message> complete_message_storage;
+struct action_message : public message {
+	action_type type;
+};
+
+typedef message_storage<input_message, force_message, camera_message, contact_message, death_message, show_illusion_message, action_message> complete_message_storage;

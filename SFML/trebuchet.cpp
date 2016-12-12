@@ -40,7 +40,7 @@ void setup_trebuchet(physical_entity& main_body, physical_entity& beam, /*physic
 	cosmos.world.CreateJoint(&ropeJointDef_counter_weight);
 
 	//add rope visuals
-	sf::ConvexShape* rope = new sf::ConvexShape;
+	std::shared_ptr<sf::ConvexShape> rope;
 	float thickness = 10.0f / 2;
 	rope->setPointCount(4);
 	rope->setFillColor(sf::Color::Red);

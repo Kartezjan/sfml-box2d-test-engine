@@ -1,4 +1,4 @@
-//#include "virtue_management.h"
+#include "virtue_management.h"
 #include "contacts.h"
 
 void controllable::send_message(abstract_entity* source) {
@@ -18,21 +18,34 @@ void controllable::send_message(abstract_entity* source) {
 		if (keyboard_events[i].key == input_key::W) {
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= cooldown) {
 				previous_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				message.force = b2Vec2(0.0f, -1000.0f);
+				message.force = b2Vec2(0.0f, -500.0f);
 				message.type = force_type::APPLY_IMPULS_TO_CENTER;
 				send_message(keyboard_events[i], message);
 			}
 		}
 		else if (keyboard_events[i].key == input_key::S) {
-			message.force = b2Vec2(0.0f, 700.0f);
+			message.force = b2Vec2(0.0f, 70.0f);
+			message.type = force_type::APPLY_IMPULS_TO_CENTER;
 			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::A) {
-			source->get_physical_body()->SetTransform(source->get_physical_body()->GetPosition(), -90 * DEG_TO_RAD);
+			message.force = b2Vec2(-5.0f, 0.f);
+			message.type = force_type::APPLY_IMPULS_TO_CENTER;
+			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::D) {
-			source->get_physical_body()->SetTransform(source->get_physical_body()->GetPosition(), 90 * DEG_TO_RAD);
+			message.force = b2Vec2(5.0f, 0.f);
+			message.type = force_type::APPLY_IMPULS_TO_CENTER;
 			send_message(keyboard_events[i], message);
+		}
+		else if (keyboard_events[i].key == input_key::SPACE) {
+			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_shot_timestamp >= shot_cd) {
+				previous_shot_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
+				auto& action_events = cosmos.message_queues.get_queue<action_message>();
+				action_message msg;
+				msg.type = action_type::GUN_SHOT;
+				action_events.push_back(msg);
+			}
 		}
 	}
 }
@@ -66,8 +79,7 @@ void spawns_objects::send_message(abstract_entity* source) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				auto box = new physical_entity(create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures[1]);
-				spawned_objects.push_back(box);
+				spawned_objects.push_back(std::shared_ptr<physical_entity>(new physical_entity(create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures[1])));
 			}
 		}
 		if (msg.key == input_key::RMB) {
@@ -84,9 +96,9 @@ void spawns_objects::send_message(abstract_entity* source) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				auto bomb = new physical_entity(create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures[4]);
-				bomb->virtues.push_back(new destroys_upon_collision(cosmos));
-				bomb->virtues.push_back(new explodes_upon_collision(cosmos, 200.f, 1e+5F ));
+				spawned_objects.push_back(std::shared_ptr<physical_entity>(new physical_entity(create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures[4])));
+				spawned_objects.back()->virtues.push_back(new destroys_upon_collision(cosmos));
+				spawned_objects.back()->virtues.push_back(new explodes_upon_collision(cosmos, 200.f, 1e+5F ));
 			}
 		}
 
@@ -97,7 +109,8 @@ void destroys_all_doomed_objects::send_message(abstract_entity* source) {
 	auto& death_queue = cosmos.message_queues.get_queue<death_message>();
 	for (auto& msg : death_queue) {
 		msg.delete_this_message = true;
-		msg.target->~abstract_entity();
+		if(msg.target->get_physical_body() != nullptr)
+			msg.target->~abstract_entity();
 	}
 }
 

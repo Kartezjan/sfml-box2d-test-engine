@@ -3,6 +3,7 @@
 abstract_entity::~abstract_entity() {
 	if (physical_body)
 		physical_body->GetWorld()->DestroyBody(physical_body);
+	physical_body = nullptr;
 	for (auto virtue : virtues)
 		delete virtue;
 }
@@ -68,8 +69,6 @@ physical_entity::physical_entity(body_properties& body_properties, std::string n
 physical_entity::~physical_entity() {
 	for (auto& obj : shapes)
 		delete obj.visual_object;
-	for (auto& obj : visual_effects)
-		delete obj.visual_object;
 }
 
 void physical_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -101,7 +100,7 @@ void physical_entity::update() {
 	}
 	for (auto& vis_obj : visual_effects) {
 		if (vis_obj.type == visual_effect_type::ROPE_JOINT) {
-			sf::ConvexShape* shape = (sf::ConvexShape*)vis_obj.visual_object;
+			std::shared_ptr<sf::ConvexShape> shape = std::dynamic_pointer_cast<sf::ConvexShape>(vis_obj.visual_object);
 			for (auto joint_edge = physical_body->GetJointList(); joint_edge; joint_edge = joint_edge->next) {
 				if (joint_edge->joint->GetType() != b2JointType::e_ropeJoint)
 					continue;

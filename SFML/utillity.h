@@ -16,4 +16,11 @@ namespace utillity {
 
 		return v = (rotated + origin);
 	}
+
+	template <class vec>
+	b2Vec2 vec_to_b2vec(const vec vector) {
+		return b2Vec2(vector.x / SCALE, vector.y / SCALE);
+	}
+
+	sf::Vector2f b2vec_to_sfvec(const b2Vec2 b2vec);
 };

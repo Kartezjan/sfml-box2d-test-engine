@@ -10,12 +10,14 @@ class virtue;
 
 enum class entity_type {ABSTRACT, IMAGE, PHYSICAL, OTHER};
 enum class shape_type { CONVEX, CIRCLE };
-enum class visual_effect_type { ROPE_JOINT };
+enum class visual_effect_type { ROPE_JOINT, LINE };
 
 struct visual_effect {
 	visual_effect_type type;
-	sf::Drawable* visual_object;
+	std::shared_ptr<sf::Drawable> visual_object;
 	float property;
+	float property2;
+	b2Vec2 vector_property;
 };
 
 class abstract_entity {
@@ -58,7 +60,10 @@ public:
 		shape_type type;
 		sf::Drawable* visual_object;
 	};
-	void addVisualEffect(visual_effect effect) { visual_effects.push_back(effect); };
+	visual_effect addVisualEffect(visual_effect effect) { visual_effects.push_back(effect); return visual_effects.back(); };
+	void removeVisualEffect(visual_effect* effect) {
+		auto erased_elem = std::remove_if(visual_effects.begin(), visual_effects.end(), [&effect](const auto& current) {return current.visual_object.get() == effect->visual_object.get();});
+	}
 	physical_entity(body_properties& body_properties, std::string n_name, sf::Texture& box_texture);
 	~physical_entity();
 	void update();

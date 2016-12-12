@@ -71,7 +71,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\Visual Studio Custom Libraries\box2d\include;D:\Visual Studio Custom Libraries\SFML-2.4.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -126,10 +126,12 @@
     <ClCompile Include="entities.cpp" />
     <ClCompile Include="event_management.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="gun.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="templates.cpp" />
     <ClCompile Include="trebuchet.cpp" />
+    <ClCompile Include="testbeds.cpp" />
     <ClCompile Include="user_input.cpp" />
     <ClCompile Include="utillity.cpp" />
     <ClCompile Include="virtue_management.cpp" />
@@ -142,15 +144,16 @@
     <ClInclude Include="entities.h" />
     <ClInclude Include="event_management.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="gun.h" />
     <ClInclude Include="templates.h" />
     <ClInclude Include="message_storage.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="resource_manager.h" />
     <ClInclude Include="source.h" />
     <ClInclude Include="trebuchet.h" />
+    <ClInclude Include="testbeds.h" />
     <ClInclude Include="user_input.h" />
     <ClInclude Include="utillity.h" />
-    <ClInclude Include="vec2.h" />
     <ClInclude Include="virtue_management.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>

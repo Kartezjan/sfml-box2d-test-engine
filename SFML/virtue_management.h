@@ -32,6 +32,8 @@ public:
 private:
 	size_t cooldown = 1200;
 	size_t previous_timestamp = 0;
+	size_t previous_shot_timestamp = 0;
+	size_t shot_cd = 200;
 }; 
 
 class applies_force : public virtue {
@@ -48,7 +50,7 @@ private:
 	size_t cooldown = 300;
 	size_t previous_creation_timestamp = 0;
 	size_t previous_removal_timestamp = 0;
-	std::vector<physical_entity*> spawned_objects;
+	std::vector< std::shared_ptr<physical_entity> > spawned_objects;
 };
 
 class destroys_all_doomed_objects : public virtue {

@@ -1,13 +1,13 @@
 #include "source.h"
 
-void update_and_render_GUI_objects(sf::RenderWindow& window, std::vector<renderable_entity*> GUI_objects) {
+inline void update_and_render_GUI_objects(sf::RenderWindow& window, std::vector<renderable_entity*> GUI_objects) {
 	for(auto obj : GUI_objects) {
 		obj->update();
 		window.draw(*obj);
 	}
 }
 
-void update_and_render_scene(sf::RenderWindow& window, b2World& world) {
+inline void update_and_render_scene(sf::RenderWindow& window, b2World& world) {
 	for (auto current = world.GetBodyList(); current; current = current->GetNext() ) {
 		auto current_entity = (renderable_entity*)current->GetUserData();
 		current_entity->update();
@@ -72,24 +72,8 @@ void main()
 	abstract_entity illusion_handler;
 	illusion_handler.virtues.push_back(new shows_illusions(universe, window));
 
-	std::vector<physical_entity*> ground_objects;
-
-	ground_objects.push_back(new physical_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures[0]));
-	ground_objects.push_back(new physical_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures[0]));
-	ground_objects.push_back(new physical_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures[0]));
-
-
-	physical_entity player(create_player(universe.world, 370, 350), "player", universe.resources.textures[1]);
-
-	physical_entity front_wheel(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "front_wheel", universe.resources.textures[2]);
-	physical_entity back_wheel(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "back_wheel", universe.resources.textures[2]);
-	setup_car(player, front_wheel, back_wheel, b2Vec2(-280.f,-10.f), b2Vec2(280.f,-10.f), 50000, universe);
-	player.virtues.push_back(new center_of_attention(universe));
-
-	physical_entity beam(create_box(universe.world, 370, -200, 1000, 20, b2Vec2(-100,0), 0, 30.f, 0.7f), "trebuchet_beam", universe.resources.textures[1]);
-	physical_entity counter_weight(create_box(universe.world, 668, -150, 70, 70, 500, 0.7f), "TREB_CW", universe.resources.textures[1]);
-	physical_entity grand_wheel(create_circle(universe.world, 370, 90, 84, 1.0f, 0.1f), "TREB_WHEEL", universe.resources.textures[1]);
-	setup_trebuchet(player, beam, counter_weight, grand_wheel, b2Vec2(0, -500), b2Vec2(400,0), universe);
+	std::vector<std::shared_ptr<physical_entity>> allocated_objects;
+	setup_bullet_world(universe, allocated_objects);
 
 	// Prepare the GUI
 

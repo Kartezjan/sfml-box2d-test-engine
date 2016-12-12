@@ -66,7 +66,7 @@ body_properties create_ramp(b2World& world, float X, float Y) {
 	b2Vec2 vertices[3];
 	vertices[0] = b2Vec2( (5000 - 400) / SCALE, 100 / SCALE);
 	vertices[1] = b2Vec2(5000 / SCALE, 100 / SCALE);
-	vertices[2] = b2Vec2(5000 / SCALE, -60 / SCALE);
+	vertices[2] = b2Vec2(5000 / SCALE, -600 / SCALE);
 	b2PolygonShape* shape = new b2PolygonShape;
 	shape->Set(vertices, 3);
 
