@@ -2,7 +2,7 @@
 
 void setup_trebuchet(physical_entity& main_body, physical_entity& beam, /*physical_entity& projectile,*/ physical_entity& counter_weight, physical_entity& grand_wheel, b2Vec2 beam_pos, b2Vec2 counter_weight_pos, universe& cosmos) {
 	grand_wheel.get_physical_body()->SetFixedRotation(true);
-	grand_wheel.virtues.push_back(new gear_controll(cosmos));
+	grand_wheel.virtues.push_back(std::make_unique<gear_controll>(cosmos));
 
 	b2RevoluteJointDef revoluteJointDef_beam;
 	revoluteJointDef_beam.bodyA = main_body.get_physical_body();

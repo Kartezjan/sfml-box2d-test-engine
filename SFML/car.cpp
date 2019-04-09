@@ -19,7 +19,7 @@ void setup_car(physical_entity& body_car, physical_entity& wheel_front, physical
 	cosmos.world.CreateJoint(&revoluteJointDef_front_wheel);
 	cosmos.world.CreateJoint(&revoluteJointDef_back_wheel);
 
-	body_car.virtues.push_back(new controllable_car(cosmos, 120 * DEG_TO_RAD));
+	body_car.virtues.push_back(std::make_unique<controllable_car>(cosmos, 120 * DEG_TO_RAD));
 }
 
 void controllable_car::send_message(abstract_entity* source) {
@@ -29,9 +29,9 @@ void controllable_car::send_message(abstract_entity* source) {
 			if (msg.key == input_key::W || msg.key == input_key::S || msg.key == input_key::SPACE) {
 				msg.delete_this_message = true;
 				for (auto joint_edge = source->get_physical_body()->GetJointList(); joint_edge; joint_edge = joint_edge->next) {
-					auto wheel = (physical_entity*)joint_edge->joint->GetBodyB()->GetUserData();
+					const auto wheel = static_cast<physical_entity*>(joint_edge->joint->GetBodyB()->GetUserData());
 					if (wheel->name == "front_wheel" || wheel->name == "back_wheel") {
-						auto joint = (b2RevoluteJoint*)joint_edge->joint;
+						auto joint = static_cast<b2RevoluteJoint*>(joint_edge->joint);
 						joint->EnableMotor(true);
 						if(msg.key == input_key::W)
 							joint->SetMotorSpeed(joint->GetMotorSpeed() + acceleration);

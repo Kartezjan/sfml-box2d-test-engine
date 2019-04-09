@@ -40,9 +40,10 @@ struct camera_message : public message {
 };
 
 struct contact_message : public message {
+	contact_message() : contact_type(::contact_type::COLLISION), fixture_a(nullptr), fixture_b(nullptr) {};
 	contact_type contact_type;
-	b2Fixture* fixtureA;
-	b2Fixture* fixtureB;
+	b2Fixture* fixture_a;
+	b2Fixture* fixture_b;
 };
 
 struct death_message : public message {

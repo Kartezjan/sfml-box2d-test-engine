@@ -5,7 +5,7 @@
 #include "config.h"
 #include "virtue_management.h"
 
-class closest_ray_callback : b2RayCastCallback {
+class closest_ray_callback : public b2RayCastCallback {
 public:
 	float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
 	{

@@ -11,8 +11,8 @@ void handles_contacts::send_message(abstract_entity* source) {
 			msg.contact_type = contact_type::COLLISION;
 		else
 			msg.contact_type = contact_type::AABB_CONTACT;
-		msg.fixtureA = contact->GetFixtureA();
-		msg.fixtureB = contact->GetFixtureB();
+		msg.fixture_a = contact->GetFixtureA();
+		msg.fixture_b = contact->GetFixtureB();
 		contact_queue.push_back(msg);
 	}
 }
@@ -20,13 +20,13 @@ void handles_contacts::send_message(abstract_entity* source) {
 void destroys_upon_collision::send_message(abstract_entity* source) {
 	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
 	for (auto& msg : contact_queue) {
-		if (msg.fixtureA->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureB->GetBody() == (b2Body*)0xFDFDFDFD) {
+		if (msg.fixture_a->GetBody() == nullptr || msg.fixture_b->GetBody() == nullptr) {
 			msg.delete_this_message = true;
 			continue;
 		}
 
-		auto bodyA = (physical_entity*)msg.fixtureA->GetBody()->GetUserData();
-		auto bodyB = (physical_entity*)msg.fixtureB->GetBody()->GetUserData();
+		auto bodyA = (physical_entity*)msg.fixture_a->GetBody()->GetUserData();
+		auto bodyB = (physical_entity*)msg.fixture_b->GetBody()->GetUserData();
 
 		if (bodyA == source || bodyB == source) {
 			auto& death_queue = cosmos.message_queues.get_queue<death_message>();
@@ -37,6 +37,7 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 				death_message death_msg;
 				death_msg.target = source;
 				death_queue.push_back(death_msg);
+				msg.delete_this_message = true;
 			}
 		}
 	}
@@ -45,13 +46,13 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 void explodes_upon_collision::send_message(abstract_entity* source) {
 	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
 	for (auto& msg : contact_queue) {
-		if (msg.fixtureA->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixtureB->GetBody() == (b2Body*)0xFDFDFDFD) {
+		if (msg.fixture_a->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixture_b->GetBody() == (b2Body*)0xFDFDFDFD) {
 			msg.delete_this_message = true;
 			continue;
 		}
 
-		auto bodyA = (physical_entity*)msg.fixtureA->GetBody()->GetUserData();
-		auto bodyB = (physical_entity*)msg.fixtureB->GetBody()->GetUserData();
+		auto bodyA = (physical_entity*)msg.fixture_a->GetBody()->GetUserData();
+		auto bodyB = (physical_entity*)msg.fixture_b->GetBody()->GetUserData();
 
 		if (bodyA == source || bodyB == source) {
 			for (float i = 0; i < num_rays; ++i) {
@@ -59,16 +60,16 @@ void explodes_upon_collision::send_message(abstract_entity* source) {
 				b2Vec2 ray_direction(sinf(angle), cosf(angle) );
 				b2Vec2 ray_end = source->get_physical_body()->GetWorldCenter() + blast_radius * ray_direction;
 				closest_ray_callback callback;
-				cosmos.world.RayCast((b2RayCastCallback*)&callback, source->get_physical_body()->GetWorldCenter(), ray_end);
+				cosmos.world.RayCast(static_cast<b2RayCastCallback*>(&callback), source->get_physical_body()->GetWorldCenter(), ray_end);
 				if (callback.m_body) {
 					apply_blast_impulse(callback.m_body, source->get_physical_body()->GetWorldCenter(), callback.contact_point, (blast_power / num_rays));
 					//also produce "BANG!" image
 					sf::RenderWindow useless_window;
 					sf::Drawable* bang_sprite = new sf::Sprite(cosmos.resources.textures[5]);
 
-					static_cast<sf::Sprite*>(bang_sprite)->setOrigin(sf::Vector2f(320.f, 220.f));
-					static_cast<sf::Sprite*>(bang_sprite)->setScale(sf::Vector2f(0.2f, 0.2f));
-					static_cast<sf::Sprite*>(bang_sprite)->setPosition(sf::Vector2f(source->get_physical_body()->GetPosition().x * SCALE, source->get_physical_body()->GetPosition().y * SCALE) );
+					dynamic_cast<sf::Sprite*>(bang_sprite)->setOrigin(sf::Vector2f(320.f, 220.f));
+					dynamic_cast<sf::Sprite*>(bang_sprite)->setScale(sf::Vector2f(0.2f, 0.2f));
+					dynamic_cast<sf::Sprite*>(bang_sprite)->setPosition(sf::Vector2f(source->get_physical_body()->GetPosition().x * SCALE, source->get_physical_body()->GetPosition().y * SCALE) );
 
 					image_entity* bang = new image_entity(bang_sprite, "BANG!", image_entity::ILLUSION, useless_window);
 					auto& illu_queue = cosmos.message_queues.get_queue<show_illusion_message>();

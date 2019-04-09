@@ -19,6 +19,7 @@ enum class virtue_type
 class virtue {
 public:
 	explicit virtue(universe& uni_ref) : cosmos(uni_ref) {}
+	virtual ~virtue() {};
 	virtual void send_message(abstract_entity* source) = 0;
 	
 protected:

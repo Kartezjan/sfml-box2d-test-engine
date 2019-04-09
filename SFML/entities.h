@@ -22,7 +22,7 @@ class abstract_entity {
 public:
 	~abstract_entity();
 	std::string name;
-	std::vector<virtue*> virtues;
+	std::vector<std::unique_ptr<virtue>> virtues;
 	entity_type get_type() { return type; }
 	b2Body* get_physical_body() { return physical_body; };
 protected:

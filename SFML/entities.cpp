@@ -3,8 +3,6 @@
 abstract_entity::~abstract_entity() {
 	if (physical_body)
 		physical_body->GetWorld()->DestroyBody(physical_body);
-	for (auto virtue : virtues)
-		delete virtue;
 }
 
 image_entity::~image_entity() {

@@ -85,8 +85,8 @@ void spawns_objects::send_message(abstract_entity* source) {
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				auto bomb = new physical_entity(create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures[4]);
-				bomb->virtues.push_back(new destroys_upon_collision(cosmos));
-				bomb->virtues.push_back(new explodes_upon_collision(cosmos, 200.f, 1e+5F ));
+				bomb->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
+				bomb->virtues.push_back(std::make_unique<explodes_upon_collision>(cosmos, 200.f, 1e+5F ));
 			}
 		}
 
