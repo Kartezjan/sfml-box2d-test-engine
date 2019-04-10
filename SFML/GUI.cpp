@@ -38,6 +38,6 @@ void shows_illusions::send_message(abstract_entity* source) {
 	auto& illu_queue = cosmos.message_queues.get_queue<show_illusion_message>();
 	for (auto& msg : illu_queue) {
 		msg.delete_this_message = true;
-		illusions.push_back(illusion_data{ msg.illusion_entity, (size_t)current_time, msg.duration });
+		illusions.push_back(illusion_data{ msg.illusion_entity, current_time, msg.duration });
 	}
 }

@@ -52,7 +52,7 @@ struct death_message : public message {
 
 struct show_illusion_message : public message {
 	image_entity* illusion_entity;
-	size_t duration;
+	int32 duration;
 };
 
 typedef message_storage<input_message, force_message, camera_message, contact_message, death_message, show_illusion_message> complete_message_storage;

@@ -38,7 +38,7 @@ physical_entity::physical_entity(body_properties& body_properties, std::string n
 			const b2PolygonShape shape = *(b2PolygonShape*)fixture.shape;
 			sf::ConvexShape* convex = new sf::ConvexShape;
 			convex->setPointCount(shape.m_count);
-			for (size_t i = 0; i < shape.m_count; ++i)
+			for (auto i = 0; i < shape.m_count; ++i)
 				convex->setPoint(i, sf::Vector2f(shape.m_vertices[i].x * SCALE, shape.m_vertices[i].y * SCALE));
 			convex->setOrigin(sf::Vector2f(shape.m_centroid.x * SCALE, shape.m_centroid.y * SCALE));
 			convex->setTexture(&texture);

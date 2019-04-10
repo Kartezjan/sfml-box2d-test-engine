@@ -35,7 +35,7 @@ protected:
 class controllable : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source);
+	void send_message(abstract_entity* source) override; 
 private:
 	size_t cooldown = 1200;
 	size_t previous_timestamp = 0;
@@ -44,22 +44,22 @@ private:
 class applies_force : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source);
+	void send_message(abstract_entity* source) override;
 };
 
 class spawns_objects : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source);
+	void send_message(abstract_entity* source) override;
 private:
-	size_t cooldown = 300;
-	size_t previous_creation_timestamp = 0;
-	size_t previous_removal_timestamp = 0;
-	std::vector<physical_entity*> spawned_objects;
+	int32 cooldown = 300;
+	int32 previous_creation_timestamp = 0;
+	int32 previous_removal_timestamp = 0;
+	std::vector<std::unique_ptr<physical_entity>> spawned_objects;
 };
 
 class destroys_all_doomed_objects : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source);
+	void send_message(abstract_entity* source) override;
 };

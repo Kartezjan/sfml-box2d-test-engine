@@ -58,7 +58,7 @@ void explodes_upon_collision::send_message(abstract_entity* source) {
 
 		if (bodyA == source || bodyB == source) {
 			for (float i = 0; i < num_rays; ++i) {
-				float angle = (i / num_rays * 360 * DEG_TO_RAD);
+				float angle = (i / num_rays * 360 * DEG_TO_RADf);
 				b2Vec2 ray_direction(sinf(angle), cosf(angle) );
 				b2Vec2 ray_end = entity->get_physical_body()->GetWorldCenter() + blast_radius * ray_direction;
 				closest_ray_callback callback;

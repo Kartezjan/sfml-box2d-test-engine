@@ -30,10 +30,10 @@ void controllable::send_message(abstract_entity* source) {
 			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::A) {
-			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), -90 * DEG_TO_RAD);
+			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), -90 * DEG_TO_RADf);
 		}
 		else if (keyboard_events[i].key == input_key::D) {
-			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), 90 * DEG_TO_RAD);
+			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), 90 * DEG_TO_RADf);
 			send_message(keyboard_events[i], message);
 		}
 	}
@@ -69,8 +69,11 @@ void spawns_objects::send_message(abstract_entity* source) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				auto box = new physical_entity(create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures[1]);
-				spawned_objects.push_back(box);
+				spawned_objects.push_back(
+					std::make_unique<physical_entity>(
+						create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures[1]
+					)
+				);
 			}
 		}
 		if (msg.key == input_key::RMB) {
@@ -79,10 +82,9 @@ void spawns_objects::send_message(abstract_entity* source) {
 				previous_removal_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				if (!spawned_objects.empty()) {
 					using namespace std::placeholders;
-					auto obj_to_del = dynamic_cast<physical_entity*>(spawned_objects.back());
+					auto& obj_to_del = spawned_objects.back();
 					auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
 					std::for_each(contact_queue.begin(), contact_queue.end(), std::bind(discard_all_messages, obj_to_del->get_physical_body(), _1));
-					delete obj_to_del;
 					spawned_objects.pop_back();
 				}
 			}
@@ -91,9 +93,13 @@ void spawns_objects::send_message(abstract_entity* source) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				auto bomb = new physical_entity(create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures[4]);
-				bomb->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
-				bomb->virtues.push_back(std::make_unique<explodes_upon_collision>(cosmos, 200.f, 1e+5F ));
+				spawned_objects.push_back(
+					std::make_unique<physical_entity>(
+						create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures[4]
+					)
+				);
+				spawned_objects.back()->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
+				spawned_objects.back()->virtues.push_back(std::make_unique<explodes_upon_collision>(cosmos, 200.f, 1e+5F ));
 			}
 		}
 

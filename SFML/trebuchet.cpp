@@ -75,7 +75,7 @@ void gear_controll::send_message(abstract_entity* source) {
 					if (joint_edge->joint->GetType() != b2JointType::e_gearJoint)
 						continue;
 					if(joint_edge->joint->GetBodyA()->GetAngle() > -0.55f)
-						entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), entity->get_physical_body()->GetAngle() + 15 * DEG_TO_RAD);
+						entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), entity->get_physical_body()->GetAngle() + 15 * DEG_TO_RADf);
 				}
 				}
 			}

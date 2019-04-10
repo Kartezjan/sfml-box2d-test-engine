@@ -16,8 +16,8 @@ public:
 private:
 	struct illusion_data {
 		image_entity* illusion_entity;
-		size_t time_offset;
-		size_t duration;
+		int32 time_offset;
+		int32 duration;
 	};
 	sf::RenderWindow& window;
 	std::vector<illusion_data> illusions;
