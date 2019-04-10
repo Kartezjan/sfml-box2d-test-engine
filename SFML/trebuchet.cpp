@@ -54,26 +54,28 @@ void setup_trebuchet(physical_entity& main_body, physical_entity& beam, /*physic
 } 
 
 void gear_controll::send_message(abstract_entity* source) {
+	auto entity = dynamic_cast<physical_entity*>(source);
+	assert(entity);
 	auto& input_messages = cosmos.message_queues.get_queue<input_message>();
 	for (auto& msg : input_messages) {
 		if (msg.key == input_key::E) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp > 300) {
 				previous_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				if (source->get_physical_body()) {
-					source->get_physical_body()->SetFixedRotation(status);
+				if (entity->get_physical_body()) {
+					entity->get_physical_body()->SetFixedRotation(status);
 					status = !status;
 				}
 			}
 		}
 		else if (msg.key == input_key::Q) {
 			msg.delete_this_message = true;
-			if (source->get_physical_body()) {
-				for (auto joint_edge = source->get_physical_body()->GetJointList(); joint_edge; joint_edge = joint_edge->next ) {
+			if (entity->get_physical_body()) {
+				for (auto joint_edge = entity->get_physical_body()->GetJointList(); joint_edge; joint_edge = joint_edge->next ) {
 					if (joint_edge->joint->GetType() != b2JointType::e_gearJoint)
 						continue;
 					if(joint_edge->joint->GetBodyA()->GetAngle() > -0.55f)
-						source->get_physical_body()->SetTransform(source->get_physical_body()->GetPosition(), source->get_physical_body()->GetAngle() + 15 * DEG_TO_RAD);
+						entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), entity->get_physical_body()->GetAngle() + 15 * DEG_TO_RAD);
 				}
 				}
 			}

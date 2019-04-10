@@ -1,10 +1,5 @@
 #include "entities.h"
 
-abstract_entity::~abstract_entity() {
-	if (physical_body)
-		physical_body->GetWorld()->DestroyBody(physical_body);
-}
-
 image_entity::~image_entity() {
 	delete visual_object;
 }
@@ -68,6 +63,7 @@ physical_entity::~physical_entity() {
 		delete obj.visual_object;
 	for (auto& obj : visual_effects)
 		delete obj.visual_object;
+	physical_body->GetWorld()->DestroyBody(physical_body);
 }
 
 void physical_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {

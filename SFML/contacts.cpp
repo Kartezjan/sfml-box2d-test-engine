@@ -25,8 +25,8 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 			continue;
 		}
 
-		auto bodyA = (physical_entity*)msg.fixture_a->GetBody()->GetUserData();
-		auto bodyB = (physical_entity*)msg.fixture_b->GetBody()->GetUserData();
+		auto bodyA = static_cast<physical_entity*>(msg.fixture_a->GetBody()->GetUserData());
+		auto bodyB = static_cast<physical_entity*>(msg.fixture_b->GetBody()->GetUserData());
 
 		if (bodyA == source || bodyB == source) {
 			auto& death_queue = cosmos.message_queues.get_queue<death_message>();
@@ -44,6 +44,8 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 }
 
 void explodes_upon_collision::send_message(abstract_entity* source) {
+	auto entity = dynamic_cast<physical_entity*>(source);
+	assert(entity);
 	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
 	for (auto& msg : contact_queue) {
 		if (msg.fixture_a->GetBody() == (b2Body*)0xFDFDFDFD || msg.fixture_b->GetBody() == (b2Body*)0xFDFDFDFD) {
@@ -58,18 +60,18 @@ void explodes_upon_collision::send_message(abstract_entity* source) {
 			for (float i = 0; i < num_rays; ++i) {
 				float angle = (i / num_rays * 360 * DEG_TO_RAD);
 				b2Vec2 ray_direction(sinf(angle), cosf(angle) );
-				b2Vec2 ray_end = source->get_physical_body()->GetWorldCenter() + blast_radius * ray_direction;
+				b2Vec2 ray_end = entity->get_physical_body()->GetWorldCenter() + blast_radius * ray_direction;
 				closest_ray_callback callback;
-				cosmos.world.RayCast(static_cast<b2RayCastCallback*>(&callback), source->get_physical_body()->GetWorldCenter(), ray_end);
+				cosmos.world.RayCast(static_cast<b2RayCastCallback*>(&callback), entity->get_physical_body()->GetWorldCenter(), ray_end);
 				if (callback.m_body) {
-					apply_blast_impulse(callback.m_body, source->get_physical_body()->GetWorldCenter(), callback.contact_point, (blast_power / num_rays));
+					apply_blast_impulse(callback.m_body, entity->get_physical_body()->GetWorldCenter(), callback.contact_point, (blast_power / num_rays));
 					//also produce "BANG!" image
 					sf::RenderWindow useless_window;
 					sf::Drawable* bang_sprite = new sf::Sprite(cosmos.resources.textures[5]);
 
 					dynamic_cast<sf::Sprite*>(bang_sprite)->setOrigin(sf::Vector2f(320.f, 220.f));
 					dynamic_cast<sf::Sprite*>(bang_sprite)->setScale(sf::Vector2f(0.2f, 0.2f));
-					dynamic_cast<sf::Sprite*>(bang_sprite)->setPosition(sf::Vector2f(source->get_physical_body()->GetPosition().x * SCALE, source->get_physical_body()->GetPosition().y * SCALE) );
+					dynamic_cast<sf::Sprite*>(bang_sprite)->setPosition(sf::Vector2f(entity->get_physical_body()->GetPosition().x * SCALE, entity->get_physical_body()->GetPosition().y * SCALE) );
 
 					image_entity* bang = new image_entity(bang_sprite, "BANG!", image_entity::ILLUSION, useless_window);
 					auto& illu_queue = cosmos.message_queues.get_queue<show_illusion_message>();
@@ -78,6 +80,7 @@ void explodes_upon_collision::send_message(abstract_entity* source) {
 					msg.duration = 250;
 					illu_queue.push_back(msg);
 				}
+				msg.delete_this_message = true;
 			}
 		}
 	}

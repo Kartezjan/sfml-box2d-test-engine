@@ -16,6 +16,12 @@ enum class virtue_type
 	CHANGES_GUI_TEXT, CONTROLLS_VIEW, TRACKS_OBJECT, CENTER_OF_ATTENTION
 };
 
+const auto discard_all_messages = [&](auto& source, auto& a)
+{
+	if(a.fixture_a->GetBody() == source || a.fixture_b->GetBody() == source)
+		a.delete_this_message = true;
+};
+
 class virtue {
 public:
 	explicit virtue(universe& uni_ref) : cosmos(uni_ref) {}

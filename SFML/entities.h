@@ -20,14 +20,13 @@ struct visual_effect {
 
 class abstract_entity {
 public:
-	~abstract_entity();
+	virtual ~abstract_entity() {};
 	std::string name;
 	std::vector<std::unique_ptr<virtue>> virtues;
 	entity_type get_type() { return type; }
-	b2Body* get_physical_body() { return physical_body; };
+	virtual void spec() {};
 protected:
 	entity_type type = entity_type::ABSTRACT;
-	b2Body* physical_body = nullptr; //an abstract entity has no physical body.
 };
 
 class renderable_entity : public abstract_entity, public sf::Drawable, public sf::Transformable {
@@ -62,9 +61,11 @@ public:
 	physical_entity(body_properties& body_properties, std::string n_name, sf::Texture& box_texture);
 	~physical_entity();
 	void update();
+	b2Body* get_physical_body() { return physical_body; };
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	sf::Texture texture;
 	std::vector<shape> shapes;
 	std::vector<visual_effect> visual_effects;
+	b2Body* physical_body = nullptr; 
 };

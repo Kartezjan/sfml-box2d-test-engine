@@ -2,6 +2,8 @@
 #include "contacts.h"
 
 void controllable::send_message(abstract_entity* source) {
+	auto entity = dynamic_cast<physical_entity*>(source);
+	assert(entity);
 	auto& keyboard_events = cosmos.message_queues.get_queue<input_message>();
 	auto& force_events = cosmos.message_queues.get_queue<force_message>();
 	force_message message;
@@ -28,10 +30,10 @@ void controllable::send_message(abstract_entity* source) {
 			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::A) {
-			source->get_physical_body()->SetTransform(source->get_physical_body()->GetPosition(), -90 * DEG_TO_RAD);
+			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), -90 * DEG_TO_RAD);
 		}
 		else if (keyboard_events[i].key == input_key::D) {
-			source->get_physical_body()->SetTransform(source->get_physical_body()->GetPosition(), 90 * DEG_TO_RAD);
+			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), 90 * DEG_TO_RAD);
 			send_message(keyboard_events[i], message);
 		}
 	}
@@ -39,18 +41,19 @@ void controllable::send_message(abstract_entity* source) {
 
 void applies_force::send_message(abstract_entity* source) {
 	auto& force_events = cosmos.message_queues.get_queue<force_message>();
-	for (size_t i = 0; i < force_events.size(); ++i) {
-		force_events[i].delete_this_message = true;
-		if (force_events[i].source->get_physical_body() == nullptr) {
+	for (auto& force_event : force_events) {
+		auto current_entity = dynamic_cast<physical_entity*>(force_event.source);
+		force_event.delete_this_message= true;
+		if (!current_entity) {
 			printf("You cannot apply force to an abstract entity. (It is also possible that the entity has lost his physical body)\n");
 			return;
 		}
-		switch (force_events[i].type) {
+		switch (force_event.type) {
 		case force_type::APPLY_FORCE_TO_CENTER:
-			force_events[i].source->get_physical_body()->ApplyForceToCenter(force_events[i].force, false);
+			current_entity->get_physical_body()->ApplyForceToCenter(force_event.force, false);
 			break;
 		case force_type::APPLY_IMPULS_TO_CENTER:
-			force_events[i].source->get_physical_body()->ApplyLinearImpulseToCenter(force_events[i].force, false);
+			current_entity->get_physical_body()->ApplyLinearImpulseToCenter(force_event.force, false);
 			break;
 		default:
 			printf("Unknown force type\n");
@@ -75,7 +78,11 @@ void spawns_objects::send_message(abstract_entity* source) {
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_removal_timestamp >= cooldown) {
 				previous_removal_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				if (!spawned_objects.empty()) {
-					spawned_objects.back()->~physical_entity();
+					using namespace std::placeholders;
+					auto obj_to_del = dynamic_cast<physical_entity*>(spawned_objects.back());
+					auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
+					std::for_each(contact_queue.begin(), contact_queue.end(), std::bind(discard_all_messages, obj_to_del->get_physical_body(), _1));
+					delete obj_to_del;
 					spawned_objects.pop_back();
 				}
 			}
@@ -94,8 +101,14 @@ void spawns_objects::send_message(abstract_entity* source) {
 }
 
 void destroys_all_doomed_objects::send_message(abstract_entity* source) {
+	using namespace std::placeholders;
 	auto& death_queue = cosmos.message_queues.get_queue<death_message>();
 	for (auto& msg : death_queue) {
+		if(auto entity = dynamic_cast<physical_entity*>(msg.target)) {
+			auto body = entity->get_physical_body();
+			auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
+			std::for_each(contact_queue.begin(), contact_queue.end(), std::bind(discard_all_messages, body, _1));
+		}
 		msg.delete_this_message = true;
 		msg.target->~abstract_entity();
 	}

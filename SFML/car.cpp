@@ -24,14 +24,15 @@ void setup_car(physical_entity& body_car, physical_entity& wheel_front, physical
 
 void controllable_car::send_message(abstract_entity* source) {
 	if (source->get_type() == entity_type::PHYSICAL) {
+		auto entity = dynamic_cast<physical_entity*>(source);
 		auto& input_messages = cosmos.message_queues.get_queue<input_message>();
 		for (auto& msg : input_messages) {
 			if (msg.key == input_key::W || msg.key == input_key::S || msg.key == input_key::SPACE) {
 				msg.delete_this_message = true;
-				for (auto joint_edge = source->get_physical_body()->GetJointList(); joint_edge; joint_edge = joint_edge->next) {
+				for (auto joint_edge = entity->get_physical_body()->GetJointList(); joint_edge; joint_edge = joint_edge->next) {
 					const auto wheel = static_cast<physical_entity*>(joint_edge->joint->GetBodyB()->GetUserData());
 					if (wheel->name == "front_wheel" || wheel->name == "back_wheel") {
-						auto joint = static_cast<b2RevoluteJoint*>(joint_edge->joint);
+						auto joint = dynamic_cast<b2RevoluteJoint*>(joint_edge->joint);
 						joint->EnableMotor(true);
 						if(msg.key == input_key::W)
 							joint->SetMotorSpeed(joint->GetMotorSpeed() + acceleration);

@@ -66,10 +66,11 @@ void tracks_object::send_message(abstract_entity* source) {
 }
 
 void center_of_attention::send_message(abstract_entity* source) {
-	if (source->get_physical_body() != nullptr) {
+	auto entity = dynamic_cast<physical_entity*>(source);
+	if (entity->get_physical_body() != nullptr) {
 		camera_message msg;
-		msg.event_pos = sf::Vector2f(source->get_physical_body()->GetPosition().x * SCALE, source->get_physical_body()->GetPosition().y * SCALE);
-		if (source->get_physical_body()->GetLinearVelocity().x < -5)
+		msg.event_pos = sf::Vector2f(entity->get_physical_body()->GetPosition().x * SCALE, entity->get_physical_body()->GetPosition().y * SCALE);
+		if (entity->get_physical_body()->GetLinearVelocity().x < -5)
 			msg.direction = move_direction::LEFT;
 		else
 			msg.direction = move_direction::RIGHT;

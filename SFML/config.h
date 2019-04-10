@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <functional>
 
 #include <SFML\Graphics.hpp>
 #include <Box2D\Box2D.h>
