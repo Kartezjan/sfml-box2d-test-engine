@@ -14,6 +14,7 @@
 #include "user_input.h"
 #include "contacts.h"
 #include "trebuchet.h"
+#include "tests.h"
 
 void update_and_render_scene(sf::RenderWindow& window, b2World& world);
 void update_and_render_GUI_objects(sf::RenderWindow& window, std::vector<renderable_entity*> GUI_objects);

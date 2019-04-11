@@ -13,26 +13,34 @@ image_entity::image_entity(sf::Drawable* object, std::string n_name, content_typ
 
 void image_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.transform *= getTransform();
-	states.texture = 0;
 	target.draw(*visual_object, states);
 }
 
 void image_entity::update() {
-	if (image_type == content_type::TEXT) {
-		sf::Text* text_object = (sf::Text*)visual_object;
+	float scale = 0;
+	sf::Text* text_object = nullptr;
+	switch(image_type)
+	{
+	case content_type::TEXT:
+		text_object = (sf::Text*)visual_object;
 		text_object->setPosition(window.mapPixelToCoords(sf::Vector2i(0, 0)));
-		float scale = window.getView().getSize().x / window.getSize().x;
+		scale = window.getView().getSize().x / window.getSize().x;
 		text_object->setScale(sf::Vector2f(scale, scale));
+		break;
+	case content_type::ANIMATION:
+		auto anim = dynamic_cast<animation_resource*>(visual_object);
+		assert(anim);
+		anim->update();
+		break;
 	}
 }
 
-physical_entity::physical_entity(body_properties& body_properties, std::string n_name, sf::Texture& box_texture) {
+primitive_entity::primitive_entity(body_properties& body_properties, std::string n_name, const sf::Texture& box_texture) : texture(box_texture) {
 	type = entity_type::PHYSICAL;
-	texture = box_texture;
 	name = n_name;
-	physical_body = create_physical_body(body_properties, this);
+	physical_body = create_physical_body(body_properties, dynamic_cast<physical_entity*>(this));
 	for (auto fixture : body_properties.fixtures) {
-		shape current;
+		auto current = shape{};
 		if (fixture.shape->m_type == fixture.shape->e_polygon) {
 			current.type = shape_type::CONVEX;
 			const b2PolygonShape shape = *(b2PolygonShape*)fixture.shape;
@@ -58,7 +66,7 @@ physical_entity::physical_entity(body_properties& body_properties, std::string n
 	}
 }
 
-physical_entity::~physical_entity() {
+primitive_entity::~primitive_entity() {
 	for (auto& obj : shapes)
 		delete obj.visual_object;
 	for (auto& obj : visual_effects)
@@ -66,7 +74,7 @@ physical_entity::~physical_entity() {
 	physical_body->GetWorld()->DestroyBody(physical_body);
 }
 
-void physical_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void primitive_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.transform *= getTransform();
 	states.texture = &texture;
 	for (auto& shape : shapes)
@@ -75,7 +83,7 @@ void physical_entity::draw(sf::RenderTarget& target, sf::RenderStates states) co
 		target.draw(*vis_eff.visual_object);
 }
 
-void physical_entity::update() {
+void primitive_entity::update() {
 	size_t shape_count = shapes.size() - 1;;
 
 	for (auto fixture = physical_body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {

@@ -1,6 +1,6 @@
 #include "trebuchet.h"
 
-void setup_trebuchet(physical_entity& main_body, physical_entity& beam, /*physical_entity& projectile,*/ physical_entity& counter_weight, physical_entity& grand_wheel, b2Vec2 beam_pos, b2Vec2 counter_weight_pos, universe& cosmos) {
+void setup_trebuchet(primitive_entity& main_body, primitive_entity& beam, /*primitive_entity& projectile,*/ primitive_entity& counter_weight, primitive_entity& grand_wheel, b2Vec2 beam_pos, b2Vec2 counter_weight_pos, universe& cosmos) {
 	grand_wheel.get_physical_body()->SetFixedRotation(true);
 	grand_wheel.virtues.push_back(std::make_unique<gear_controll>(cosmos));
 

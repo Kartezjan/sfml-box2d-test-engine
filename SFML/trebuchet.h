@@ -4,7 +4,7 @@
 #include "virtue_management.h"
 #include "entities.h"
 
-void setup_trebuchet(physical_entity& main_body, physical_entity& beam, /*physical_entity& projectile,*/ physical_entity& counter_weight, physical_entity& grand_wheel, b2Vec2 beam_pos, b2Vec2 counter_weight_pos, universe& cosmos);
+void setup_trebuchet(primitive_entity& main_body, primitive_entity& beam, primitive_entity& counter_weight, primitive_entity& grand_wheel, b2Vec2 beam_pos, b2Vec2 counter_weight_pos, universe& cosmos);
 
 class gear_controll : public virtue {
 public:

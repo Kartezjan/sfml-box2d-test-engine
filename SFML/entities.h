@@ -2,7 +2,7 @@
 
 #include "config.h"
 #include "utillity.h"
-
+#include "animation.h"
 #include "virtue_management.h"
 #include "physics.h"
 
@@ -38,7 +38,7 @@ private:
 
 class image_entity : public renderable_entity {
 public:
-	enum content_type { TEXT, ILLUSION, ROPE };
+	enum content_type { TEXT, ILLUSION, ROPE, ANIMATION };
 	image_entity(sf::Drawable* object, std::string n_name, content_type n_type, sf::RenderWindow& win_ref);
 	~image_entity();
 	void update(void);
@@ -51,21 +51,38 @@ private:
 	sf::RenderWindow& window;
 };
 
-class physical_entity : public renderable_entity {
+class physical_entity : public renderable_entity 
+{
+public:
+	b2Body* get_physical_body() { return physical_body; };
+protected:
+	b2Body* physical_body = nullptr; 
+};
+
+class primitive_entity : public physical_entity {
 public:
 	struct shape {
 		shape_type type;
 		sf::Drawable* visual_object;
 	};
 	void addVisualEffect(visual_effect effect) { visual_effects.push_back(effect); };
-	physical_entity(body_properties& body_properties, std::string n_name, sf::Texture& box_texture);
-	~physical_entity();
+	primitive_entity(body_properties& body_properties, std::string n_name, const sf::Texture& box_texture);
+	~primitive_entity();
 	void update();
-	b2Body* get_physical_body() { return physical_body; };
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	sf::Texture texture;
+	const sf::Texture& texture;
 	std::vector<shape> shapes;
 	std::vector<visual_effect> visual_effects;
-	b2Body* physical_body = nullptr; 
+};
+
+
+class sprite_entity : public physical_entity
+{
+public:
+	sprite_entity(animation& anim) : animation(anim) {}
+	void update();
+private:
+	animation animation;
+	void draw(sf::RenderTarget&, sf::RenderStates states) const;
 };
