@@ -30,12 +30,12 @@ void main()
 
 	// Prepare textures
 	resource_manager resources;
-	resources.add_texture("ground", R"(gfx\ground.png)");
-	resources.add_texture("box", R"(gfx\box.jpg)");
-	resources.add_texture("wheel", R"(gfx\wheel.png)");
-	resources.add_texture("red_car", R"(gfx\red_car.jpg)");
-	resources.add_texture("black", R"(gfx\black.png)");
-	resources.add_texture("bang", R"(gfx\bang.png)");
+	resources.textures_ += std::make_pair<>("ground", R"(gfx\ground.png)");
+	resources.textures_ += std::make_pair<>("box", R"(gfx\box.jpg)");
+	resources.textures_ += std::make_pair<>("wheel", R"(gfx\wheel.png)");
+	resources.textures_ += std::make_pair<>("red_car", R"(gfx\red_car.jpg)");
+	resources.textures_ += std::make_pair<>("black", R"(gfx\black.png)");
+	resources.textures_ += std::make_pair<>("bang", R"(gfx\bang.png)");
 
 
 	// Prepare the world
@@ -61,21 +61,21 @@ void main()
 
 	std::vector<physical_entity*> ground_objects;
 
-	ground_objects.push_back(new primitive_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.get_texture("ground")));
-	ground_objects.push_back(new primitive_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.get_texture("ground")));
-	ground_objects.push_back(new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.get_texture("ground")));
+	ground_objects.push_back(new primitive_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]));
+	ground_objects.push_back(new primitive_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]));
+	ground_objects.push_back(new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground"]));
 
 
-	primitive_entity player(create_player(universe.world, 370, 350), "player", universe.resources.get_texture("box"));
+	primitive_entity player(create_player(universe.world, 370, 350), "player", universe.resources.textures_["box"]);
 
-	primitive_entity front_wheel(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "front_wheel", universe.resources.get_texture("wheel"));
-	primitive_entity back_wheel(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "back_wheel", universe.resources.get_texture("wheel"));
+	primitive_entity front_wheel(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "front_wheel", universe.resources.textures_["wheel"]);
+	primitive_entity back_wheel(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "back_wheel", universe.resources.textures_["wheel"]);
 	setup_car(player, front_wheel, back_wheel, b2Vec2(-280.f,-10.f), b2Vec2(280.f,-10.f), 50000, universe);
 	player.virtues.push_back(std::make_unique<center_of_attention>(universe));
 
-	primitive_entity beam(create_box(universe.world, 370, -200, 1000, 20, b2Vec2(-100,0), 0, 30.f, 0.7f), "trebuchet_beam", universe.resources.get_texture("box"));
-	primitive_entity counter_weight(create_box(universe.world, 668, -150, 70, 70, 500, 0.7f), "TREB_CW", universe.resources.get_texture("box"));
-	primitive_entity grand_wheel(create_circle(universe.world, 370, 90, 84, 1.0f, 0.1f), "TREB_WHEEL", universe.resources.get_texture("box"));
+	primitive_entity beam(create_box(universe.world, 370, -200, 1000, 20, b2Vec2(-100,0), 0, 30.f, 0.7f), "trebuchet_beam", universe.resources.textures_["box"]);
+	primitive_entity counter_weight(create_box(universe.world, 668, -150, 70, 70, 500, 0.7f), "TREB_CW", universe.resources.textures_["box"]);
+	primitive_entity grand_wheel(create_circle(universe.world, 370, 90, 84, 1.0f, 0.1f), "TREB_WHEEL", universe.resources.textures_["box"]);
 	setup_trebuchet(player, beam, counter_weight, grand_wheel, b2Vec2(0, -500), b2Vec2(400,0), universe);
 
 	// Prepare the GUI

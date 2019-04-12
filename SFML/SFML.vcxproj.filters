@@ -131,5 +131,8 @@
     <ClInclude Include="tests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ptr_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

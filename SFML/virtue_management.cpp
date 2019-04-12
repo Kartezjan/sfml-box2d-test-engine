@@ -71,7 +71,7 @@ void spawns_objects::send_message(abstract_entity* source) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				spawned_objects.push_back(
 					std::make_unique<primitive_entity>(
-						create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.get_texture("box")
+						create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures_["box"]
 					)
 				);
 			}
@@ -95,7 +95,7 @@ void spawns_objects::send_message(abstract_entity* source) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				spawned_objects.push_back(
 					std::make_unique<primitive_entity>(
-						create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.get_texture("bomb")
+						create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures_["bomb"]
 					)
 				);
 				spawned_objects.back()->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));

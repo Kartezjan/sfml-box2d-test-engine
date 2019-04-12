@@ -67,7 +67,7 @@ void explodes_upon_collision::send_message(abstract_entity* source) {
 					apply_blast_impulse(callback.m_body, entity->get_physical_body()->GetWorldCenter(), callback.contact_point, (blast_power / num_rays));
 					//also produce "BANG!" image
 					sf::RenderWindow useless_window;
-					sf::Drawable* bang_sprite = new sf::Sprite(cosmos.resources.get_texture("bang"));
+					sf::Drawable* bang_sprite = new sf::Sprite(cosmos.resources.textures_["bang"]);
 
 					dynamic_cast<sf::Sprite*>(bang_sprite)->setOrigin(sf::Vector2f(320.f, 220.f));
 					dynamic_cast<sf::Sprite*>(bang_sprite)->setScale(sf::Vector2f(0.2f, 0.2f));

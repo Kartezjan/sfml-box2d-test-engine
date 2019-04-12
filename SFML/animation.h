@@ -1,7 +1,6 @@
 #pragma once
 
 #include "config.h"
-#include "entities.h"
 
 typedef std::vector<sf::Sprite> animation;
 typedef std::vector<size_t> pattern;
@@ -52,6 +51,7 @@ public:
 	animation_resource& operator=(const animation_resource& other)
 	{
 		std::copy(other.get_animation_set().begin(), other.get_animation_set().end(), std::back_inserter(anims));
+
 		return *this;
 	}
 	animation_resource& operator=(animation_resource&& other)
@@ -67,7 +67,7 @@ public:
 	const animation_set& get_animation_set() const { return anims; }
 	animation_set& get_animation_set() { return anims; }
 	animation_element& get_current_animation() { return anims[current_animation]; }
-	const animation_element& get_current_animation() const { return anims[current_animation]; }
+	const animation_element& get_current_animation() const { return const_cast<animation_resource*>(this)->get_current_animation(); }
 	void update() { get_current_animation().update(); }
 private:
 	animation_set anims;

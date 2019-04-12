@@ -1,4 +1,10 @@
 #include "tests.h"
+#include "ptr_map.h"
+
+void ptr_map_test()
+{
+	ptr_map<std::string> test;
+}
 
 image_entity test_animation(resource_manager& resources, sf::RenderWindow& window)
 {
@@ -14,13 +20,13 @@ image_entity test_animation(resource_manager& resources, sf::RenderWindow& windo
 
 	auto foo_pattern = pattern{};
 	for (auto i = 0; i < paths.size(); ++i)
-		for (auto j = 0; j < 12; ++j)
+		for (auto j = 0; j < 6; ++j)
 			foo_pattern.emplace_back(i);
 	std::vector<std::string> texture_ids;
 	for (auto& path : paths) {
-		resources.add_texture(path);
-		texture_ids.emplace_back(path.first);
+		resources.textures_ += path;
+		texture_ids.push_back(path.first);
 	}
-	auto& anim_res = resources.add_animation("hero_run",texture_ids, foo_pattern);
+	auto& anim_res = resources.anims_res_ += (std::make_tuple<>("hero_run",texture_ids, foo_pattern));
 	return image_entity(&anim_res, "test", image_entity::content_type::ANIMATION, window);
 }

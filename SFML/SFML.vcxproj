@@ -143,6 +143,7 @@
     <ClInclude Include="contacts.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="entities.h" />
+    <ClInclude Include="ptr_map.h" />
     <ClInclude Include="event_management.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="templates.h" />

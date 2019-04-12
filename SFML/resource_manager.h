@@ -2,88 +2,94 @@
 
 #include "config.h"
 
+typedef std::vector<std::string> texture_ids;
+typedef std::string resource_id;
+typedef std::string path;
 
-struct resource_manager {
-	friend resource_manager;
-	resource_manager() = default;
-	resource_manager(const resource_manager& other)
+template<typename T>
+class resource
+{
+public:
+	friend resource;
+	resource() = default;
+	resource(const resource& other) { operator=(other); }
+	resource(resource&& other) noexcept { operator=(other); }
+	~resource() { for (auto& e : resource_) delete e.second; }
+	resource& operator=(const resource& other)
 	{
-		operator=(other);
-	}
-	resource_manager(resource_manager&& other) noexcept
-	{
-		operator=(other);
-	}
-	~resource_manager()
-	{
-		for (auto& e : all_animations_) delete e.second;
-		for (auto& e : textures_) delete e.second;
-	}
-	resource_manager& operator=(const resource_manager& other)
-	{
-		for(auto& e : other.textures_)
-			textures_.emplace(e.first, new sf::Texture(*e.second));
-		all_animations_ = other.all_animations_;
+		for(auto& e : other.resource_)
+			resource_.emplace(e.first, new T(*e.second));
 		return *this;
 	}
-	resource_manager& operator=(resource_manager&& other) noexcept
+	resource& operator=(resource&& other) noexcept
 	{
-		for (auto& e : textures_) delete e.second;
-		textures_.clear();
-		for (auto& e : all_animations_) delete e.second;
-		all_animations_.clear();
-		textures_ = other.textures_;
-		all_animations_ = other.all_animations_;
+		for (auto& e : resource_) delete e.second;
+		resource_.clear();
+		resource_ = other.resource_;
 		return *this;
 	}
-	sf::Texture& add_texture(const std::string& name, const std::string& path)
+	T& operator[](const resource_id& idx){
+		const auto found = resource_.find(idx);
+		assert(found != resource_.end());
+		return *found->second;
+	}
+
+	void operator-=(const resource_id& idx)
+	{
+		auto found = resource_.find(idx);
+		assert(found != resource_.end());
+		delete found->second;
+		resource_.erase(found);
+	}
+	const T& operator[] (const resource_id& idx) const{ return const_cast<resource<T>*>(this)->operator[](idx); }
+protected:
+	std::unordered_map<std::string, T*> resource_;
+};
+
+class textures : public resource<sf::Texture>
+{
+public:
+	sf::Texture& add(const resource_id& id, const path& path) { return operator+=(std::make_pair<>(id, path)); }
+	sf::Texture& operator+=(const std::pair<resource_id, path>& description)
 	{
 		auto texture = new sf::Texture();
-		assert(texture->loadFromFile(path));
-		const auto result = textures_.emplace(name, texture);
+		assert(texture->loadFromFile(description.second));
+		const auto result = resource_.emplace(description.first, texture);
 		assert(result.second);
 		return *result.first->second; 
 	}
-	sf::Texture& add_texture(const std::pair<std::string, std::string>& description)
+};
+class animation_resources : public resource<animation_resource>
+{
+public:
+	animation_resources(const textures& textures) : textures_ref(textures) {}
+	animation_resource& add(resource_id id, texture_ids textures, pattern pattern)
 	{
-		return add_texture(description.first, description.second);
+		return operator+=(std::make_tuple<>(id, textures, pattern));
 	}
-	void remove_texture(const std::string& name)
+	animation_resource& operator+=(const std::tuple<resource_id, texture_ids, pattern>& description)
 	{
-		auto found = textures_.find(name);
-		assert(found != textures_.end());
-		delete found->second;
-		textures_.erase(found);
-	}
-	animation_resource& add_animation(const std::string& name, std::vector<std::string>& texture_ids, pattern& pattern)
-	{
+		auto& anim_id = std::get<0>(description);
+		auto& textures = std::get<1>(description);
+		auto& pattern = std::get<2>(description);
 		auto sprites = animation{};
-		for(auto& id : texture_ids)
+		for(auto& id : textures)
 		{
-			sprites.emplace_back(sf::Sprite(get_texture(id)));
+			sprites.emplace_back(sf::Sprite(textures_ref[id]));
 			sprites.back().setPosition(sf::Vector2f(300.f,300.f));
 		}
 		auto anim_res = new animation_resource{ animation_set{animation_element{std::move(sprites), pattern}} };
-		const auto result = all_animations_.emplace(name, anim_res);
+		const auto result = resource_.emplace(anim_id, anim_res);
 		assert(result.second);
 		return *result.first->second;
 	}
-	void remove_animation(std::string& name) {
-		all_animations_.erase(name);
-	}
-	sf::Texture& get_texture(const std::string& name)
-	{
-		const auto found = textures_.find(name);
-		assert(found != textures_.end());
-		return *found->second;
-	}
-	animation_resource& get_animation(const std::string& name)
-	{
-		const auto found = all_animations_.find(name);
-		assert(found != all_animations_.end());
-		return *found->second;
-	}
 private:
-	std::unordered_map<std::string, sf::Texture*> textures_;
-	std::unordered_map<std::string, animation_resource*> all_animations_;
+	const textures& textures_ref;
+};
+
+
+struct resource_manager {
+	resource_manager() : anims_res_(textures_) {}
+	textures textures_;
+	animation_resources anims_res_;
 };
