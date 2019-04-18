@@ -3,7 +3,8 @@
 #include "config.h"
 
 #include "event_management.h"
-#include "virtue_management.h"
+#include "virtue.h"
+#include "misc_virtues.h"
 #include "entities.h"
 #include "physics.h"
 #include "world.h"

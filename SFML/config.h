@@ -9,6 +9,8 @@
 #include <SFML\Graphics.hpp>
 #include <Box2D\Box2D.h>
 
+#include "observer_ptr.h"
+
 const auto SCALE = 30.f;
 
 const auto DEG_TO_RAD = 0.01745329251994329576923690768489;

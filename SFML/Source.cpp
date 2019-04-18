@@ -59,11 +59,9 @@ void main()
 	abstract_entity illusion_handler;
 	illusion_handler.virtues.push_back(std::make_unique<shows_illusions>(universe, window));
 
-	std::vector<physical_entity*> ground_objects;
-
-	ground_objects.push_back(new primitive_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]));
-	ground_objects.push_back(new primitive_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]));
-	ground_objects.push_back(new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground"]));
+	universe.entity_map += primitive_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]);
+	universe.entity_map += primitive_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]);
+	universe.entity_map += primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground"]);
 
 
 	primitive_entity player(create_player(universe.world, 370, 350), "player", universe.resources.textures_["box"]);

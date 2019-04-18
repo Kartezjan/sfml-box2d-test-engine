@@ -1,65 +1,51 @@
 #pragma once
 
-#include "config.h"
-#include "event_management.h"
-#include "entities.h"
-#include "physics.h"
-#include "world.h"
-#include "resource_manager.h"
+#include "virtue.h"
+#include "camera.h"
+#include "car.h"
+#include "contacts.h"
+#include "GUI.h"
+#include "misc_virtues.h"
+#include "trebuchet.h"
+#include "user_input.h"
 
-enum class virtue_type
-{ 
-	EMPTY_VIRTUE,
-	CONTROLLABLE, CONTROLLABLE_CAR,
-	PRODUCES_USER_INPUT, 
-	APPLIES_FORCE, SPAWNS_OBJECTS, 
-	CHANGES_GUI_TEXT, CONTROLLS_VIEW, TRACKS_OBJECT, CENTER_OF_ATTENTION
-};
-
-const auto discard_all_messages = [&](auto& source, auto& a)
+template <typename... Args>
+auto make_virtue(const virtue_type type, Args&&... args)
 {
-	if(a.fixture_a->GetBody() == source || a.fixture_b->GetBody() == source)
-		a.delete_this_message = true;
-};
-
-class virtue {
-public:
-	explicit virtue(universe& uni_ref) : cosmos(uni_ref) {}
-	virtual ~virtue() {};
-	virtual void send_message(abstract_entity* source) = 0;
-	
-protected:
-	universe& cosmos;
-};
-
-class controllable : public virtue {
-public:
-	using virtue::virtue;
-	void send_message(abstract_entity* source) override; 
-private:
-	size_t cooldown = 1200;
-	size_t previous_timestamp = 0;
-}; 
-
-class applies_force : public virtue {
-public:
-	using virtue::virtue;
-	void send_message(abstract_entity* source) override;
-};
-
-class spawns_objects : public virtue {
-public:
-	using virtue::virtue;
-	void send_message(abstract_entity* source) override;
-private:
-	int32 cooldown = 300;
-	int32 previous_creation_timestamp = 0;
-	int32 previous_removal_timestamp = 0;
-	std::vector<std::unique_ptr<physical_entity>> spawned_objects;
-};
-
-class destroys_all_doomed_objects : public virtue {
-public:
-	using virtue::virtue;
-	void send_message(abstract_entity* source) override;
-};
+	auto result = std::unique_ptr<virtue>{};
+	switch(type)
+	{
+	case virtue_type::empty_virtue:
+		break;
+	case virtue_type::controllable:
+		result = std::make_unique<controllable>{ std::forward(args)... };
+		break;
+	case virtue_type::controllable_car:
+		result = std::make_unique<controllable_car>{ std::forward(args)... };
+		break;
+	case virtue_type::produces_user_input:
+		result = std::make_unique<produces_user_input>{ std::forward(args)... };
+		break;
+	case virtue_type::applies_force:
+		result = std::make_unique<applies_force>{ std::forward(args)... };
+		break;
+	case virtue_type::spawns_objects:
+		result = std::make_unique<spawns_objects>{ std::forward(args)... };
+		break;
+	case virtue_type::changes_gui_text:
+		result = std::make_unique<changes_GUI_text>{ std::forward(args)... };
+		break;
+	case virtue_type::controlls_view:
+		result = std::make_unique<controlls_view>{ std::forward(args)... };
+		break;
+	case virtue_type::tracks_object:
+		result = std::make_unique<tracks_object>{ std::forward(args)... };
+		break;
+	case virtue_type::center_of_attention:
+		result = std::make_unique<center_of_attention>{ std::forward(args)... };
+		break;
+	default:
+		assert(false);
+	}
+	return result;
+}

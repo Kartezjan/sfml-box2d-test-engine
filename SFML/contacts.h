@@ -3,7 +3,8 @@
 #include <cfloat>
 
 #include "config.h"
-#include "virtue_management.h"
+#include "world.h"
+#include "virtue.h"
 
 class closest_ray_callback : public b2RayCastCallback {
 public:

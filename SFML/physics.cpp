@@ -197,6 +197,15 @@ b2Body* create_physical_body(body_properties& properties, physical_entity* targe
 	return body;
 }
 
+b2Body* create_physical_body(body_properties& properties, observer_ptr<entity_info> data) {
+	b2Body* body = properties.world.CreateBody(&properties.body_def);
+	size_t i = 0;
+	for (auto fixture : properties.fixtures)
+		body->CreateFixture(&fixture);
+	body->SetUserData(static_cast<void*>(data.get()));
+	return body;
+}
+
 b2Vec2 get_shape_position(const b2Shape *shape) {
 	if (shape->m_type == b2Shape::e_circle)
 	{

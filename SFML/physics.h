@@ -3,6 +3,7 @@
 #include "config.h"
 
 class physical_entity;
+struct entity_info;
 
 struct body_properties {
 	body_properties(b2World& world_ref) :
@@ -16,6 +17,7 @@ struct body_properties {
 body_properties create_ground(b2World& World, float X, float Y, float width, float heigh);
 
 b2Body* create_physical_body(body_properties&, physical_entity* target);
+b2Body* create_physical_body(body_properties&, std::size_t ownwer_id);
 
 body_properties create_player(b2World& World, float X, float Y);
 

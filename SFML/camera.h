@@ -1,7 +1,8 @@
 #pragma once
 
 #include "config.h"
-#include "virtue_management.h"
+#include "virtue.h"
+#include "world.h"
 
 class controlls_view : public virtue {
 public:

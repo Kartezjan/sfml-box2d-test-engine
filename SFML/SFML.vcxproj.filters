@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\virtues">
-      <UniqueIdentifier>{0e9e94ce-a58c-41de-a595-62861ae1378d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\virtues">
       <UniqueIdentifier>{238cfa5e-4f66-4385-aa8b-d340f9479c53}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,9 @@
     </Filter>
     <Filter Include="Source Files\misc">
       <UniqueIdentifier>{8160d9ff-dc8a-4f5b-8782-749505ce296e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\virtues">
+      <UniqueIdentifier>{0e9e94ce-a58c-41de-a595-62861ae1378d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +68,18 @@
     </ClCompile>
     <ClCompile Include="tests.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="misc_virtues.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
+    <ClCompile Include="entitycpp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="virtue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="has_physics.cpp">
+      <Filter>Source Files\virtues</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +145,36 @@
     </ClInclude>
     <ClInclude Include="ptr_map.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="misc_virtues.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="virtue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ptr_vec.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="observer_ptr.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="has_primitive_body.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="renderable.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="has_physics.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="has_sprite.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="has_physical_body.h">
+      <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

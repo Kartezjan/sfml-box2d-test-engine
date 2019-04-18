@@ -1,7 +1,8 @@
 #pragma once
 
 #include "config.h"
-#include "virtue_management.h"
+#include "world.h"
+#include "virtue.h"
 
 class changes_GUI_text : public virtue {
 public:

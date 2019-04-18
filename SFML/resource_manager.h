@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config.h"
+#include "animation.h"
 
 typedef std::vector<std::string> texture_ids;
 typedef std::string resource_id;

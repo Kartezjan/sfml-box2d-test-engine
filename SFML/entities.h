@@ -3,7 +3,7 @@
 #include "config.h"
 #include "utillity.h"
 #include "animation.h"
-#include "virtue_management.h"
+#include "virtue.h"
 #include "physics.h"
 
 class virtue;
