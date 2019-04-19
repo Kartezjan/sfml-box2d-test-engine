@@ -1,6 +1,5 @@
 #pragma once
 
-#include "virtue.h"
 #include "camera.h"
 #include "car.h"
 #include "contacts.h"
@@ -9,6 +8,8 @@
 #include "trebuchet.h"
 #include "user_input.h"
 #include "has_physics.h"
+#include "renderable.h"
+#include "has_primitive_body.h"
 
 template <typename... Args>
 auto make_virtue(const virtue_type type, Args&&... args)
@@ -62,6 +63,12 @@ auto make_virtue(const virtue_type type, Args&&... args)
 		break;
 	case virtue_type::shows_illusions:
 		result = std::make_unique<shows_illusions>{ std::forward(args)... };
+		break;
+	case virtue_type::renderable:
+		result = std::make_unique<renderable>{ std::forward(args)... };
+		break;
+	case virtue_type::has_primitive_body:
+		result = std::make_unique<has_primitive_body>{ std::forward(args)... };
 		break;
 	default:
 		assert(false);

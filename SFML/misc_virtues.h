@@ -1,7 +1,8 @@
 #pragma once
 
 #include "virtue.h"
-#include "world.h"
+
+struct body_properties;
 
 class controllable : public virtue {
 public:
@@ -23,10 +24,11 @@ public:
 	using virtue::virtue;
 	void process() override;
 private:
+	entity_id spawn(const body_properties& what);
 	int32 cooldown = 300;
 	int32 previous_creation_timestamp = 0;
 	int32 previous_removal_timestamp = 0;
-	std::vector<std::unique_ptr<physical_entity>> spawned_objects;
+	std::vector<entity_id> spawned_objects;
 };
 
 class destroys_all_doomed_objects : public virtue {
