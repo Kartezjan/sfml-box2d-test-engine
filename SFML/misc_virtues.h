@@ -6,7 +6,7 @@
 class controllable : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source) override; 
+	void process() override; 
 private:
 	size_t cooldown = 1200;
 	size_t previous_timestamp = 0;
@@ -15,13 +15,13 @@ private:
 class applies_force : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source) override;
+	void process() override;
 };
 
 class spawns_objects : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source) override;
+	void process() override;
 private:
 	int32 cooldown = 300;
 	int32 previous_creation_timestamp = 0;
@@ -32,5 +32,5 @@ private:
 class destroys_all_doomed_objects : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source) override;
+	void process() override;
 };

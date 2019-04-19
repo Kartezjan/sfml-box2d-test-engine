@@ -6,8 +6,6 @@
 #include "virtue.h"
 #include "physics.h"
 
-class virtue;
-
 enum class entity_type {ABSTRACT, IMAGE, PHYSICAL, OTHER};
 enum class shape_type { CONVEX, CIRCLE };
 enum class visual_effect_type { ROPE_JOINT };

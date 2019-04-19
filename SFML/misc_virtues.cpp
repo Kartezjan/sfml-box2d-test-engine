@@ -46,12 +46,12 @@ void controllable::process() {
 void applies_force::process() {
 	auto& force_events = cosmos_.message_queues.get_queue<force_message>();
 	for (auto& force_event : force_events) {
-		auto current_entity = dynamic_cast<physical_entity*>(force_event.source);
+		auto current_entity = force_event.source;
+		auto body_virtue = dynamic_cast<has_physics>(owner_ref_.get_virtue(virtue_type::has_physics).get());
+		assert(body_virtue, "you cannot apply force to non physical entity");
+		auto body = body_virtue->physical_body();
 		force_event.delete_this_message= true;
-		if (!current_entity) {
-			printf("You cannot apply force to an abstract entity. (It is also possible that the entity has lost his physical body)\n");
-			return;
-		}
+		
 		switch (force_event.type) {
 		case force_type::APPLY_FORCE_TO_CENTER:
 			current_entity->get_physical_body()->ApplyForceToCenter(force_event.force, false);
@@ -75,7 +75,7 @@ void spawns_objects::process() {
 				previous_creation_timestamp = cosmos_.universe_clock.getElapsedTime().asMilliseconds();
 				spawned_objects.push_back(
 					std::make_unique<primitive_entity>(
-						create_box(cosmos_.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures_["box"]
+						create_box(cosmos_.world, cosmos_.mouse_pos.x, cosmos_.mouse_pos.y), "box", cosmos_.resources.textures_["box"]
 					)
 				);
 			}
@@ -99,7 +99,7 @@ void spawns_objects::process() {
 				previous_creation_timestamp = cosmos_.universe_clock.getElapsedTime().asMilliseconds();
 				spawned_objects.push_back(
 					std::make_unique<primitive_entity>(
-						create_circle(cosmos_.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures_["bomb"]
+						create_circle(cosmos_.world, cosmos_.mouse_pos.x, cosmos_.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos_.resources.textures_["bomb"]
 					)
 				);
 				spawned_objects.back()->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos_));

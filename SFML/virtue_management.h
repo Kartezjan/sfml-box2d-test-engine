@@ -58,10 +58,10 @@ auto make_virtue(const virtue_type type, Args&&... args)
 		result = std::make_unique<explodes_upon_collision>{ std::forward(args)... };
 		break;
 	case virtue_type::changes_GUI_text:
-		result = std::make_unique<explodes_upon_collision>{ std::forward(args)... };
+		result = std::make_unique<changes_GUI_text>{ std::forward(args)... };
 		break;
 	case virtue_type::shows_illusions:
-		result = std::make_unique<explodes_upon_collision>{ std::forward(args)... };
+		result = std::make_unique<shows_illusions>{ std::forward(args)... };
 		break;
 	default:
 		assert(false);

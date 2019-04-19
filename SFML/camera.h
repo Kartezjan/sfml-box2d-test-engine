@@ -2,7 +2,6 @@
 
 #include "config.h"
 #include "virtue.h"
-#include "world.h"
 
 class controls_view : public virtue {
 public:
@@ -21,7 +20,7 @@ private:
 class tracks_object : public virtue {
 public:
 	tracks_object(universe& uni_ref, _entity& owner_ref,  sf::View& view_ref, sf::RenderWindow& win_ref) : virtue(uni_ref, owner_ref), view_(view_ref), window_ref_(win_ref) {}
-	void process();
+	void process() override;
 private:
 	bool free_mode_ = false;
 	sf::View& view_;

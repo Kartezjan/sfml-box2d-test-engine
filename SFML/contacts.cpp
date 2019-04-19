@@ -1,8 +1,8 @@
 #include "contacts.h"
 
-void handles_contacts::send_message(abstract_entity* source) {
-	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
-	for (auto contact = cosmos.world.GetContactList(); contact; contact = contact->GetNext()) {
+void handles_contacts::process() {
+	auto& contact_queue = cosmos_.message_queues.get_queue<contact_message>();
+	for (auto contact = cosmos_.world.GetContactList(); contact; contact = contact->GetNext()) {
 		contact_message msg;
 		msg.lifetime = 2;
 		if (!contact->IsEnabled())
@@ -17,8 +17,8 @@ void handles_contacts::send_message(abstract_entity* source) {
 	}
 }
 
-void destroys_upon_collision::send_message(abstract_entity* source) {
-	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
+void destroys_upon_collision::process() {
+	auto& contact_queue = cosmos_.message_queues.get_queue<contact_message>();
 	for (auto& msg : contact_queue) {
 		if (msg.fixture_a->GetBody() == nullptr || msg.fixture_b->GetBody() == nullptr) {
 			msg.delete_this_message = true;
@@ -43,7 +43,7 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 	}
 }
 
-void explodes_upon_collision::send_message(abstract_entity* source) {
+void explodes_upon_collision::process() {
 	auto entity = dynamic_cast<physical_entity*>(source);
 	assert(entity);
 	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();

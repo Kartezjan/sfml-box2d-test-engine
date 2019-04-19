@@ -1,4 +1,5 @@
 #include "user_input.h"
+#include "world.h"
 
 void produces_user_input::send_message(abstract_entity* source) {
 

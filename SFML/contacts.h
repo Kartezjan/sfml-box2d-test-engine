@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cfloat>
-
 #include "config.h"
 #include "world.h"
 #include "virtue.h"
@@ -21,23 +19,22 @@ public:
 class handles_contacts : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source);
+	void process() override;
 };
-
 class destroys_upon_collision : public virtue {
 public:
 	using virtue::virtue;
-	void send_message(abstract_entity* source);
+	void process() override;
 };
 
 class explodes_upon_collision : public virtue {
 public:
-	explodes_upon_collision(universe& uni_ref, float blast_rad, float blast_pow) : virtue(uni_ref) 
+	explodes_upon_collision(universe& uni_ref, _entity& owner_ref, const float blast_rad, const float blast_pow) : virtue(uni_ref, owner_ref) 
 	{
 		blast_radius = blast_rad / SCALE;
 		blast_power = blast_pow;
 	}
-	void send_message(abstract_entity* source);
+	void process() override;
 private:
 	float num_rays = 32.f;
 	float blast_radius = 5.f;

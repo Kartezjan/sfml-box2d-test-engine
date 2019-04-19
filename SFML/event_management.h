@@ -3,10 +3,7 @@
 #include "config.h"
 
 #include "message_storage.h"
-
-
-class abstract_entity;
-class image_entity;
+#include "entity.h"
 
 enum class force_type { APPLY_FORCE_TO_CENTER, APPLY_IMPULS_TO_CENTER };
 
@@ -30,7 +27,7 @@ struct input_message : public message {
 struct force_message : public message {
 	force_type type;
 	b2Vec2 force;
-	abstract_entity* source;
+	entity_id source;
 };
 
 struct camera_message : public message {
@@ -47,11 +44,11 @@ struct contact_message : public message {
 };
 
 struct death_message : public message {
-	abstract_entity* target;
+	 _entity target;
 };
 
 struct show_illusion_message : public message {
-	image_entity* illusion_entity;
+	_entity illusion_entity;
 	int32 duration;
 };
 

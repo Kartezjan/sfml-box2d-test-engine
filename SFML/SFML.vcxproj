@@ -132,6 +132,7 @@
     <ClCompile Include="event_management.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="has_physics.cpp" />
+    <ClCompile Include="has_primitive_body.cpp" />
     <ClCompile Include="misc_virtues.cpp" />
     <ClCompile Include="physics.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -151,15 +152,15 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="entities.h" />
     <ClInclude Include="entity.h" />
-    <ClInclude Include="has_physical_body.h" />
+    <ClInclude Include="has_sprite_body.h" />
     <ClInclude Include="has_sprite.h" />
     <ClInclude Include="has_physics.h" />
     <ClInclude Include="has_primitive_body.h" />
     <ClInclude Include="misc_virtues.h" />
     <ClInclude Include="observer_ptr.h" />
-    <ClInclude Include="ptr_map.h" />
     <ClInclude Include="event_management.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="entity_map.h" />
     <ClInclude Include="ptr_vec.h" />
     <ClInclude Include="renderable.h" />
     <ClInclude Include="templates.h" />

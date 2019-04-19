@@ -11,6 +11,12 @@ public:
 	observer_ptr(observer_ptr&&) = default;
 	observer_ptr& operator=(const observer_ptr&) = default;
 	observer_ptr& operator=(observer_ptr&&) = default;
+	explicit operator bool() const {
+		return static_cast<bool>(ptr_);
+	}
+	explicit operator T*() const {
+		return ptr_;
+	}
 	void assign(observer_ptr<T> ptr)
 	{
 		assert(!ptr_);
