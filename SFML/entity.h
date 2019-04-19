@@ -9,6 +9,11 @@
 
 using entity_id = std::size_t;
 
+struct entity_info
+{
+	int id = 0;
+};
+
 class _entity
 {
 public:

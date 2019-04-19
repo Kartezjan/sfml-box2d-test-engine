@@ -17,7 +17,7 @@ struct body_properties {
 body_properties create_ground(b2World& World, float X, float Y, float width, float heigh);
 
 b2Body* create_physical_body(body_properties&, physical_entity* target);
-b2Body* create_physical_body(body_properties&, std::size_t ownwer_id);
+b2Body* create_physical_body(body_properties&, observer_ptr<entity_info> data);
 
 body_properties create_player(b2World& World, float X, float Y);
 
