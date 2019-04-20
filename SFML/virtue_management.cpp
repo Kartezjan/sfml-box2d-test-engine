@@ -69,11 +69,10 @@ void spawns_objects::send_message(abstract_entity* source) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				spawned_objects.push_back(
-					std::make_unique<primitive_entity>(
-						create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures_["box"]
-					)
+				auto handle = cosmos.all_entities += new primitive_entity(
+					create_box(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), "box", cosmos.resources.textures_["box"]
 				);
+				spawned_objects.push_back(handle);
 			}
 		}
 		if (msg.key == input_key::RMB) {
@@ -81,10 +80,11 @@ void spawns_objects::send_message(abstract_entity* source) {
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_removal_timestamp >= cooldown) {
 				previous_removal_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
 				if (!spawned_objects.empty()) {
-					using namespace std::placeholders;
-					auto& obj_to_del = spawned_objects.back();
-					auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
-					std::for_each(contact_queue.begin(), contact_queue.end(), std::bind(discard_all_messages, obj_to_del->get_physical_body(), _1));
+					const entity_id obj_to_del_handle = spawned_objects.back();
+					auto& death_queue = cosmos.message_queues.get_queue<death_message>();
+					death_message msg;
+					msg.target = obj_to_del_handle;
+					death_queue.emplace_back(msg);
 					spawned_objects.pop_back();
 				}
 			}
@@ -93,13 +93,13 @@ void spawns_objects::send_message(abstract_entity* source) {
 			msg.delete_this_message = true;
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_creation_timestamp >= cooldown) {
 				previous_creation_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				spawned_objects.push_back(
-					std::make_unique<primitive_entity>(
-						create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures_["bomb"]
-					)
+				auto handle = cosmos.all_entities += new primitive_entity(
+					create_circle(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y, 16, 1.f, 1.f), "bomb", cosmos.resources.textures_["black"]
 				);
-				spawned_objects.back()->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
-				spawned_objects.back()->virtues.push_back(std::make_unique<explodes_upon_collision>(cosmos, 200.f, 1e+5F ));
+				spawned_objects.push_back(handle);
+				auto& obj = *cosmos.all_entities.access(handle).get();
+				obj.virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
+				obj.virtues.push_back(std::make_unique<explodes_upon_collision>(cosmos, 200.f, 1e+5F ));
 			}
 		}
 
@@ -110,13 +110,13 @@ void destroys_all_doomed_objects::send_message(abstract_entity* source) {
 	using namespace std::placeholders;
 	auto& death_queue = cosmos.message_queues.get_queue<death_message>();
 	for (auto& msg : death_queue) {
-		if(auto entity = dynamic_cast<physical_entity*>(msg.target)) {
+		if(auto entity = dynamic_cast<physical_entity*>(cosmos.all_entities[msg.target].get())) {
 			auto body = entity->get_physical_body();
 			auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
 			std::for_each(contact_queue.begin(), contact_queue.end(), std::bind(discard_all_messages, body, _1));
 		}
 		msg.delete_this_message = true;
-		msg.target->~abstract_entity();
+		cosmos.all_entities -= msg.target;
 	}
 }
 

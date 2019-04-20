@@ -59,7 +59,7 @@ public:
 		std::move(other.get_animation_set().begin(),other.get_animation_set().end(), std::back_inserter(anims));
 		return *this;
 	}
-	void select_animation(int anim_id)
+	void select_animation(std::size_t anim_id)
 	{
 		assert(anim_id < anims.size());
 		current_animation = anim_id;

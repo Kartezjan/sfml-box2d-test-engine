@@ -188,7 +188,7 @@ body_properties create_box(b2World& world, int X, int Y) {
 	return box_properties;
 }
 
-b2Body* create_physical_body(body_properties& properties, physical_entity* target) {
+b2Body* create_physical_body(const body_properties& properties, physical_entity* target) {
 	b2Body* body = properties.world.CreateBody(&properties.body_def);
 	size_t i = 0;
 	for (auto fixture : properties.fixtures)

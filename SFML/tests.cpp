@@ -1,10 +1,5 @@
 #include "tests.h"
-#include "ptr_map.h"
-
-void ptr_map_test()
-{
-	ptr_map<std::string> test;
-}
+#include "entity_map.h"
 
 image_entity test_animation(resource_manager& resources, sf::RenderWindow& window)
 {
@@ -28,5 +23,5 @@ image_entity test_animation(resource_manager& resources, sf::RenderWindow& windo
 		texture_ids.push_back(path.first);
 	}
 	auto& anim_res = resources.anims_res_ += (std::make_tuple<>("hero_run",texture_ids, foo_pattern));
-	return image_entity(&anim_res, "test", image_entity::content_type::ANIMATION, window);
+	return image_entity(&anim_res, { 0,0 }, "test", image_entity::content_type::ANIMATION, window);
 }

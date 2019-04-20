@@ -78,6 +78,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\includes</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\libs\sfml;$(SolutionDir)\libs\box2d-debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -124,7 +125,9 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="car.cpp" />
     <ClCompile Include="contacts.cpp" />
+    <ClCompile Include="editor.cpp" />
     <ClCompile Include="entities.cpp" />
+    <ClCompile Include="entity_map.cpp" />
     <ClCompile Include="event_management.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="physics.cpp" />
@@ -142,10 +145,13 @@
     <ClInclude Include="car.h" />
     <ClInclude Include="contacts.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="editor.h" />
     <ClInclude Include="entities.h" />
-    <ClInclude Include="ptr_map.h" />
+    <ClInclude Include="entity_map.h" />
     <ClInclude Include="event_management.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="observer_ptr.h" />
+    <ClInclude Include="ptr_vec.h" />
     <ClInclude Include="templates.h" />
     <ClInclude Include="message_storage.h" />
     <ClInclude Include="physics.h" />

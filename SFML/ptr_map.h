@@ -6,14 +6,14 @@
 
 typedef size_t entity_id;
 
-template <typename val>
 struct ptr_map 
 {
-	void operator+=(val&& elem) { map_.emplace(map_.size(), std::make_shared<>(elem)); }
-	auto try_access(entity_id idx) -> std::<std::shared_ptr<val>>
+	void operator+=(val&& elem) { map_.emplace(map_.size(), std::make_unique<>(elem)); }
+	auto try_access(entity_id idx) -> std::optional<val*>
 	{
+		map_.find()
 	}
-	auto access(entity_id idx) -> std::shared_ptr<T> { return map_[idx]; }
+	auto access(entity_id idx) -> T* { return map_[idx].get(); }
 private:
-	std::unordered_map<entity_id, std::shared_ptr<val>> map_;
-};
+	std::unordered_map<entity_id, std::unique_ptr<val>> map_;
+}; 

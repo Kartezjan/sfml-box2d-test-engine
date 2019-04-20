@@ -4,66 +4,52 @@ image_entity::~image_entity() {
 	delete visual_object;
 }
 
-image_entity::image_entity(sf::Drawable* object, std::string n_name, content_type n_type, sf::RenderWindow& win_ref) : window(win_ref) {
+image_entity::image_entity(sf::Drawable* object, const sf::Vector2f pos,  const std::string& n_name, const content_type n_type, sf::RenderWindow& win_ref) : window(win_ref) {
 	type = entity_type::IMAGE;
 	visual_object = object;
 	name = n_name;
 	image_type = n_type;
+	position_ = pos;
 }
 
 void image_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	states.transform *= getTransform();
-	target.draw(*visual_object, states);
+	if (!hidden_)
+	{
+		states.transform *= getTransform();
+		target.draw(*visual_object, states);
+	}
 }
 
 void image_entity::update() {
-	float scale = 0;
-	sf::Text* text_object = nullptr;
+	auto transformable = dynamic_cast<sf::Transformable*>(visual_object);
+	if(sticky_)
+	{
+		transformable->setPosition(window.mapPixelToCoords({ static_cast<int>(position_.x), static_cast<int>(position_.y) }));
+		const auto scale = window.getView().getSize().x / window.getSize().x;
+		transformable->setScale(sf::Vector2f(scale, scale));
+	}
+	else
+	{
+		transformable->setPosition(position_);
+	}
+	animation_resource* anim = nullptr;
 	switch(image_type)
 	{
-	case content_type::TEXT:
-		text_object = (sf::Text*)visual_object;
-		text_object->setPosition(window.mapPixelToCoords(sf::Vector2i(0, 0)));
-		scale = window.getView().getSize().x / window.getSize().x;
-		text_object->setScale(sf::Vector2f(scale, scale));
-		break;
 	case content_type::ANIMATION:
-		auto anim = dynamic_cast<animation_resource*>(visual_object);
+		anim = dynamic_cast<animation_resource*>(visual_object);
 		assert(anim);
 		anim->update();
+		break;
+	default:
 		break;
 	}
 }
 
-primitive_entity::primitive_entity(body_properties& body_properties, std::string n_name, const sf::Texture& box_texture) : texture(box_texture) {
+primitive_entity::primitive_entity(const body_properties& body_properties, std::string n_name, const sf::Texture& box_texture) : texture(box_texture) {
 	type = entity_type::PHYSICAL;
 	name = n_name;
 	physical_body = create_physical_body(body_properties, dynamic_cast<physical_entity*>(this));
-	for (auto fixture : body_properties.fixtures) {
-		auto current = shape{};
-		if (fixture.shape->m_type == fixture.shape->e_polygon) {
-			current.type = shape_type::CONVEX;
-			const b2PolygonShape shape = *(b2PolygonShape*)fixture.shape;
-			sf::ConvexShape* convex = new sf::ConvexShape;
-			convex->setPointCount(shape.m_count);
-			for (auto i = 0; i < shape.m_count; ++i)
-				convex->setPoint(i, sf::Vector2f(shape.m_vertices[i].x * SCALE, shape.m_vertices[i].y * SCALE));
-			convex->setOrigin(sf::Vector2f(shape.m_centroid.x * SCALE, shape.m_centroid.y * SCALE));
-			convex->setTexture(&texture);
-			current.visual_object = convex;
-			shapes.push_back(current);
-		}
-		else {
-			current.type = shape_type::CIRCLE;
-			sf::CircleShape* circle = new sf::CircleShape;
-			const b2CircleShape shape = *(b2CircleShape*)fixture.shape;
-			circle->setRadius(shape.m_radius * SCALE);
-			circle->setOrigin(sf::Vector2f(shape.m_radius * SCALE, shape.m_radius * SCALE));
-			circle->setTexture(&texture);
-			current.visual_object = circle;
-			shapes.push_back(current);
-		}
-	}
+	shapes = utillity::convert_shape_to_sf(body_properties, box_texture);
 }
 
 primitive_entity::~primitive_entity() {

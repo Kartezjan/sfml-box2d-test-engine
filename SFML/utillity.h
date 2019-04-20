@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config.h"
+#include "physics.h"
 
 namespace utillity {
 	template <class vec, class d>
@@ -16,4 +17,6 @@ namespace utillity {
 
 		return v = (rotated + origin);
 	}
+
+	std::vector<shape> convert_shape_to_sf(const body_properties&, const sf::Texture&);
 };

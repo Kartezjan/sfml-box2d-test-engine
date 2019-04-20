@@ -7,10 +7,11 @@
 
 class abstract_entity;
 class image_entity;
+using entity_id = std::size_t;
 
 enum class force_type { APPLY_FORCE_TO_CENTER, APPLY_IMPULS_TO_CENTER };
 
-enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X, B, E, Q};
+enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X, B, E, Q, F1};
 
 enum class event_type { TRACKED_OBJECT_POS, FREE_CAMERA };
 
@@ -44,10 +45,12 @@ struct contact_message : public message {
 	contact_type contact_type;
 	b2Fixture* fixture_a;
 	b2Fixture* fixture_b;
+	entity_id owner_a = 0;
+	entity_id owner_b = 0;
 };
 
 struct death_message : public message {
-	abstract_entity* target;
+	entity_id target;
 };
 
 struct show_illusion_message : public message {

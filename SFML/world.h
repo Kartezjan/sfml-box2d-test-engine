@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config.h"
+#include "entity_map.h"
 
 struct resource_manager;
 class renderable_entity;
@@ -16,4 +17,7 @@ struct universe {
 	sf::Clock universe_clock;
 	sf::Vector2f mouse_pos;
 	resource_manager& resources;
+	entity_map all_entities;
+	bool editor_mode = false;
+	entity_map gui_resources;
 };

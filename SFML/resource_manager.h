@@ -92,4 +92,5 @@ struct resource_manager {
 	resource_manager() : anims_res_(textures_) {}
 	textures textures_;
 	animation_resources anims_res_;
+	sf::Font font;
 };

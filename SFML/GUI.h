@@ -3,6 +3,8 @@
 #include "config.h"
 #include "virtue_management.h"
 
+void setup_gui(std::vector<renderable_entity*>& container, sf::RenderWindow& win_ref, universe& uni_ref);
+
 class changes_GUI_text : public virtue {
 public:
 	using virtue::virtue;
@@ -15,7 +17,7 @@ public:
 	void send_message(abstract_entity* source);
 private:
 	struct illusion_data {
-		image_entity* illusion_entity;
+		std::unique_ptr<image_entity> illusion_entity;
 		int32 time_offset;
 		int32 duration;
 	};

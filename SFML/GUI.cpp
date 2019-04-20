@@ -1,21 +1,23 @@
 #include "GUI.h"
 
+void setup_gui(std::vector<renderable_entity*>& container, sf::RenderWindow& win_ref, universe& uni_ref)
+{
+
+}
+
 void changes_GUI_text::send_message(abstract_entity* source) {
 	if (source->get_type() == entity_type::IMAGE) {
 
-		image_entity* text_holder = (image_entity*)source;
-
-		if (text_holder->get_image_type() == text_holder->TEXT) {
-			char buffer[100];
-			std::string output = "mouse pos - X:";
-			_itoa_s(cosmos.mouse_pos.x, buffer, 10);
-			output.append(buffer);
-			output.append("  Y:");
-			_itoa_s(cosmos.mouse_pos.y, buffer, 10);
-			output.append(buffer);
-
-			sf::Text* text = (sf::Text*)text_holder->get_visual_object();
-			text->setString(output);
+		auto text_holder = dynamic_cast<image_entity*>(source);
+		switch(text_holder->get_image_type())
+		{
+		case image_entity::MOUSE_CORD_MESSAGE:
+			{
+				std::string output = "mouse pos - X:" + std::to_string(cosmos.mouse_pos.x)
+					+ " Y:" + std::to_string(cosmos.mouse_pos.y);
+				sf::Text* text = (sf::Text*)text_holder->get_visual_object();
+				text->setString(output);
+			}
 		}
 	}
 	else
@@ -38,6 +40,6 @@ void shows_illusions::send_message(abstract_entity* source) {
 	auto& illu_queue = cosmos.message_queues.get_queue<show_illusion_message>();
 	for (auto& msg : illu_queue) {
 		msg.delete_this_message = true;
-		illusions.push_back(illusion_data{ msg.illusion_entity, current_time, msg.duration });
+		illusions.push_back(illusion_data{std::unique_ptr<image_entity>(msg.illusion_entity), current_time, msg.duration });
 	}
 }

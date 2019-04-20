@@ -69,6 +69,12 @@
     <ClCompile Include="tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="entity_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="editor.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entities.h">
@@ -131,8 +137,17 @@
     <ClInclude Include="tests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ptr_map.h">
+    <ClInclude Include="entity_map.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="observer_ptr.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ptr_vec.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="editor.h">
+      <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

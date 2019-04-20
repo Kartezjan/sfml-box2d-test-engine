@@ -2,7 +2,15 @@
 
 #include "config.h"
 
+
 class physical_entity;
+
+enum class shape_type { CONVEX, CIRCLE };
+
+struct shape {
+	shape_type type;
+	sf::Drawable* visual_object;
+};
 
 struct body_properties {
 	body_properties(b2World& world_ref) :
@@ -15,7 +23,7 @@ struct body_properties {
 
 body_properties create_ground(b2World& World, float X, float Y, float width, float heigh);
 
-b2Body* create_physical_body(body_properties&, physical_entity* target);
+b2Body* create_physical_body(const body_properties&, physical_entity* target);
 
 body_properties create_player(b2World& World, float X, float Y);
 
