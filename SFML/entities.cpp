@@ -1,4 +1,5 @@
 #include "entities.h"
+#include "window.h"
 
 image_entity::~image_entity() {
 	delete visual_object;
@@ -24,9 +25,7 @@ void image_entity::update() {
 	auto transformable = dynamic_cast<sf::Transformable*>(visual_object);
 	if(sticky_)
 	{
-		transformable->setPosition(window.mapPixelToCoords({ static_cast<int>(position_.x), static_cast<int>(position_.y) }));
-		const auto scale = window.getView().getSize().x / window.getSize().x;
-		transformable->setScale(sf::Vector2f(scale, scale));
+		map_to_window(*transformable, position_, window);
 	}
 	else
 	{

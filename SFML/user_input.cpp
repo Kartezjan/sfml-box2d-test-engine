@@ -73,6 +73,21 @@ void produces_user_input::send_message(abstract_entity* source) {
 		message.key = input_key::F1;
 		keyboard_events.push_back(message);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma))
+	{
+		message.key = input_key::Comma;
+		keyboard_events.push_back(message);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period))
+	{
+		message.key = input_key::Period;
+		keyboard_events.push_back(message);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+	{
+		message.key = input_key::Enter;
+		keyboard_events.push_back(message);
+	}
 
 	/*!!!!!!!!!!!!!!!!!!!!!!!*/
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= 300) {

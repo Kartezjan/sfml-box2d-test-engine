@@ -25,21 +25,27 @@
     <Filter Include="Source Files\misc">
       <UniqueIdentifier>{8160d9ff-dc8a-4f5b-8782-749505ce296e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\entities">
+      <UniqueIdentifier>{9bc6867d-867d-49ae-8efa-270c35c7e24b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\entities\gui">
+      <UniqueIdentifier>{1e73e7f1-803f-4787-8c33-dbfd14b7a8a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities">
+      <UniqueIdentifier>{503b1d26-6262-4f60-ba81-6a321b8b3128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities\gui">
+      <UniqueIdentifier>{69df89c8-d16e-4de8-a8f1-c35c14b9873e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="entities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="event_management.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="virtue_management.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utillity.cpp">
@@ -69,17 +75,26 @@
     <ClCompile Include="tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entity_map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="editor.cpp">
       <Filter>Source Files\virtues</Filter>
     </ClCompile>
+    <ClCompile Include="entities.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="entity_map.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="virtue_management.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
+    <ClCompile Include="toolbox_item.cpp">
+      <Filter>Source Files\entities\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="toolbox.cpp">
+      <Filter>Source Files\entities\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="entities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,9 +108,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="event_management.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="virtue_management.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="world.h">
@@ -131,13 +143,7 @@
     <ClInclude Include="trebuchet.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
-    <ClInclude Include="animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="tests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entity_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="observer_ptr.h">
@@ -148,6 +154,27 @@
     </ClInclude>
     <ClInclude Include="editor.h">
       <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="entities.h">
+      <Filter>Header Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_map.h">
+      <Filter>Header Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="virtue_management.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="animation.h">
+      <Filter>Header Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox.h">
+      <Filter>Header Files\entities\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="toolbox_item.h">
+      <Filter>Header Files\entities\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="window.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

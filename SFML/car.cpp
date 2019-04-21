@@ -19,7 +19,7 @@ void setup_car(physical_entity& body_car, physical_entity& wheel_front, physical
 	cosmos.world.CreateJoint(&revoluteJointDef_front_wheel);
 	cosmos.world.CreateJoint(&revoluteJointDef_back_wheel);
 
-	body_car.virtues.push_back(std::make_unique<controllable_car>(cosmos, 120 * DEG_TO_RAD));
+	//body_car.virtues.push_back(std::make_unique<controllable_car>(cosmos, 120 * DEG_TO_RAD));
 }
 
 void controllable_car::send_message(abstract_entity* source) {

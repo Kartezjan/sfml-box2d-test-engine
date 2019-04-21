@@ -57,9 +57,12 @@ void main()
 
 	abstract_entity nature;
 	nature.virtues.push_back(std::make_unique<applies_force>(universe));
-	nature.virtues.push_back(std::make_unique<spawns_objects>(universe));
+	// nature.virtues.push_back(std::make_unique<spawns_objects>(universe));
 	nature.virtues.push_back(std::make_unique<destroys_all_doomed_objects>(universe));
-	nature.virtues.emplace_back(std::make_unique<editor>(universe, window));
+	//nature.virtues.emplace_back(std::make_unique<editor>(universe, window));
+
+	abstract_entity editor_entity;
+	editor_entity.virtues.emplace_back(std::make_unique<editor>(universe, window));
 
 	abstract_entity illusion_handler;
 	illusion_handler.virtues.push_back(std::make_unique<shows_illusions>(universe, window));
@@ -68,23 +71,7 @@ void main()
 	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]);
 	universe.all_entities += new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground"]);
 
-
-	const auto player_handle = universe.all_entities += new primitive_entity(create_player(universe.world, 370, 350), "player", universe.resources.textures_["box"]);
-	const auto front_wheel_handle = universe.all_entities += new primitive_entity(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "front_wheel", universe.resources.textures_["wheel"]);
-	const auto back_wheel_handle = universe.all_entities += new primitive_entity(create_circle(universe.world, 370, 350, 20.f, 500.f, 0.7f), "back_wheel", universe.resources.textures_["wheel"]);
-	auto player = dynamic_cast<physical_entity*>(universe.all_entities.access(player_handle).get());
-	auto front_wheel = dynamic_cast<physical_entity*>(universe.all_entities.access(front_wheel_handle).get());
-	auto back_wheel = dynamic_cast<physical_entity*>(universe.all_entities.access(back_wheel_handle).get());
-	setup_car(*player, *front_wheel, *back_wheel, b2Vec2(-280.f,-10.f), b2Vec2(280.f,-10.f), 50000, universe);
-	player->virtues.push_back(std::make_unique<center_of_attention>(universe));
-
-	auto beam_handle = universe.all_entities += new primitive_entity (create_box(universe.world, 370, -200, 1000, 20, b2Vec2(-100,0), 0, 30.f, 0.7f), "trebuchet_beam", universe.resources.textures_["box"]);
-	auto cw_handle = universe.all_entities += new primitive_entity (create_box(universe.world, 668, -150, 70, 70, 500, 0.7f), "TREB_CW", universe.resources.textures_["box"]);
-	auto gw_handle = universe.all_entities += new primitive_entity (create_circle(universe.world, 370, 90, 84, 1.0f, 0.1f), "TREB_WHEEL", universe.resources.textures_["box"]);
-	auto beam = dynamic_cast<primitive_entity*>(universe.all_entities[beam_handle].get());
-	auto cw = dynamic_cast<primitive_entity*>(universe.all_entities[cw_handle].get());
-	auto gw = dynamic_cast<primitive_entity*>(universe.all_entities[gw_handle].get());
-	setup_trebuchet(*dynamic_cast<primitive_entity*>(player), *beam, *cw, *gw, b2Vec2(0, -500), b2Vec2(400,0), universe);
+	trebuchet_spawn(universe);
 
 	// Prepare the GUI
 	auto example_animation = test_animation(resources, window);
@@ -106,6 +93,7 @@ void main()
 	gui_objects.push_back(&mouse_pos_info_gui);
 	gui_objects.emplace_back(&example_animation);
 
+	test(universe, window);
 	
 	//process virtues lambda function
 
@@ -124,15 +112,18 @@ void main()
 		for (auto obj : gui_objects)
 			process_virtues(*obj);
 		//Invoke all physical entities' virtues (actions) 
-		for (auto entity = universe.world.GetBodyList(); entity; entity = entity->GetNext() )
-			process_virtues(*static_cast<physical_entity*>(entity->GetUserData()));
-		// Apply entities' changes to the world
-		process_virtues(nature);
+		process_virtues(editor_entity);
+		if (!universe.editor_mode)
+		{
+			for (auto entity = universe.world.GetBodyList(); entity; entity = entity->GetNext())
+				process_virtues(*static_cast<physical_entity*>(entity->GetUserData()));
+			// Apply entities' changes to the world
+			process_virtues(nature);
 
-		if (!universe.editor_mode) {
-			universe.world.Step(1 / 60.f, 8, 3);
+			if (!universe.editor_mode) {
+				universe.world.Step(1 / 60.f, 8, 3);
+			}
 		}
-
 		window.clear(sf::Color::White);
 		update_and_render_scene(window, universe.world);
 		process_virtues(illusion_handler);

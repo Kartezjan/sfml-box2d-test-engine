@@ -5,6 +5,7 @@
 #include "animation.h"
 #include "virtue_management.h"
 #include "physics.h"
+#include "ptr_vec.h"
 
 class virtue;
 using entity_id = std::size_t;
@@ -37,6 +38,10 @@ class renderable_entity : public abstract_entity, public sf::Drawable, public sf
 public:
 	renderable_entity(const entity_id id = 0) : abstract_entity(id) {}
 	virtual void update(void) = 0;
+	bool is_hidden() const { return hidden_; }
+	void hidden(const bool opt) { hidden_ = opt; }
+protected:
+	bool hidden_ = false;
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };
@@ -52,15 +57,12 @@ public:
 	bool is_sticky() const { return sticky_; }
 	void sticky(const bool opt) { sticky_ = opt; }
 	void update_position(const sf::Vector2f new_pos) { position_ = new_pos; }
-	bool is_hidden() const { return hidden_; }
-	void hidden(const bool opt) { hidden_ = opt; }
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	sf::Drawable* visual_object;
 	content_type image_type;
 	sf::RenderWindow& window;
 	bool sticky_ = false;
-	bool hidden_ = false;
 	sf::Vector2f position_;
 };
 
