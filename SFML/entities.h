@@ -91,12 +91,3 @@ private:
 };
 
 
-class sprite_entity : public physical_entity
-{
-public:
-	sprite_entity(animation& anim) : animation_(anim) {}
-	void update();
-private:
-	animation animation_;
-	void draw(sf::RenderTarget&, sf::RenderStates states) const;
-};

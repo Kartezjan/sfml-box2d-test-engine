@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config.h"
+#include "animation.h"
 
 typedef std::vector<std::string> texture_ids;
 typedef std::string resource_id;
@@ -67,19 +68,25 @@ public:
 	{
 		return operator+=(std::make_tuple<>(id, textures, pattern));
 	}
-	animation_resource& operator+=(const std::tuple<resource_id, texture_ids, pattern>& description)
+	void update(const std::tuple<resource_id, texture_ids, pattern>& description)
 	{
 		auto& anim_id = std::get<0>(description);
+		assert(resource_.find(anim_id) != resource_.end());
 		auto& textures = std::get<1>(description);
 		auto& pattern = std::get<2>(description);
 		auto sprites = animation{};
 		for(auto& id : textures)
 		{
 			sprites.emplace_back(sf::Sprite(textures_ref[id]));
-			sprites.back().setPosition(sf::Vector2f(300.f,300.f));
 		}
-		auto anim_res = new animation_resource{ animation_set{animation_element{std::move(sprites), pattern}} };
+		*resource_[anim_id] += animation_element{ sprites, pattern };
+	}
+	animation_resource& operator+=(const std::tuple<resource_id, texture_ids, pattern>& description)
+	{
+		auto& anim_id = std::get<0>(description);
+		auto anim_res = new animation_resource();
 		const auto result = resource_.emplace(anim_id, anim_res);
+		update(description);
 		assert(result.second);
 		return *result.first->second;
 	}

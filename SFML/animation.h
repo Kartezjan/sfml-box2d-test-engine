@@ -38,13 +38,14 @@ typedef std::vector<animation_element> animation_set;
 class animation_resource : public sf::Drawable, public sf::Transformable
 {
 public:
-	animation_resource(animation_set& anims) : anims(anims) {}
+	explicit animation_resource(animation_set& anims) : anims(anims) {}
+	explicit animation_resource() = default;
 	~animation_resource() = default;
 	animation_resource(const animation_resource& other)
 	{
 		operator=(other);
 	}
-	animation_resource(animation_resource&& other)
+	animation_resource(animation_resource&& other) noexcept
 	{
 		operator=(other);
 	}
@@ -54,11 +55,12 @@ public:
 
 		return *this;
 	}
-	animation_resource& operator=(animation_resource&& other)
+	animation_resource& operator=(animation_resource&& other) noexcept
 	{
 		std::move(other.get_animation_set().begin(),other.get_animation_set().end(), std::back_inserter(anims));
 		return *this;
 	}
+	void operator+=(const animation_element& new_set) { anims.emplace_back(new_set); }
 	void select_animation(std::size_t anim_id)
 	{
 		assert(anim_id < anims.size());
@@ -69,6 +71,7 @@ public:
 	animation_element& get_current_animation() { return anims[current_animation]; }
 	const animation_element& get_current_animation() const { return const_cast<animation_resource*>(this)->get_current_animation(); }
 	void update() { get_current_animation().update(); }
+	sf::Sprite& get_current_frame() { return get_current_animation().get_current_frame(); }
 private:
 	animation_set anims;
 	int current_animation = 0;

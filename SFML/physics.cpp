@@ -129,6 +129,37 @@ body_properties create_player(b2World& world, float X, float Y) {
 	return player_properties;
 }
 
+body_properties create_hero(b2World& world, float x, float y)
+{
+	body_properties hero(world);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(x / SCALE, y / SCALE);
+	body_def.type = b2_dynamicBody;
+
+	hero.body_def = body_def;
+
+	auto shape = new b2PolygonShape;
+	shape->SetAsBox((37.f / 2) / SCALE, (50.f / 2) / SCALE);
+
+	b2Vec2 vertices[4];
+	vertices[0] = b2Vec2(0 / SCALE, 50. / SCALE);
+	vertices[1] = b2Vec2(0 / SCALE, 50. / SCALE);
+	vertices[2] = b2Vec2( 37 / SCALE, -50. / SCALE);
+	vertices[3] = b2Vec2(-37 / SCALE, -50. / SCALE);
+
+	shape->Set(vertices, 4);
+
+	b2FixtureDef fixture_def;
+	fixture_def.density = 1.f;
+	fixture_def.friction = 0.6f;
+	fixture_def.shape = shape;
+
+	hero.body_def = body_def;
+	hero.fixtures.push_back(fixture_def);
+
+	return hero;
+}
+
 body_properties create_circle(b2World& World, float X, float Y, float radius, float density, float friction) {
 	body_properties circle_properties(World);
 	b2BodyDef body_def;

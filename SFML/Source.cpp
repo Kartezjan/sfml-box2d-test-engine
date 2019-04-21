@@ -93,7 +93,7 @@ void main()
 	gui_objects.push_back(&mouse_pos_info_gui);
 	gui_objects.emplace_back(&example_animation);
 
-	test(universe, window);
+	hero_test(universe);
 	
 	//process virtues lambda function
 
@@ -129,7 +129,7 @@ void main()
 		process_virtues(illusion_handler);
 		update_and_render_gui_objects(window, gui_objects);
 		for (auto& obj : universe.gui_resources) {
-			auto renderable = dynamic_cast<renderable_entity*>(obj.second.get());
+			const auto renderable = dynamic_cast<renderable_entity*>(obj.second.get());
 			renderable->update();
 			window.draw(*renderable);
 		}

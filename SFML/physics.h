@@ -21,6 +21,8 @@ struct body_properties {
 	b2World& world;
 };
 
+body_properties create_hero(b2World& world, float x, float y);
+
 body_properties create_ground(b2World& World, float X, float Y, float width, float heigh);
 
 b2Body* create_physical_body(const body_properties&, physical_entity* target);
