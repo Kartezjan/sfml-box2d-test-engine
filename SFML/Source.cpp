@@ -74,7 +74,6 @@ void main()
 	trebuchet_spawn(universe);
 
 	// Prepare the GUI
-	auto example_animation = test_animation(resources, window);
 	std::vector<renderable_entity*> gui_objects;
 
 	sf::Font font;
@@ -91,8 +90,8 @@ void main()
 	mouse_pos_info_gui.virtues.push_back(std::make_unique<changes_GUI_text>(universe));
 
 	gui_objects.push_back(&mouse_pos_info_gui);
-	gui_objects.emplace_back(&example_animation);
 
+	test_animation(universe.resources, window);
 	hero_test(universe);
 	
 	//process virtues lambda function

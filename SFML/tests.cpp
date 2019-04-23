@@ -16,26 +16,27 @@ void gui_test(universe& universe, sf::RenderWindow& window)
 
 void hero_test(universe& universe)
 {
-	universe.all_entities += new sprite_entity(create_hero(universe.world, 1000, -250), universe.resources.anims_res_["hero"]);
+	auto handle = universe.all_entities += new sprite_entity(create_hero(universe.world, 1000, -250), universe.resources.anims_res_["hero"]);
+	dynamic_cast<sprite_entity*>(universe.all_entities[handle].get())->virtues.push_back(std::make_unique<controllable>(universe));
 }
 
-image_entity test_animation(resource_manager& resources, sf::RenderWindow& window)
+void test_animation(resource_manager& resources, sf::RenderWindow& window)
 {
-	auto paths =
+	auto paths = std::vector<std::pair<std::string,std::string>>
 	{
-		std::make_pair<std::string,std::string>("hero_run0", R"(gfx\fuccboi\adventurer-run-00.png)"),
-		std::make_pair<std::string,std::string>("hero_run1", R"(gfx\fuccboi\adventurer-run-01.png)"),
-		std::make_pair<std::string,std::string>("hero_run2", R"(gfx\fuccboi\adventurer-run-02.png)"),
-		std::make_pair<std::string,std::string>("hero_run3", R"(gfx\fuccboi\adventurer-run-03.png)"),
-		std::make_pair<std::string,std::string>("hero_run4", R"(gfx\fuccboi\adventurer-run-04.png)"),
-		std::make_pair<std::string,std::string>("hero_run5", R"(gfx\fuccboi\adventurer-run-05.png)"),
+		{"hero_run0", R"(gfx\fuccboi\adventurer-run-00.png)"},
+		{"hero_run1", R"(gfx\fuccboi\adventurer-run-01.png)"},
+		{"hero_run2", R"(gfx\fuccboi\adventurer-run-02.png)"},
+		{"hero_run3", R"(gfx\fuccboi\adventurer-run-03.png)"},
+		{"hero_run4", R"(gfx\fuccboi\adventurer-run-04.png)"},
+		{"hero_run5", R"(gfx\fuccboi\adventurer-run-05.png)"}
 	};
 
-	auto idle_paths =
+	auto idle_paths = std::vector<std::pair<std::string,std::string>>
 	{
-		std::make_pair<std::string,std::string>("hero_idle0", R"(gfx\fuccboi\adventurer-idle-00.png)"),
-		std::make_pair<std::string,std::string>("hero_idle1", R"(gfx\fuccboi\adventurer-idle-01.png)"),
-		std::make_pair<std::string,std::string>("hero_idle2", R"(gfx\fuccboi\adventurer-idle-02.png)"),
+		{"hero_idle0", R"(gfx\fuccboi\adventurer-idle-00.png)"},
+		{"hero_idle1", R"(gfx\fuccboi\adventurer-idle-01.png)"},
+		{"hero_idle2", R"(gfx\fuccboi\adventurer-idle-02.png)"}
 	};
 
 	auto run_pattern = pattern{};
@@ -61,5 +62,4 @@ image_entity test_animation(resource_manager& resources, sf::RenderWindow& windo
 			idle_pattern.emplace_back(i);
 	auto& anim_res = resources.anims_res_ += {"hero", texture_run_ids, run_pattern};
 	resources.anims_res_.update({ "hero" , texture_idle_ids, idle_pattern });
-	return image_entity(&anim_res, { 0,0 }, "test", image_entity::content_type::ANIMATION, window);
 }

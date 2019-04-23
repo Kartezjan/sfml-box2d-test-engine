@@ -2,7 +2,7 @@
 
 #include "config.h"
 
-typedef std::vector<sf::Sprite> animation;
+typedef std::vector<sf::Texture> animation;
 typedef std::vector<size_t> pattern;
 struct animation_element
 {
@@ -11,15 +11,15 @@ public:
 	~animation_element() = default;
 	animation_element(const animation_element& other) { animation_ = other.animation_; pattern_ = other.pattern_; }
 	animation_element(animation_element&& other) noexcept { animation_ = std::move(other.animation_); pattern_ = std::move(other.pattern_); }
-	animation_element(std::vector<sf::Sprite> animation, std::vector<size_t> pattern) : animation_(animation), pattern_(pattern)
+	animation_element(const std::vector<sf::Texture>& animation, std::vector<size_t> pattern) : animation_(animation), pattern_(pattern)
 	{
 		for (auto i : pattern)
 			assert(i < animation.size());
 	}
 	const animation& get_animation() const { return animation_; }
 	const pattern& get_pattern() const { return pattern_; }
-	sf::Sprite& get_current_frame() { return animation_[pattern_[current_frame]]; }
-	const sf::Sprite& get_current_frame() const { return const_cast<animation_element*>(this)->get_current_frame(); }
+	sf::Texture& get_current_frame() { return animation_[pattern_[current_frame]]; }
+	const sf::Texture& get_current_frame() const { return const_cast<animation_element*>(this)->get_current_frame(); }
 	void select_frame(size_t frame_id)
 	{
 		assert(frame_id < pattern_.size());
@@ -35,7 +35,7 @@ private:
 
 typedef std::vector<animation_element> animation_set;
 
-class animation_resource : public sf::Drawable, public sf::Transformable
+class animation_resource
 {
 public:
 	explicit animation_resource(animation_set& anims) : anims(anims) {}
@@ -71,13 +71,9 @@ public:
 	animation_element& get_current_animation() { return anims[current_animation]; }
 	const animation_element& get_current_animation() const { return const_cast<animation_resource*>(this)->get_current_animation(); }
 	void update() { get_current_animation().update(); }
-	sf::Sprite& get_current_frame() { return get_current_animation().get_current_frame(); }
+	const sf::Texture& get_current_frame() const { return get_current_animation().get_current_frame(); }
 private:
 	animation_set anims;
 	int current_animation = 0;
 	std::vector<size_t> pattern;
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		target.draw(get_current_animation().get_current_frame(), states);
-	};
 };

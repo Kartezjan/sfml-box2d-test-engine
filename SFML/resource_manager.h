@@ -74,12 +74,12 @@ public:
 		assert(resource_.find(anim_id) != resource_.end());
 		auto& textures = std::get<1>(description);
 		auto& pattern = std::get<2>(description);
-		auto sprites = animation{};
+		auto frames = animation{};
 		for(auto& id : textures)
 		{
-			sprites.emplace_back(sf::Sprite(textures_ref[id]));
+			frames.emplace_back(textures_ref[id]);
 		}
-		*resource_[anim_id] += animation_element{ sprites, pattern };
+		*resource_[anim_id] += animation_element{ frames, pattern };
 	}
 	animation_resource& operator+=(const std::tuple<resource_id, texture_ids, pattern>& description)
 	{

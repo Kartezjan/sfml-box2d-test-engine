@@ -82,9 +82,9 @@ public:
 	void addVisualEffect(visual_effect effect) { visual_effects.push_back(effect); };
 	primitive_entity(const body_properties& body_properties, std::string n_name, const sf::Texture& box_texture);
 	~primitive_entity();
-	void update();
+	void update() override;
 private:
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	const sf::Texture& texture;
 	std::vector<shape> shapes;
 	std::vector<visual_effect> visual_effects;

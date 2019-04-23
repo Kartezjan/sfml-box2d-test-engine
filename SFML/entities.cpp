@@ -1,5 +1,6 @@
 #include "entities.h"
 #include "window.h"
+#include "animation.h"
 
 image_entity::~image_entity() {
 	delete visual_object;

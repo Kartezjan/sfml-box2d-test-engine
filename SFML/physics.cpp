@@ -142,10 +142,10 @@ body_properties create_hero(b2World& world, float x, float y)
 	shape->SetAsBox((37.f / 2) / SCALE, (50.f / 2) / SCALE);
 
 	b2Vec2 vertices[4];
-	vertices[0] = b2Vec2(0 / SCALE, 50. / SCALE);
-	vertices[1] = b2Vec2(0 / SCALE, 50. / SCALE);
-	vertices[2] = b2Vec2( 37 / SCALE, -50. / SCALE);
-	vertices[3] = b2Vec2(-37 / SCALE, -50. / SCALE);
+	vertices[0] = b2Vec2(-13.5*3 / SCALE, 25*3. / SCALE);
+	vertices[1] = b2Vec2(13.5*3 / SCALE, 25*3. / SCALE);
+	vertices[2] = b2Vec2( 13.5*3 / SCALE, -15*3. / SCALE);
+	vertices[3] = b2Vec2(-13.5*3 / SCALE, -15*3. / SCALE);
 
 	shape->Set(vertices, 4);
 

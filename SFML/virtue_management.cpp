@@ -20,13 +20,13 @@ void controllable::send_message(abstract_entity* source) {
 		if (keyboard_events[i].key == input_key::W) {
 			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= cooldown) {
 				previous_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				message.force = b2Vec2(0.0f, -1000.0f);
+				message.force = b2Vec2(0.0f, -10.0f);
 				message.type = force_type::APPLY_IMPULS_TO_CENTER;
 				send_message(keyboard_events[i], message);
 			}
 		}
 		else if (keyboard_events[i].key == input_key::S) {
-			message.force = b2Vec2(0.0f, 700.0f);
+			message.force = b2Vec2(0.0f, 7.0f);
 			send_message(keyboard_events[i], message);
 		}
 		else if (keyboard_events[i].key == input_key::A) {

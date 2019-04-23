@@ -19,13 +19,11 @@ void sprite_entity::update()
 	const auto mean_pos = to_sf_vec(position_sum) / static_cast<float>(count);
 	const auto mean_centroid = to_sf_vec(centroid_sum) / static_cast<float>(count);
 	animation_.update();
-	animation_.get_current_frame().setOrigin(mean_centroid * SCALE);
-	animation_.get_current_frame().setPosition(mean_pos * SCALE);
-	animation_.get_current_frame().setRotation(physical_body->GetAngle() * RAD_TO_DEGf);
-	animation_.get_current_frame().setScale({ 1.5f, 1.5f });
+	shape_.setTexture(&animation_.get_current_frame());
+	shape_.setPosition(to_sf_vec(physical_body->GetPosition()) * SCALE);
 }
 
 void sprite_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(animation_, states);
+	target.draw(shape_, states);
 }
