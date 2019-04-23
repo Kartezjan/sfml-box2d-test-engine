@@ -64,7 +64,6 @@ void trebuchet_spawn(universe& universe)
 	auto front_wheel = dynamic_cast<physical_entity*>(universe.all_entities.access(front_wheel_handle).get());
 	auto back_wheel = dynamic_cast<physical_entity*>(universe.all_entities.access(back_wheel_handle).get());
 	setup_car(*player, *front_wheel, *back_wheel, b2Vec2(-280.f,-10.f), b2Vec2(280.f,-10.f), 50000, universe);
-	player->virtues.push_back(std::make_unique<center_of_attention>(universe));
 
 	auto beam_handle = universe.all_entities += new primitive_entity (create_box(universe.world, 370, -200, 1000, 20, b2Vec2(-100,0), 0, 30.f, 0.7f), "trebuchet_beam", universe.resources.textures_["box"]);
 	auto cw_handle = universe.all_entities += new primitive_entity (create_box(universe.world, 668, -150, 70, 70, 500, 0.7f), "TREB_CW", universe.resources.textures_["box"]);

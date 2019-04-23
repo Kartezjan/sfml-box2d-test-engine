@@ -136,25 +136,23 @@ body_properties create_hero(b2World& world, float x, float y)
 	body_def.position = b2Vec2(x / SCALE, y / SCALE);
 	body_def.type = b2_dynamicBody;
 
-	hero.body_def = body_def;
-
 	auto shape = new b2PolygonShape;
-	shape->SetAsBox((37.f / 2) / SCALE, (50.f / 2) / SCALE);
 
 	b2Vec2 vertices[4];
-	vertices[0] = b2Vec2(-13.5*3 / SCALE, 25*3. / SCALE);
-	vertices[1] = b2Vec2(13.5*3 / SCALE, 25*3. / SCALE);
-	vertices[2] = b2Vec2( 13.5*3 / SCALE, -15*3. / SCALE);
-	vertices[3] = b2Vec2(-13.5*3 / SCALE, -15*3. / SCALE);
+	vertices[0] = b2Vec2(-5.*3 / SCALE, 25*3. / SCALE);
+	vertices[1] = b2Vec2(7.*3 / SCALE, 25*3. / SCALE);
+	vertices[2] = b2Vec2( 7.*3 / SCALE, -15*3. / SCALE);
+	vertices[3] = b2Vec2(-5.*3 / SCALE, -15*3. / SCALE);
 
 	shape->Set(vertices, 4);
 
 	b2FixtureDef fixture_def;
 	fixture_def.density = 1.f;
-	fixture_def.friction = 0.6f;
+	fixture_def.friction = 0.8f;
 	fixture_def.shape = shape;
 
 	hero.body_def = body_def;
+	hero.body_def.fixedRotation = true;
 	hero.fixtures.push_back(fixture_def);
 
 	return hero;
@@ -190,7 +188,6 @@ body_properties create_ground(b2World& world, float X, float Y, float width, flo
 	shape->SetAsBox((width / 2) / SCALE, (heigh / 2) / SCALE, b2Vec2(0.f / SCALE, 0.f / SCALE), 0);
 
 	b2FixtureDef fixture_def;
-	fixture_def.density = 500.f;
 	fixture_def.shape = shape;
 
 	ground_properties.body_def = body_def;

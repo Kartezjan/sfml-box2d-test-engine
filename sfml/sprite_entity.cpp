@@ -19,8 +19,17 @@ void sprite_entity::update()
 	const auto mean_pos = to_sf_vec(position_sum) / static_cast<float>(count);
 	const auto mean_centroid = to_sf_vec(centroid_sum) / static_cast<float>(count);
 	animation_.update();
+	const auto size = shape_.getTextureRect();
+	if (flip_)
+	{
+		shape_.setScale(-1.f, 1.f);
+	}
+	else
+	{
+		shape_.setScale(1.f, 1.f);
+	}
 	shape_.setTexture(&animation_.get_current_frame());
-	shape_.setPosition(to_sf_vec(physical_body->GetPosition()) * SCALE);
+	shape_.setPosition(mean_pos * SCALE);
 }
 
 void sprite_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const

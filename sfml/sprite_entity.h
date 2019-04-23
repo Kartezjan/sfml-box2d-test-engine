@@ -13,16 +13,18 @@ public:
 		shape_.setPoint(1, { 18.5*3, 25*3 });
 		shape_.setPoint(2, { 18.5*3, -25*3 });
 		shape_.setPoint(3, { -18.5*3, -25*3 });
-
 	}
 	~sprite_entity()
 	{
 		physical_body->GetWorld()->DestroyBody(physical_body);
 	}
 	void select_animation_set(std::size_t id) { animation_.select_animation(id); };
+	void flip(const bool opt) { flip_ = opt; }
 	void update() override;
 private:
 	animation_resource animation_;
 	sf::ConvexShape shape_;
 	void draw(sf::RenderTarget&, sf::RenderStates states) const override;
+	bool flip_ = false;
+	bool flipped_ = false;
 };

@@ -50,10 +50,10 @@ void applies_force::send_message(abstract_entity* source) {
 		}
 		switch (force_event.type) {
 		case force_type::APPLY_FORCE_TO_CENTER:
-			current_entity->get_physical_body()->ApplyForceToCenter(force_event.force, false);
+			current_entity->get_physical_body()->ApplyForceToCenter(force_event.force, true);
 			break;
 		case force_type::APPLY_IMPULS_TO_CENTER:
-			current_entity->get_physical_body()->ApplyLinearImpulseToCenter(force_event.force, false);
+			current_entity->get_physical_body()->ApplyLinearImpulseToCenter(force_event.force, true);
 			break;
 		default:
 			printf("Unknown force type\n");

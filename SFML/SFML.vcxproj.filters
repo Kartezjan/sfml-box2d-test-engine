@@ -96,6 +96,9 @@
     <ClCompile Include="sprite_entity.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
+    <ClCompile Include="is_playable.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="animation.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="is_playable.h">
+      <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
