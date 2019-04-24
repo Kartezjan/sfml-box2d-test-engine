@@ -101,8 +101,17 @@ void main()
 			e->send_message(&target);
 	};
 
+	sf::Event ev;
 	while (window.isOpen())
 	{
+		while (window.pollEvent(ev))
+		{
+			if(ev.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+
+		}
 		//Get input from the user
 		process_virtues(user_input);
 		process_virtues(camera);
