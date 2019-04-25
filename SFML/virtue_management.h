@@ -52,15 +52,6 @@ protected:
 	universe& cosmos;
 };
 
-class controllable : public virtue {
-public:
-	using virtue::virtue;
-	void send_message(abstract_entity* source) override; 
-private:
-	size_t cooldown = 1200;
-	size_t previous_timestamp = 0;
-}; 
-
 class applies_force : public virtue {
 public:
 	using virtue::virtue;

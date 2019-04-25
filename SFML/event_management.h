@@ -31,7 +31,7 @@ struct input_message : public message {
 struct force_message : public message {
 	force_type type;
 	b2Vec2 force;
-	abstract_entity* source;
+	entity_id target;
 };
 
 struct camera_message : public message {

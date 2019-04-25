@@ -15,6 +15,7 @@ public:
 	{
 		for (auto i : pattern)
 			assert(i < animation.size());
+		assert(pattern_.size());
 	}
 	const animation& get_animation() const { return animation_; }
 	const pattern& get_pattern() const { return pattern_; }
@@ -25,12 +26,22 @@ public:
 		assert(frame_id < pattern_.size());
 		current_frame = frame_id;
 	}
-	void update() { current_frame = ++current_frame % pattern_.size(); }
+	void update()
+	{
+		if (repeat_)
+			current_frame = ++current_frame % pattern_.size();
+		else
+			current_frame = std::min(++current_frame, pattern_.size() - 1);
+	}
 	void reset() { current_frame = 0; }
+	void repeats(const bool opt) { repeat_ = opt; }
+	bool repeatable() const {return repeat_; }
+	bool is_finished() const { return repeat_ ? false : (current_frame == pattern_.size() - 1); }
 private:
-	int current_frame = 0;
+	std::size_t current_frame = 0;
 	animation animation_;
 	pattern pattern_;
+	bool repeat_ = true;
 };
 
 typedef std::vector<animation_element> animation_set;
@@ -57,7 +68,7 @@ public:
 	}
 	animation_resource& operator=(animation_resource&& other) noexcept
 	{
-		std::move(other.get_animation_set().begin(),other.get_animation_set().end(), std::back_inserter(anims));
+		std::move(other.get_animation_set().begin(), other.get_animation_set().end(), std::back_inserter(anims));
 		return *this;
 	}
 	void operator+=(const animation_element& new_set) { anims.emplace_back(new_set); }
@@ -72,6 +83,10 @@ public:
 	const animation_element& get_current_animation() const { return const_cast<animation_resource*>(this)->get_current_animation(); }
 	void update() { get_current_animation().update(); }
 	const sf::Texture& get_current_frame() const { return get_current_animation().get_current_frame(); }
+	void repeats(const bool opt) { get_current_animation().repeats(opt); }
+	bool repeatable() const { return get_current_animation().repeatable(); }
+	void reset() { get_current_animation().reset(); }
+	bool is_finished() const { return get_current_animation().is_finished(); }
 private:
 	animation_set anims;
 	int current_animation = 0;

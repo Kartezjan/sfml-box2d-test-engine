@@ -99,6 +99,9 @@
     <ClCompile Include="is_playable.cpp">
       <Filter>Source Files\virtues</Filter>
     </ClCompile>
+    <ClCompile Include="scanner.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
@@ -186,6 +189,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="is_playable.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="scanner.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,7 +14,7 @@ body_properties create_kinematic_box(b2World& world, int X, int Y, float height,
 	fixture_def.shape = shape;
 
 	box_properties.body_def = body_def;
-	box_properties.fixtures.push_back(fixture_def);
+	box_properties.fixtures.push_back({ fixture_data{}, fixture_def });
 
 	return box_properties;
 }
@@ -33,7 +33,7 @@ body_properties create_box(b2World& world, int X, int Y, float height, float wid
 	fixture_def.shape = shape;
 
 	box_properties.body_def = body_def;
-	box_properties.fixtures.push_back(fixture_def);
+	box_properties.fixtures.push_back({ fixture_data{}, fixture_def });
 
 	return box_properties;
 }
@@ -52,7 +52,7 @@ body_properties create_box(b2World& world, int X, int Y, float height, float wid
 	fixture_def.shape = shape;
 
 	box_properties.body_def = body_def;
-	box_properties.fixtures.push_back(fixture_def);
+	box_properties.fixtures.push_back({ fixture_data{}, fixture_def });
 
 	return box_properties;
 }
@@ -75,7 +75,7 @@ body_properties create_ramp(b2World& world, float X, float Y) {
 	fixture_def.shape = shape;
 
 	ramp_properties.body_def = body_def;
-	ramp_properties.fixtures.push_back(fixture_def);
+	ramp_properties.fixtures.push_back({ fixture_data{}, fixture_def });
 
 	return ramp_properties;
 }
@@ -118,13 +118,13 @@ body_properties create_player(b2World& world, float X, float Y) {
 	fixture_def.density = 800.f;
 	fixture_def.friction = 0.7f;
 	fixture_def.shape = shape;
-	player_properties.fixtures.push_back(fixture_def);
+	player_properties.fixtures.push_back({ fixture_data{}, fixture_def });
 
 	fixture_def.shape = shape2;
-	player_properties.fixtures.push_back(fixture_def);
+	player_properties.fixtures.push_back({ fixture_data{}, fixture_def });
 
 	fixture_def.shape = shape3;
-	player_properties.fixtures.push_back(fixture_def);
+	player_properties.fixtures.push_back({ fixture_data{}, fixture_def });;
 
 	return player_properties;
 }
@@ -147,13 +147,24 @@ body_properties create_hero(b2World& world, float x, float y)
 	shape->Set(vertices, 4);
 
 	b2FixtureDef fixture_def;
-	fixture_def.density = 1.f;
+	fixture_def.density = 20.f;
 	fixture_def.friction = 0.8f;
 	fixture_def.shape = shape;
 
 	hero.body_def = body_def;
 	hero.body_def.fixedRotation = true;
-	hero.fixtures.push_back(fixture_def);
+	hero.fixtures.push_back({ fixture_data{}, fixture_def });;
+
+	auto leg_shape = new b2PolygonShape;
+	leg_shape->SetAsBox(5.5*3 / SCALE, 2 / SCALE, b2Vec2{ 1*3 / SCALE, 24.7*3 / SCALE }, 0);
+	b2FixtureDef leg_fixture;
+	leg_fixture.density = 20.f;
+	leg_fixture.friction= 0.8f;
+	leg_fixture.isSensor = true;
+
+	leg_fixture.shape = leg_shape;
+	leg_fixture.shape = leg_shape;
+	hero.fixtures.push_back({ fixture_data{fixture_data::type::foot}, leg_fixture });
 
 	return hero;
 }
@@ -174,7 +185,7 @@ body_properties create_circle(b2World& World, float X, float Y, float radius, fl
 	fixture_def.shape = shape_circle;
 
 	circle_properties.body_def = body_def;
-	circle_properties.fixtures.push_back(fixture_def);
+	circle_properties.fixtures.push_back({ fixture_data{}, fixture_def });;
 	return circle_properties;
 }
 
@@ -189,9 +200,10 @@ body_properties create_ground(b2World& world, float X, float Y, float width, flo
 
 	b2FixtureDef fixture_def;
 	fixture_def.shape = shape;
+	fixture_def.friction = 0.6;
 
 	ground_properties.body_def = body_def;
-	ground_properties.fixtures.push_back(fixture_def);
+	ground_properties.fixtures.push_back({ fixture_data{}, fixture_def });;
 
 	return ground_properties;
 }
@@ -211,7 +223,7 @@ body_properties create_box(b2World& world, int X, int Y) {
 	fixture_def.restitution = 0.3f;
 
 	box_properties.body_def = body_def;
-	box_properties.fixtures.push_back(fixture_def);
+	box_properties.fixtures.push_back({ fixture_data{}, fixture_def });;
 
 	return box_properties;
 }
@@ -220,7 +232,10 @@ b2Body* create_physical_body(const body_properties& properties, physical_entity*
 	b2Body* body = properties.world.CreateBody(&properties.body_def);
 	size_t i = 0;
 	for (auto fixture : properties.fixtures)
-		body->CreateFixture(&fixture);
+	{
+		auto fix = body->CreateFixture(&fixture.second);
+		fix->SetUserData(new fixture_data{ fixture.first });
+	}
 	body->SetUserData(target);
 	return body;
 }

@@ -70,26 +70,24 @@ void main()
 	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]);
 	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]);
 	universe.all_entities += new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 2000.f, 300.f,100.f, 750.f), "wall", resources.textures_["ground"]);
 
 	trebuchet_spawn(universe);
 
 	// Prepare the GUI
-	std::vector<renderable_entity*> gui_objects;
-
 	sf::Font font;
 	font.loadFromFile(R"(C:\Windows\Fonts\arial.ttf)");
-	sf::Text mouse_position_info;
-	mouse_position_info.setFont(font);
-	mouse_position_info.setString("mouse position - X: 0  Y: 0");
-	mouse_position_info.setCharacterSize(12);
-	mouse_position_info.setFillColor(sf::Color::Black);
-	mouse_position_info.setPosition(sf::Vector2f(0, 0));
+	auto mouse_position_info = new sf::Text;
+	mouse_position_info->setFont(font);
+	mouse_position_info->setString("mouse position - X: 0  Y: 0");
+	mouse_position_info->setCharacterSize(12);
+	mouse_position_info->setFillColor(sf::Color::Black);
+	mouse_position_info->setPosition(sf::Vector2f(0, 0));
 
-	image_entity mouse_pos_info_gui(&mouse_position_info, { 0,0 }, "GUI_MOUSE_POS", image_entity::MOUSE_CORD_MESSAGE, window);
-	mouse_pos_info_gui.sticky(true);
-	mouse_pos_info_gui.virtues.push_back(std::make_unique<changes_GUI_text>(universe));
-
-	gui_objects.push_back(&mouse_pos_info_gui);
+	auto mouse_text_handle = universe.gui_resources += new image_entity (mouse_position_info, { 0,0 }, "GUI_MOUSE_POS", image_entity::MOUSE_CORD_MESSAGE, window);
+	auto mouse_text = dynamic_cast<image_entity*>(universe.gui_resources[mouse_text_handle].get());
+	mouse_text->sticky(true);
+	mouse_text->virtues.push_back(std::make_unique<changes_GUI_text>(universe));
 
 	test_animation(universe.resources, window);
 	hero_test(universe);
@@ -116,11 +114,12 @@ void main()
 		process_virtues(user_input);
 		process_virtues(camera);
 		process_virtues(contact_handler);
-		//Invoke all GUI virtues (actions)
-		for (auto obj : gui_objects)
-			process_virtues(*obj);
 		//Invoke all physical entities' virtues (actions) 
 		process_virtues(editor_entity);
+		for(auto& gui_object : universe.gui_resources)
+		{
+			process_virtues(*gui_object.second);
+		}
 		if (!universe.editor_mode)
 		{
 			for (auto entity = universe.world.GetBodyList(); entity; entity = entity->GetNext())
@@ -135,7 +134,6 @@ void main()
 		window.clear(sf::Color::White);
 		update_and_render_scene(window, universe.world);
 		process_virtues(illusion_handler);
-		update_and_render_gui_objects(window, gui_objects);
 		for (auto& obj : universe.gui_resources) {
 			const auto renderable = dynamic_cast<renderable_entity*>(obj.second.get());
 			renderable->update();

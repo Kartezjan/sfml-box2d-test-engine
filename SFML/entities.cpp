@@ -2,13 +2,9 @@
 #include "window.h"
 #include "animation.h"
 
-image_entity::~image_entity() {
-	delete visual_object;
-}
-
 image_entity::image_entity(sf::Drawable* object, const sf::Vector2f pos,  const std::string& n_name, const content_type n_type, sf::RenderWindow& win_ref) : window(win_ref) {
 	type = entity_type::IMAGE;
-	visual_object = object;
+	visual_object = std::unique_ptr<sf::Drawable>(object);
 	name = n_name;
 	image_type = n_type;
 	position_ = pos;
@@ -23,7 +19,7 @@ void image_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 void image_entity::update() {
-	auto transformable = dynamic_cast<sf::Transformable*>(visual_object);
+	auto transformable = dynamic_cast<sf::Transformable*>(visual_object.get());
 	if(sticky_)
 	{
 		map_to_window(*transformable, position_, window);
@@ -36,7 +32,7 @@ void image_entity::update() {
 	switch(image_type)
 	{
 	case content_type::ANIMATION:
-		anim = dynamic_cast<animation_resource*>(visual_object);
+		anim = dynamic_cast<animation_resource*>(visual_object.get());
 		assert(anim);
 		anim->update();
 		break;
@@ -57,7 +53,6 @@ primitive_entity::~primitive_entity() {
 		delete obj.visual_object;
 	for (auto& obj : visual_effects)
 		delete obj.visual_object;
-	physical_body->GetWorld()->DestroyBody(physical_body);
 }
 
 void primitive_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -12,14 +12,23 @@ struct shape {
 	sf::Drawable* visual_object;
 };
 
-struct body_properties {
+struct fixture_data
+{
+	enum type {standard = 0, foot};
+	type fixture_type = standard;
+	int contact_handler_data = 0;
+};
+
+struct body_properties
+{
 	body_properties(b2World& world_ref) :
 		world(world_ref)
 	{}
-	std::vector<b2FixtureDef> fixtures;
+	std::vector<std::pair<fixture_data, b2FixtureDef>> fixtures;
 	b2BodyDef body_def;
 	b2World& world;
 };
+
 
 body_properties create_hero(b2World& world, float x, float y);
 

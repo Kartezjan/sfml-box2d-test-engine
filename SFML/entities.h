@@ -50,16 +50,15 @@ class image_entity : public renderable_entity {
 public:
 	enum content_type { MOUSE_CORD_MESSAGE, TEXT, ILLUSION, ROPE, ANIMATION };
 	image_entity(sf::Drawable* object, const sf::Vector2f position, const std::string& n_name, const content_type n_type, sf::RenderWindow& win_ref);
-	~image_entity();
 	void update(void) override;
-	sf::Drawable* get_visual_object() { return visual_object; }
-	content_type get_image_type() { return image_type; };
+	sf::Drawable* get_visual_object() const { return visual_object.get(); }
+	content_type get_image_type() const { return image_type; };
 	bool is_sticky() const { return sticky_; }
 	void sticky(const bool opt) { sticky_ = opt; }
 	void update_position(const sf::Vector2f new_pos) { position_ = new_pos; }
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	sf::Drawable* visual_object;
+	std::unique_ptr<sf::Drawable> visual_object;
 	content_type image_type;
 	sf::RenderWindow& window;
 	bool sticky_ = false;
@@ -70,6 +69,15 @@ class physical_entity : public renderable_entity
 {
 public:
 	physical_entity(entity_id id = 0) : renderable_entity(id) {}
+	~physical_entity()
+	{
+		for(auto fixture = physical_body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+		{
+			if(const auto ptr = static_cast<fixture_data*>(fixture->GetUserData()))
+				delete ptr;
+		}
+		physical_body->GetWorld()->DestroyBody(physical_body);
+	}
 	b2Body* get_physical_body() { return physical_body; };
 	void update() override { assert(false); }
 protected:

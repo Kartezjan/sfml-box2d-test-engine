@@ -1,48 +1,10 @@
 //#include "virtue_management.h"
 #include "contacts.h"
 
-void controllable::send_message(abstract_entity* source) {
-	auto entity = dynamic_cast<physical_entity*>(source);
-	assert(entity);
-	auto& keyboard_events = cosmos.message_queues.get_queue<input_message>();
-	auto& force_events = cosmos.message_queues.get_queue<force_message>();
-	force_message message;
-	message.source = source;
-	message.type = force_type::APPLY_FORCE_TO_CENTER;
-
-	auto send_message = [&force_events](input_message& msg_to_be_marked, force_message& new_msg) {
-		force_events.push_back(new_msg);
-		msg_to_be_marked.delete_this_message = true;
-	};
-
-	for (size_t i = 0; i < keyboard_events.size(); ++i) {
-		keyboard_events[i].delete_this_message = true;
-		if (keyboard_events[i].key == input_key::W) {
-			if (cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= cooldown) {
-				previous_timestamp = cosmos.universe_clock.getElapsedTime().asMilliseconds();
-				message.force = b2Vec2(0.0f, -10.0f);
-				message.type = force_type::APPLY_IMPULS_TO_CENTER;
-				send_message(keyboard_events[i], message);
-			}
-		}
-		else if (keyboard_events[i].key == input_key::S) {
-			message.force = b2Vec2(0.0f, 7.0f);
-			send_message(keyboard_events[i], message);
-		}
-		else if (keyboard_events[i].key == input_key::A) {
-			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), -90 * DEG_TO_RADf);
-		}
-		else if (keyboard_events[i].key == input_key::D) {
-			entity->get_physical_body()->SetTransform(entity->get_physical_body()->GetPosition(), 90 * DEG_TO_RADf);
-			send_message(keyboard_events[i], message);
-		}
-	}
-}
-
 void applies_force::send_message(abstract_entity* source) {
 	auto& force_events = cosmos.message_queues.get_queue<force_message>();
 	for (auto& force_event : force_events) {
-		auto current_entity = dynamic_cast<physical_entity*>(force_event.source);
+		auto current_entity = dynamic_cast<physical_entity*>(cosmos.all_entities[force_event.target].get());
 		force_event.delete_this_message= true;
 		if (!current_entity) {
 			printf("You cannot apply force to an abstract entity. (It is also possible that the entity has lost his physical body)\n");

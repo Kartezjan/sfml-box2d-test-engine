@@ -19,6 +19,7 @@ public:
 		physical_body->GetWorld()->DestroyBody(physical_body);
 	}
 	void select_animation_set(std::size_t id) { animation_.select_animation(id); };
+	animation_element& get_current_animation() { return animation_.get_current_animation(); }
 	void flip(const bool opt) { flip_ = opt; }
 	void update() override;
 private:

@@ -7,6 +7,11 @@ void sprite_entity::update()
 	b2Vec2 body_pos = {0,0};
 	b2Vec2 centroid_sum = {0,0};
 	for (auto fixture = physical_body->GetFixtureList(); fixture; fixture = fixture->GetNext()) {
+		if (static_cast<fixture_data*>(fixture->GetUserData())->fixture_type != fixture_data::standard)
+		{
+			// Don't account auxiliary fixtures.
+			continue;
+		}
 		auto pos = get_shape_position(fixture->GetShape());
 		body_pos = physical_body->GetPosition();
 		centroid_sum += pos;
