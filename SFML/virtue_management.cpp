@@ -72,11 +72,6 @@ void destroys_all_doomed_objects::send_message(abstract_entity* source) {
 	using namespace std::placeholders;
 	auto& death_queue = cosmos.message_queues.get_queue<death_message>();
 	for (auto& msg : death_queue) {
-		if(auto entity = dynamic_cast<physical_entity*>(cosmos.all_entities[msg.target].get())) {
-			auto body = entity->get_physical_body();
-			auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
-			std::for_each(contact_queue.begin(), contact_queue.end(), std::bind(discard_all_messages, body, _1));
-		}
 		msg.delete_this_message = true;
 		cosmos.all_entities -= msg.target;
 	}

@@ -26,6 +26,7 @@ public:
 	std::string name;
 	std::vector<std::unique_ptr<virtue>> virtues;
 	entity_type get_type() { return type; }
+	const std::string& get_name() { return name; }
 	virtual void spec() {}
 	entity_id id() const { return id_; }
 	void change_id(const entity_id id) { id_ = id; }
@@ -90,6 +91,7 @@ public:
 	void addVisualEffect(visual_effect effect) { visual_effects.push_back(effect); };
 	primitive_entity(const body_properties& body_properties, std::string n_name, const sf::Texture& box_texture);
 	~primitive_entity();
+	void expand_texture_rect();
 	void update() override;
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

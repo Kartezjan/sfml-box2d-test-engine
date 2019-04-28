@@ -6,7 +6,7 @@ class is_playable : public virtue
 {
 public:
 	is_playable(universe& uni_ref) :  virtue(uni_ref), 
-	scanner_(uni_ref, {(180.f +-45.f) * DEG_TO_RADf, (180.f + 45.f) * DEG_TO_RADf}, 5.f * DEG_TO_RADf, 500 / SCALE) {}
+	scanner_(uni_ref, 5.f * DEG_TO_RADf, 500 / SCALE) {}
 	enum class state { idle = 0, running };
 	void send_message(abstract_entity* source) override;
 private:

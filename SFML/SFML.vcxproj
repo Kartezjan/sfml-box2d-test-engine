@@ -125,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="behavior.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="car.cpp" />
     <ClCompile Include="contacts.cpp" />
@@ -133,6 +134,7 @@
     <ClCompile Include="entity_map.cpp" />
     <ClCompile Include="event_management.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="has_hit_points.cpp" />
     <ClCompile Include="is_playable.cpp" />
     <ClCompile Include="scanner.cpp" />
     <ClCompile Include="sprite_entity.cpp" />
@@ -149,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
+    <ClInclude Include="behavior.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="car.h" />
     <ClInclude Include="contacts.h" />
@@ -158,6 +161,7 @@
     <ClInclude Include="entity_map.h" />
     <ClInclude Include="event_management.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="has_hit_points.h" />
     <ClInclude Include="is_playable.h" />
     <ClInclude Include="scanner.h" />
     <ClInclude Include="sprite_entity.h" />

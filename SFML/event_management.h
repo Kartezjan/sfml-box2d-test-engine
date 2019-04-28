@@ -58,4 +58,10 @@ struct show_illusion_message : public message {
 	int32 duration;
 };
 
-typedef message_storage<input_message, force_message, camera_message, contact_message, death_message, show_illusion_message> complete_message_storage;
+struct hit_points_modifier_message : public message
+{
+	entity_id target;
+	int delta;
+};
+
+typedef message_storage<input_message, force_message, camera_message, contact_message, death_message, show_illusion_message, hit_points_modifier_message> complete_message_storage;

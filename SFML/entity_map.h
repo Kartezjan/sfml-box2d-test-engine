@@ -26,4 +26,5 @@ struct entity_map
 	auto end() { return map_.end(); }
 private:
 	std::unordered_map<entity_id, std::unique_ptr<abstract_entity>> map_;
+	entity_id last_id_ = 1;
 };

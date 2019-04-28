@@ -99,7 +99,13 @@
     <ClCompile Include="is_playable.cpp">
       <Filter>Source Files\virtues</Filter>
     </ClCompile>
+    <ClCompile Include="behavior.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
     <ClCompile Include="scanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="has_hit_points.cpp">
       <Filter>Source Files\virtues</Filter>
     </ClCompile>
   </ItemGroup>
@@ -191,7 +197,13 @@
     <ClInclude Include="is_playable.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
+    <ClInclude Include="behavior.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
     <ClInclude Include="scanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="has_hit_points.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>

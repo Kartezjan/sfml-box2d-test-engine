@@ -21,7 +21,7 @@ void main()
 {
 
 	//Prepare the window 
-	sf::RenderWindow window(sf::VideoMode(1024, 768, 32), "Test");
+	sf::RenderWindow window(sf::VideoMode(1024, 768, 32), "Force Boy The Movie The Game 2: Electric Boogaloo");
 
 	window.setFramerateLimit(60);
 
@@ -32,12 +32,18 @@ void main()
 
 	// Prepare textures
 	resource_manager resources;
-	resources.textures_ += std::make_pair<>("ground", R"(gfx\ground.png)");
-	resources.textures_ += std::make_pair<>("box", R"(gfx\box.jpg)");
-	resources.textures_ += std::make_pair<>("wheel", R"(gfx\wheel.png)");
-	resources.textures_ += std::make_pair<>("red_car", R"(gfx\red_car.jpg)");
-	resources.textures_ += std::make_pair<>("black", R"(gfx\black.png)");
-	resources.textures_ += std::make_pair<>("bang", R"(gfx\bang.png)");
+	resources.textures_ += {"ground_large", R"(gfx\ground_large.png)"};
+	resources.textures_["ground_large"].setRepeated(true);
+resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
+	resources.textures_["ground_top"].setRepeated(true);
+	resources.textures_ += {"wall1", R"(gfx\wall.png)"};
+	resources.textures_["wall1"].setRepeated(true);
+	resources.textures_ += {"box", R"(gfx\box.jpg)"};
+	resources.textures_ += {"wheel", R"(gfx\wheel.png)"};
+	resources.textures_ += {"red_car", R"(gfx\red_car.jpg)"};
+	resources.textures_ += {"black", R"(gfx\black.png)"};
+	resources.textures_ += {"bang", R"(gfx\bang.png)"};
+	resources.textures_ += {"cyan", R"(gfx\cyan.png)"};
 
 	resources.font = sf::Font();
 	resources.font.loadFromFile(R"(C:\Windows\Fonts\arial.ttf)");
@@ -67,10 +73,15 @@ void main()
 	abstract_entity illusion_handler;
 	illusion_handler.virtues.push_back(std::make_unique<shows_illusions>(universe, window));
 
-	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f + 12000.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]);
-	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f, 500.f, 10000, 200), "ground", resources.textures_["ground"]);
-	universe.all_entities += new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground"]);
-	universe.all_entities += new primitive_entity(create_ground(universe.world, 2000.f, 300.f,100.f, 750.f), "wall", resources.textures_["ground"]);
+	entity_id ground = 0;
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f + 12000.f, 700.f, 10000, 600), "ground", resources.textures_["ground_large"]);
+	ground = universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f, 700.f, 10000, 582), "ground", resources.textures_["ground_large"]);
+	dynamic_cast<primitive_entity*>(universe.all_entities[ground].get())->expand_texture_rect();
+	ground = universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f, 400.f, 10000, 18), "ground", resources.textures_["ground_top"]);
+	dynamic_cast<primitive_entity*>(universe.all_entities[ground].get())->expand_texture_rect();
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f, 700.f, 10000, 600), "ground", resources.textures_["ground_large"]);
+	universe.all_entities += new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground_large"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 2000.f, 300.f,100.f, 750.f), "wall1", resources.textures_["wall1"]);
 
 	trebuchet_spawn(universe);
 

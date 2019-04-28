@@ -5,6 +5,7 @@
 #include "sprite_entity.h"
 #include "is_playable.h"
 #include "camera.h"
+#include "behavior.h"
 
 void gui_test(universe& universe, sf::RenderWindow& window)
 {
@@ -18,10 +19,15 @@ void gui_test(universe& universe, sf::RenderWindow& window)
 
 void hero_test(universe& universe)
 {
-	auto handle = universe.all_entities += new sprite_entity(create_hero(universe.world, 1000, -250), universe.resources.anims_res_["hero"]);
+	auto handle = universe.all_entities += new sprite_entity(create_hero(universe.world, 1000, -250), universe.resources.anims_res_["hero"], 3.f);
 	auto test = universe.all_entities += new primitive_entity(create_hero(universe.world, 1500, -250), "foo" ,  universe.resources.textures_["box"]);
 	dynamic_cast<sprite_entity*>(universe.all_entities[handle].get())->virtues.push_back(std::make_unique<is_playable>(universe));
 	dynamic_cast<sprite_entity*>(universe.all_entities[handle].get())->virtues.push_back(std::make_unique<center_of_attention>(universe));
+	dynamic_cast<sprite_entity*>(universe.all_entities[handle].get())->set_category(sprite_entity::category::enemy);
+
+	auto ranger_handle = universe.all_entities += new sprite_entity(create_ranger(universe.world, 1970, -250), universe.resources.anims_res_["ranger"], 3.f);
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->virtues.push_back(
+		std::make_unique<ranger_behavior>(ranger_behavior{universe, 1970.f, 300.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true}));
 }
 
 std::pair<std::vector<std::string>, pattern> load_animation_from_file
@@ -43,7 +49,68 @@ std::pair<std::vector<std::string>, pattern> load_animation_from_file
 	return { texture_ids, new_pattern };
 }
 
-void test_animation(resource_manager& resources, sf::RenderWindow& window)
+void load_ranger(resource_manager& resources)
+{
+	auto attack_paths = std::vector<std::pair<std::string, std::string>>
+	{
+		{"ranger_attack0", R"(gfx\ranger\Attack_02\Character_01_Attack_02_01.png)"},
+		{"ranger_attack1", R"(gfx\ranger\Attack_02\Character_01_Attack_02_02.png)"},
+		{"ranger_attack2", R"(gfx\ranger\Attack_02\Character_01_Attack_02_03.png)"},
+		{"ranger_attack3", R"(gfx\ranger\Attack_02\Character_01_Attack_02_04.png)"},
+		{"ranger_attack4", R"(gfx\ranger\Attack_02\Character_01_Attack_02_05.png)"},
+		{"ranger_attack5", R"(gfx\ranger\Attack_02\Character_01_Attack_02_06.png)"},
+		{"ranger_attack6", R"(gfx\ranger\Attack_02\Character_01_Attack_02_07.png)"},
+		{"ranger_attack7", R"(gfx\ranger\Attack_02\Character_01_Attack_02_08.png)"},
+		{"ranger_attack8", R"(gfx\ranger\Attack_02\Character_01_Attack_02_09.png)"},
+		{"ranger_attack9", R"(gfx\ranger\Attack_02\Character_01_Attack_02_10.png)"},
+		{"ranger_attack10", R"(gfx\ranger\Attack_02\Character_01_Attack_02_11.png)"},
+		{"ranger_attack11", R"(gfx\ranger\Attack_02\Character_01_Attack_02_12.png)"},
+		{"ranger_attack12", R"(gfx\ranger\Attack_02\Character_01_Attack_02_13.png)"},
+		{"ranger_attack13", R"(gfx\ranger\Attack_02\Character_01_Attack_02_14.png)"},
+		{"ranger_attack14", R"(gfx\ranger\Attack_02\Character_01_Attack_02_15.png)"},
+		{"ranger_attack15", R"(gfx\ranger\Attack_02\Character_01_Attack_02_16.png)"}
+	};
+
+	auto walk_paths = std::vector<std::pair<std::string, std::string>>
+	{
+		{"ranger_walk0", R"(gfx\ranger\Walk\Character_01_Walk_01.png)"},
+		{"ranger_walk1", R"(gfx\ranger\Walk\Character_01_Walk_02.png)"},
+		{"ranger_walk2", R"(gfx\ranger\Walk\Character_01_Walk_03.png)"},
+		{"ranger_walk3", R"(gfx\ranger\Walk\Character_01_Walk_04.png)"},
+		{"ranger_walk4", R"(gfx\ranger\Walk\Character_01_Walk_05.png)"},
+		{"ranger_walk5", R"(gfx\ranger\Walk\Character_01_Walk_06.png)"},
+		{"ranger_walk6", R"(gfx\ranger\Walk\Character_01_Walk_07.png)"},
+		{"ranger_walk7", R"(gfx\ranger\Walk\Character_01_Walk_08.png)"},
+		{"ranger_walk8", R"(gfx\ranger\Walk\Character_01_Walk_09.png)"},
+		{"ranger_walk9", R"(gfx\ranger\Walk\Character_01_Walk_10.png)"},
+		{"ranger_walk10", R"(gfx\ranger\Walk\Character_01_Walk_11.png)"},
+		{"ranger_walk11", R"(gfx\ranger\Walk\Character_01_Walk_12.png)"}
+	};
+
+	auto idle_paths = std::vector<std::pair<std::string, std::string>>
+	{
+		{"ranger_idle0", R"(gfx\ranger\Idle\Character_01_Idle1.png)"},
+		{"ranger_idle1", R"(gfx\ranger\Idle\Character_01_Idle2.png)"},
+		{"ranger_idle2", R"(gfx\ranger\Idle\Character_01_Idle3.png)"},
+		{"ranger_idle3", R"(gfx\ranger\Idle\Character_01_Idle4.png)"},
+		{"ranger_idle4", R"(gfx\ranger\Idle\Character_01_Idle5.png)"},
+		{"ranger_idle5", R"(gfx\ranger\Idle\Character_01_Idle6.png)"},
+		{"ranger_idle6", R"(gfx\ranger\Idle\Character_01_Idle7.png)"},
+		{"ranger_idle7", R"(gfx\ranger\Idle\Character_01_Idle8.png)"},
+		{"ranger_idle8", R"(gfx\ranger\Idle\Character_01_Idle9.png)"},
+		{"ranger_idle9", R"(gfx\ranger\Idle\Character_01_Idle10.png)"},
+		{"ranger_idle10", R"(gfx\ranger\Idle\Character_01_Idle11.png)"},
+		{"ranger_idle11", R"(gfx\ranger\Idle\Character_01_Idle12.png)"}
+	};
+	auto idle = load_animation_from_file(resources, idle_paths, 6);
+	auto walk = load_animation_from_file(resources, walk_paths, 6);
+	auto attack = load_animation_from_file(resources, attack_paths, 6);
+	auto& anim_res = resources.anims_res_ += {"ranger", idle.first, idle.second};
+	resources.anims_res_.update({ "ranger", walk.first, walk.second });
+	resources.anims_res_.update({ "ranger", attack.first, attack.second });
+}
+
+void load_hero(resource_manager& resources)
 {
 	auto run_paths = std::vector<std::pair<std::string, std::string>>
 	{
@@ -98,4 +165,10 @@ void test_animation(resource_manager& resources, sf::RenderWindow& window)
 	resources.anims_res_.update({ "hero" , grab.first, grab.second });
 	resources.anims_res_.update({ "hero" , jump.first, jump.second });
 	resources.anims_res_.update({ "hero" , magick.first, magick.second });
+}
+
+void test_animation(resource_manager& resources, sf::RenderWindow& window)
+{
+	load_hero(resources);
+	load_ranger(resources);
 }

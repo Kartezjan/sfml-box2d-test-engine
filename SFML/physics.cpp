@@ -129,6 +129,46 @@ body_properties create_player(b2World& world, float X, float Y) {
 	return player_properties;
 }
 
+body_properties create_ranger(b2World& world, float x, float y)
+{
+	body_properties hero(world);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(x / SCALE, y / SCALE);
+	body_def.type = b2_dynamicBody;
+
+	auto shape = new b2PolygonShape;
+
+	b2Vec2 vertices[4];
+	vertices[0] = b2Vec2(-13.*3 / SCALE, 17*3. / SCALE);
+	vertices[1] = b2Vec2(13.*3 / SCALE, 17*3. / SCALE);
+	vertices[2] = b2Vec2( 13.*3 / SCALE, -17*3. / SCALE);
+	vertices[3] = b2Vec2(-13.*3 / SCALE, -17*3. / SCALE);
+
+	shape->Set(vertices, 4);
+
+	b2FixtureDef fixture_def;
+	fixture_def.density = 20.f;
+	fixture_def.friction = 0.8f;
+	fixture_def.shape = shape;
+
+	hero.body_def = body_def;
+	hero.body_def.fixedRotation = true;
+	hero.fixtures.push_back({ fixture_data{}, fixture_def });;
+
+	auto leg_shape = new b2PolygonShape;
+	leg_shape->SetAsBox(5.5*3 / SCALE, 2 / SCALE, b2Vec2{ 1*3 / SCALE, 16.7*3 / SCALE }, 0);
+	b2FixtureDef leg_fixture;
+	leg_fixture.density = 20.f;
+	leg_fixture.friction= 0.8f;
+	leg_fixture.isSensor = true;
+
+	leg_fixture.shape = leg_shape;
+	leg_fixture.shape = leg_shape;
+	hero.fixtures.push_back({ fixture_data{fixture_data::type::foot}, leg_fixture });
+
+	return hero;
+}
+
 body_properties create_hero(b2World& world, float x, float y)
 {
 	body_properties hero(world);

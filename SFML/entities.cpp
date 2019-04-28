@@ -55,6 +55,19 @@ primitive_entity::~primitive_entity() {
 		delete obj.visual_object;
 }
 
+void primitive_entity::expand_texture_rect()
+{
+	for(auto& shape : shapes)
+	{
+		auto obj = dynamic_cast<sf::ConvexShape*>(shape.visual_object);
+		if(obj)
+		{
+			const auto bounds = obj->getLocalBounds();
+			obj->setTextureRect(sf::IntRect{bounds});
+		}
+	}
+}
+
 void primitive_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.transform *= getTransform();
 	states.texture = &texture;
@@ -73,8 +86,9 @@ void primitive_entity::update() {
 		pos += body_pos;
 		utillity::rotate(pos, b2Vec2(body_pos.x, body_pos.y), physical_body->GetAngle());
 		if (fixture->GetShape()->m_type == fixture->GetShape()->e_polygon) {
-			static_cast<sf::ConvexShape*>(shapes[shape_count].visual_object)->setPosition(sf::Vector2f(pos.x * SCALE, pos.y * SCALE));
-			static_cast<sf::ConvexShape*>(shapes[shape_count].visual_object)->setRotation(physical_body->GetAngle() * 180 / b2_pi);
+			auto current_shape = dynamic_cast<sf::ConvexShape*>(shapes[shape_count].visual_object);
+			current_shape->setPosition(sf::Vector2f(pos.x * SCALE, pos.y * SCALE));
+			current_shape->setRotation(physical_body->GetAngle() * 180 / b2_pi);
 		}
 		else {
 			static_cast<sf::CircleShape*>(shapes[shape_count].visual_object)->setPosition(sf::Vector2f(pos.x * SCALE, pos.y * SCALE));

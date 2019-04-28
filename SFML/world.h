@@ -1,5 +1,7 @@
 #pragma once
 
+#include <random>
+
 #include "config.h"
 #include "entity_map.h"
 
@@ -10,7 +12,8 @@ struct universe {
 	universe(b2Vec2 gravity, resource_manager& res) :
 		world(gravity),
 		resources(res),
-		mouse_pos(0, 0)
+		mouse_pos(0, 0),
+		rng(0xFA7A1)
 	{}
 	b2World world;
 	complete_message_storage message_queues;
@@ -20,4 +23,5 @@ struct universe {
 	entity_map all_entities;
 	bool editor_mode = false;
 	entity_map gui_resources;
+	std::default_random_engine rng;
 };

@@ -31,6 +31,7 @@ struct body_properties
 
 
 body_properties create_hero(b2World& world, float x, float y);
+body_properties create_ranger(b2World& world, float x, float y);
 
 body_properties create_ground(b2World& World, float X, float Y, float width, float heigh);
 
