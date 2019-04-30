@@ -1,5 +1,6 @@
 #include "source.h"
 #include "editor.h"
+#include "processes_hp_messages.h"
 
 void update_and_render_gui_objects(sf::RenderWindow& window, std::vector<renderable_entity*> gui_objects) {
 	for(auto obj : gui_objects) {
@@ -44,9 +45,12 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 	resources.textures_ += {"black", R"(gfx\black.png)"};
 	resources.textures_ += {"bang", R"(gfx\bang.png)"};
 	resources.textures_ += {"cyan", R"(gfx\cyan.png)"};
+	resources.textures_ += {"heart", R"(gfx\heart.png)"};
 
 	resources.font = sf::Font();
 	resources.font.loadFromFile(R"(C:\Windows\Fonts\arial.ttf)");
+
+	test_animation(resources, window);
 
 	// Prepare the world
 	universe universe(b2Vec2(0.0f, 9.8f), resources);
@@ -65,6 +69,7 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 	nature.virtues.push_back(std::make_unique<applies_force>(universe));
 	// nature.virtues.push_back(std::make_unique<spawns_objects>(universe));
 	nature.virtues.push_back(std::make_unique<destroys_all_doomed_objects>(universe));
+	nature.virtues.emplace_back(std::make_unique<processes_hp_messages>(universe));
 	//nature.virtues.emplace_back(std::make_unique<editor>(universe, window));
 
 	abstract_entity editor_entity;
@@ -84,6 +89,7 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 	universe.all_entities += new primitive_entity(create_ground(universe.world, 2000.f, 300.f,100.f, 750.f), "wall1", resources.textures_["wall1"]);
 
 	trebuchet_spawn(universe);
+	auto hero_handle = hero_test(universe);
 
 	// Prepare the GUI
 	sf::Font font;
@@ -100,8 +106,19 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 	mouse_text->sticky(true);
 	mouse_text->virtues.push_back(std::make_unique<changes_GUI_text>(universe));
 
-	test_animation(universe.resources, window);
-	hero_test(universe);
+	auto health_status = new sf::Text("100", font, 40);
+	health_status->setFillColor(sf::Color(220, 0, 40));
+	auto heart_img = new sf::RectangleShape(sf::Vector2f{45,45});
+	heart_img->setTexture(&universe.resources.textures_["heart"]);
+	auto heart_handle = universe.gui_resources += new image_entity(heart_img, { 0,20 }, "HEART", image_entity::ILLUSION, window);
+
+	auto hp_status_handle = universe.gui_resources += new image_entity(health_status, { 50, 15 }, "HP_STATUS", image_entity::TEXT, window);
+	auto hp_status = dynamic_cast<image_entity*>(universe.gui_resources[hp_status_handle].get());
+	hp_status->sticky(true);
+	auto heart = dynamic_cast<image_entity*>(universe.gui_resources[heart_handle].get());
+	hp_status->virtues.emplace_back(std::make_unique<updates_hit_points_status>(universe, hero_handle));
+	heart->sticky(true);
+
 	
 	//process virtues lambda function
 

@@ -2,6 +2,8 @@
 #include "virtue_management.h"
 #include "scanner.h"
 
+class sprite_entity;
+
 class is_playable : public virtue
 {
 public:
@@ -16,6 +18,8 @@ private:
 	time_restriction magick_cast_duration_{cosmos.universe_clock, 250};
 	bool casts_magick_ = false;
 	bool stands_on_ground(const entity_id source) const;
+	void die(sprite_entity* who);
 	bool inv_direction_ = false;
+	bool died_ = false;
 	scanner scanner_;
 };

@@ -1,10 +1,10 @@
 #include "GUI.h"
+#include "sprite_entity.h"
 
 void setup_gui(std::vector<renderable_entity*>& container, sf::RenderWindow& win_ref, universe& uni_ref)
 {
 
 }
-
 void changes_GUI_text::send_message(abstract_entity* source) {
 	if (source->get_type() == entity_type::IMAGE) {
 
@@ -22,6 +22,15 @@ void changes_GUI_text::send_message(abstract_entity* source) {
 	}
 	else
 		printf("This virtue is only for images.\n");
+}
+
+void updates_hit_points_status::send_message(abstract_entity* source)
+{
+	auto text_holder = dynamic_cast<image_entity*>(source);
+	assert(text_holder);
+	auto text = dynamic_cast<sf::Text*>(text_holder->get_visual_object());
+	const auto hp = dynamic_cast<sprite_entity*>(cosmos.all_entities[target_].get())->hp();
+	text->setString(hp <= 0 ? "0" : std::to_string(hp));
 }
 
 void shows_illusions::send_message(abstract_entity* source) {

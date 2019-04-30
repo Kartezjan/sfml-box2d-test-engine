@@ -29,6 +29,16 @@ public:
 	void send_message(abstract_entity* source);
 };
 
+class hp_removal_upon_collision : public virtue
+{
+public:
+	hp_removal_upon_collision(universe& uni_ref, const int delta, const std::size_t cooldown) : 
+		virtue(uni_ref), delta_(delta), damage_tick_(cosmos.universe_clock, cooldown) {}
+	void send_message(abstract_entity* source) override;
+	int delta_;
+	time_restriction damage_tick_;
+};
+
 class explodes_upon_collision : public virtue {
 public:
 	explodes_upon_collision(universe& uni_ref, float blast_rad, float blast_pow) : virtue(uni_ref) 

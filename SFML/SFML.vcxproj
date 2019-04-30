@@ -136,6 +136,7 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="has_hit_points.cpp" />
     <ClCompile Include="is_playable.cpp" />
+    <ClCompile Include="processes_hp_messages.cpp" />
     <ClCompile Include="scanner.cpp" />
     <ClCompile Include="sprite_entity.cpp" />
     <ClCompile Include="toolbox.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="has_hit_points.h" />
     <ClInclude Include="is_playable.h" />
+    <ClInclude Include="processes_hp_messages.h" />
     <ClInclude Include="scanner.h" />
     <ClInclude Include="sprite_entity.h" />
     <ClInclude Include="observer_ptr.h" />

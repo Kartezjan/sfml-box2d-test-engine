@@ -1,4 +1,5 @@
 #include "contacts.h"
+#include "sprite_entity.h"
 
 void handles_contacts::send_message(abstract_entity* source) {
 	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
@@ -27,6 +28,8 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 			continue;
 		}
 		if (msg.owner_a == source->id() || msg.owner_b == source->id()) {
+			if (msg.contact_type != contact_type::COLLISION)
+				continue;
 			auto& death_queue = cosmos.message_queues.get_queue<death_message>();
 			auto does_exist = std::find_if(death_queue.begin(), death_queue.end(), [source](death_message& msg_in_vector) {
 				return source->id() == msg_in_vector.target;
@@ -37,6 +40,30 @@ void destroys_upon_collision::send_message(abstract_entity* source) {
 				death_queue.push_back(death_msg);
 				msg.delete_this_message = true;
 			}
+		}
+	}
+}
+
+void hp_removal_upon_collision::send_message(abstract_entity* source)
+{
+	auto target_id = entity_id{ 0 };
+	auto& contact_queue = cosmos.message_queues.get_queue<contact_message>();
+	auto& hp_queue = cosmos.message_queues.get_queue<hit_points_modifier_message>();
+	for (auto& msg : contact_queue) {
+		if (!cosmos.all_entities.exists(msg.owner_a) || !cosmos.all_entities.exists(msg.owner_b)) {
+			msg.delete_this_message = true;
+			continue;
+		}
+		if (damage_tick_.can_use() && (msg.owner_a == source->id() || msg.owner_b == source->id())) {
+			target_id = msg.owner_a == source->id() ? msg.owner_b : msg.owner_a;
+			msg.delete_this_message = true;
+		}
+		else
+			continue;
+		const auto target = dynamic_cast<sprite_entity*>(cosmos.all_entities[target_id].get());
+		if (target)
+		{
+			hp_queue.emplace_back(hit_points_modifier_message{false, 2, target_id, delta_ });
 		}
 	}
 }

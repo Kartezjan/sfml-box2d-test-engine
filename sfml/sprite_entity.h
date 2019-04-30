@@ -27,11 +27,13 @@ public:
 	void update() override;
 	category get_category() const { return cat_; }
 	void set_category(const category cat) { cat_ = cat; }
+	int hp() const { return hp_; }
+	void modify_hp(const int delta) { hp_ += delta; }
 private:
+	void draw(sf::RenderTarget&, sf::RenderStates states) const override;
 	animation_resource animation_;
 	sf::ConvexShape shape_;
-	void draw(sf::RenderTarget&, sf::RenderStates states) const override;
 	bool flip_ = false;
-	bool flipped_ = false;
 	category cat_ = category::neutral;
+	int hp_ = 100; // this should be as a separate component
 };

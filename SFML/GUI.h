@@ -11,6 +11,13 @@ public:
 	void send_message(abstract_entity* source);
 };
 
+class updates_hit_points_status  : public virtue {
+public:
+	updates_hit_points_status(universe& uni_ref, entity_id target) : virtue(uni_ref), target_(target) {}
+	void send_message(abstract_entity* source) override;
+private:
+	entity_id target_;
+};
 class shows_illusions : public virtue {
 public:
 	shows_illusions(universe& uni_ref, sf::RenderWindow& win_ref) : virtue(uni_ref), window(win_ref) {}

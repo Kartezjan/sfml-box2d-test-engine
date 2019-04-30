@@ -5,7 +5,15 @@
 
 void is_playable::send_message(abstract_entity* source)
 {
-	const auto entity = dynamic_cast<sprite_entity*>(source);
+	if (died_)
+		return;
+	auto entity = dynamic_cast<sprite_entity*>(source);
+	if(entity->hp() <= 0)
+	{
+		// bye, cruel world!
+		die(entity);
+		return;
+	}
 	assert(entity);
 	const auto body = entity->get_physical_body();
 	assert(body);
@@ -159,4 +167,11 @@ bool is_playable::stands_on_ground(const entity_id source) const
 		}
 	}
 	return false;
+}
+
+void is_playable::die(sprite_entity* who)
+{
+	who->select_animation_set(6);
+	who->get_current_animation().repeats(false);
+	died_ = true;
 }

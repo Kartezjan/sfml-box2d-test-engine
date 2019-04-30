@@ -268,6 +268,7 @@ void ranger_behavior::shoot(physical_entity* source)
 		"bullet", cosmos.resources.textures_["cyan"]
 	);
 	cosmos.all_entities[handle]->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
+	cosmos.all_entities[handle]->virtues.push_back(std::make_unique<hp_removal_upon_collision>(cosmos, damage_pattern_(cosmos.rng), 50));
 	auto bullet_body = dynamic_cast<primitive_entity*>(cosmos.all_entities[handle].get())->get_physical_body();
 	const auto dir = direction_ ? 1 : -1;
 	const auto force = b2Vec2{ dir * cosf(angle) * speed * bullet_body->GetMass(), sinf(angle) * speed * bullet_body->GetMass() };

@@ -17,7 +17,7 @@ void gui_test(universe& universe, sf::RenderWindow& window)
 	foo->add_item("bar");
 }
 
-void hero_test(universe& universe)
+entity_id hero_test(universe& universe)
 {
 	auto handle = universe.all_entities += new sprite_entity(create_hero(universe.world, 1000, -250), universe.resources.anims_res_["hero"], 3.f);
 	auto test = universe.all_entities += new primitive_entity(create_hero(universe.world, 1500, -250), "foo" ,  universe.resources.textures_["box"]);
@@ -28,6 +28,8 @@ void hero_test(universe& universe)
 	auto ranger_handle = universe.all_entities += new sprite_entity(create_ranger(universe.world, 1970, -250), universe.resources.anims_res_["ranger"], 3.f);
 	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->virtues.push_back(
 		std::make_unique<ranger_behavior>(ranger_behavior{universe, 1970.f, 300.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true}));
+
+	return handle;
 }
 
 std::pair<std::vector<std::string>, pattern> load_animation_from_file
@@ -152,12 +154,22 @@ void load_hero(resource_manager& resources)
 		{"hero_magick2", R"(gfx\fuccboi\adventurer-cast-loop-02.png)"},
 		{"hero_magick3", R"(gfx\fuccboi\adventurer-cast-loop-03.png)"},
 	};
+	const auto death_paths = std::vector<std::pair<std::string, std::string>>
+	{
+		{"hero_death1", R"(gfx\fuccboi\adventurer-die-01.png)"},
+		{"hero_death2", R"(gfx\fuccboi\adventurer-die-02.png)"},
+		{"hero_death3", R"(gfx\fuccboi\adventurer-die-03.png)"},
+		{"hero_death4", R"(gfx\fuccboi\adventurer-die-04.png)"},
+		{"hero_death5", R"(gfx\fuccboi\adventurer-die-05.png)"},
+		{"hero_death6", R"(gfx\fuccboi\adventurer-die-06.png)"},
+	};
 	auto idle = load_animation_from_file(resources, idle_paths, 15);
 	auto run = load_animation_from_file(resources, run_paths, 6);
 	auto fall = load_animation_from_file(resources, fall_paths, 6);
 	auto grab = load_animation_from_file(resources, grab_paths, 12);
 	auto jump = load_animation_from_file(resources, jump_paths, 15);
 	auto magick = load_animation_from_file(resources, magick_paths, 6);
+	auto death = load_animation_from_file(resources, death_paths, 30);
 
 	auto& anim_res = resources.anims_res_ += {"hero", idle.first, idle.second};
 	resources.anims_res_.update({ "hero" , run.first, run.second });
@@ -165,6 +177,7 @@ void load_hero(resource_manager& resources)
 	resources.anims_res_.update({ "hero" , grab.first, grab.second });
 	resources.anims_res_.update({ "hero" , jump.first, jump.second });
 	resources.anims_res_.update({ "hero" , magick.first, magick.second });
+	resources.anims_res_.update({ "hero" , death.first, death.second });
 }
 
 void test_animation(resource_manager& resources, sf::RenderWindow& window)

@@ -108,6 +108,9 @@
     <ClCompile Include="has_hit_points.cpp">
       <Filter>Source Files\virtues</Filter>
     </ClCompile>
+    <ClCompile Include="processes_hp_messages.cpp">
+      <Filter>Source Files\virtues</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h">
@@ -204,6 +207,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="has_hit_points.h">
+      <Filter>Header Files\virtues</Filter>
+    </ClInclude>
+    <ClInclude Include="processes_hp_messages.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
   </ItemGroup>
