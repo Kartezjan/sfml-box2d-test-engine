@@ -212,5 +212,8 @@
     <ClInclude Include="processes_hp_messages.h">
       <Filter>Header Files\virtues</Filter>
     </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>Header Files\entities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

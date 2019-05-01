@@ -4,10 +4,11 @@
 
 #include "virtue_management.h"
 
-enum class preview_type {box = 0, bomb, count};
+enum class preview_type {box = 0, bomb, ranger, count};
 
 constexpr std::size_t box = 0;
 constexpr std::size_t bomb = 1;
+constexpr std::size_t ranger = 2;
 
 
 class editor : public virtue

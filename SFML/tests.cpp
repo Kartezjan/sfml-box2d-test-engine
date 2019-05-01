@@ -28,6 +28,7 @@ entity_id hero_test(universe& universe)
 	auto ranger_handle = universe.all_entities += new sprite_entity(create_ranger(universe.world, 1970, -250), universe.resources.anims_res_["ranger"], 3.f);
 	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->virtues.push_back(
 		std::make_unique<ranger_behavior>(ranger_behavior{universe, 1970.f, 300.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true}));
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->set_category(sprite_entity::category::ally);
 
 	return handle;
 }
@@ -104,12 +105,33 @@ void load_ranger(resource_manager& resources)
 		{"ranger_idle10", R"(gfx\ranger\Idle\Character_01_Idle11.png)"},
 		{"ranger_idle11", R"(gfx\ranger\Idle\Character_01_Idle12.png)"}
 	};
+	auto death_paths = std::vector<std::pair<std::string, std::string>>
+	{
+		{"ranger_death0", R"(gfx\ranger\Death\Character_01_Death_01.png)"},
+		{"ranger_death1", R"(gfx\ranger\Death\Character_01_Death_02.png)"},
+		{"ranger_death2", R"(gfx\ranger\Death\Character_01_Death_03.png)"},
+		{"ranger_death3", R"(gfx\ranger\Death\Character_01_Death_04.png)"},
+		{"ranger_death4", R"(gfx\ranger\Death\Character_01_Death_05.png)"},
+		{"ranger_death5", R"(gfx\ranger\Death\Character_01_Death_06.png)"},
+		{"ranger_death6", R"(gfx\ranger\Death\Character_01_Death_07.png)"},
+		{"ranger_death7", R"(gfx\ranger\Death\Character_01_Death_08.png)"},
+		{"ranger_death8", R"(gfx\ranger\Death\Character_01_Death_09.png)"},
+		{"ranger_death9", R"(gfx\ranger\Death\Character_01_Death_10.png)"},
+		{"ranger_death10", R"(gfx\ranger\Death\Character_01_Death_11.png)"},
+		{"ranger_death11", R"(gfx\ranger\Death\Character_01_Death_12.png)"},
+		{"ranger_death12", R"(gfx\ranger\Death\Character_01_Death_13.png)"},
+		{"ranger_death13", R"(gfx\ranger\Death\Character_01_Death_14.png)"},
+		{"ranger_death14", R"(gfx\ranger\Death\Character_01_Death_15.png)"},
+		{"ranger_death15", R"(gfx\ranger\Death\Character_01_Death_16.png)"},
+	};
 	auto idle = load_animation_from_file(resources, idle_paths, 6);
 	auto walk = load_animation_from_file(resources, walk_paths, 6);
 	auto attack = load_animation_from_file(resources, attack_paths, 6);
+	auto death = load_animation_from_file(resources, death_paths, 6);
 	auto& anim_res = resources.anims_res_ += {"ranger", idle.first, idle.second};
 	resources.anims_res_.update({ "ranger", walk.first, walk.second });
 	resources.anims_res_.update({ "ranger", attack.first, attack.second });
+	resources.anims_res_.update({ "ranger", death.first, death.second });
 }
 
 void load_hero(resource_manager& resources)

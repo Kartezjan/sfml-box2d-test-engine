@@ -88,6 +88,11 @@ void produces_user_input::send_message(abstract_entity* source) {
 		message.key = input_key::Enter;
 		keyboard_events.push_back(message);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+	{
+		message.key = input_key::SHIFT;
+		keyboard_events.push_back(message);
+	}
 
 	/*!!!!!!!!!!!!!!!!!!!!!!!*/
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && cosmos.universe_clock.getElapsedTime().asMilliseconds() - previous_timestamp >= 300) {

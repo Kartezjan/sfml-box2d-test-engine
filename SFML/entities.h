@@ -52,14 +52,14 @@ public:
 	enum content_type { MOUSE_CORD_MESSAGE, TEXT, ILLUSION, ROPE, ANIMATION };
 	image_entity(sf::Drawable* object, const sf::Vector2f position, const std::string& n_name, const content_type n_type, sf::RenderWindow& win_ref);
 	void update(void) override;
-	sf::Drawable* get_visual_object() const { return visual_object.get(); }
+	sf::Drawable* get_visual_object() const { return visual_object; }
 	content_type get_image_type() const { return image_type; };
 	bool is_sticky() const { return sticky_; }
 	void sticky(const bool opt) { sticky_ = opt; }
 	void update_position(const sf::Vector2f new_pos) { position_ = new_pos; }
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	std::unique_ptr<sf::Drawable> visual_object;
+	sf::Drawable* visual_object = nullptr;
 	content_type image_type;
 	sf::RenderWindow& window;
 	bool sticky_ = false;

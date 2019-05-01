@@ -88,6 +88,14 @@ void ranger_behavior::send_message(abstract_entity* source)
 {
 	auto entity = dynamic_cast<sprite_entity*>(source);
 	auto body = entity->get_physical_body();
+	if (entity->hp() <= 0)
+	{
+		die(entity);
+	}
+	if(died_)
+	{
+		return;
+	}
 	const auto current_velocity = body->GetLinearVelocity();
 	physical_entity* closest_target = nullptr;
 	auto closest_target_distance = shooting_range + 1.f;
@@ -282,4 +290,11 @@ void ranger_behavior::shoot(physical_entity* source)
 			force_type::APPLY_IMPULS_TO_CENTER, force, handle
 		}
 	);
+}
+
+void ranger_behavior::die(sprite_entity* who)
+{
+	who->select_animation_set(3);
+	who->get_current_animation().repeats(false);
+	died_ = true;
 }

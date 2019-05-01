@@ -4,7 +4,7 @@
 
 image_entity::image_entity(sf::Drawable* object, const sf::Vector2f pos,  const std::string& n_name, const content_type n_type, sf::RenderWindow& win_ref) : window(win_ref) {
 	type = entity_type::IMAGE;
-	visual_object = std::unique_ptr<sf::Drawable>(object);
+	visual_object = object;
 	name = n_name;
 	image_type = n_type;
 	position_ = pos;
@@ -19,7 +19,7 @@ void image_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 void image_entity::update() {
-	auto transformable = dynamic_cast<sf::Transformable*>(visual_object.get());
+	auto transformable = dynamic_cast<sf::Transformable*>(visual_object);
 	if(sticky_)
 	{
 		map_to_window(*transformable, position_, window);
@@ -32,7 +32,7 @@ void image_entity::update() {
 	switch(image_type)
 	{
 	case content_type::ANIMATION:
-		anim = dynamic_cast<animation_resource*>(visual_object.get());
+		anim = dynamic_cast<animation_resource*>(visual_object);
 		assert(anim);
 		anim->update();
 		break;

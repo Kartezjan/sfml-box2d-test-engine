@@ -164,6 +164,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="has_hit_points.h" />
     <ClInclude Include="is_playable.h" />
+    <ClInclude Include="particle.h" />
     <ClInclude Include="processes_hp_messages.h" />
     <ClInclude Include="scanner.h" />
     <ClInclude Include="sprite_entity.h" />

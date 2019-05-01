@@ -2,6 +2,7 @@
 #include "sprite_entity.h"
 #include "animation.h"
 #include "scanner.h"
+#include "contacts.h"
 
 void is_playable::send_message(abstract_entity* source)
 {
@@ -55,6 +56,12 @@ void is_playable::send_message(abstract_entity* source)
 		case input_key::SPACE:
 			cast_magick = magick_cooldown_.can_use();
 			msg.delete_this_message = true;
+		case input_key::SHIFT:
+			if(magick_cooldown_.can_use())
+			{
+				alternative_spell_ = !alternative_spell_;
+			}
+			msg.delete_this_message = true;
 		default:
 			break;
 		}
@@ -97,17 +104,24 @@ void is_playable::send_message(abstract_entity* source)
 			casts_magick_ = false;
 			entity->select_animation_set(0);
 			// do magick n stuff
-			const auto offset = inv_direction_ ? b2Vec2{-100 / SCALE, 0} : b2Vec2{ 100 / SCALE, 0 };
-			const auto direction = inv_direction_ ? 180 : 0;
-			const auto cone = std::pair<float,float>{ (direction - 45.f)*DEG_TO_RADf, (direction + 45.f) * DEG_TO_RADf };
-			const auto power = -1.0e2f;
-			auto bodies_in_range = scanner_.scan(entity, cone, offset);
-			for (auto& current_entity : bodies_in_range)
+			if(alternative_spell_)
 			{
-				const auto pos_diff = dynamic_cast<physical_entity*>(cosmos.all_entities[current_entity].get())->get_physical_body()->GetPosition() - body->GetPosition();
-				const auto normal = b2Vec2{ cosf(pos_diff.x), sinf(pos_diff.y) };
-				auto msg = force_message{ false, 2, force_type::APPLY_IMPULS_TO_CENTER, {normal.x * power, normal.y * power}, current_entity };
-				force_queue.push_back(msg);
+				shoot(entity);
+			}
+			else
+			{
+				const auto offset = inv_direction_ ? b2Vec2{ -100 / SCALE, 0 } : b2Vec2{ 100 / SCALE, 0 };
+				const auto direction = inv_direction_ ? 180 : 0;
+				const auto cone = std::pair<float, float>{ (direction - 45.f)*DEG_TO_RADf, (direction + 45.f) * DEG_TO_RADf };
+				const auto power = -1.0e3f;
+				auto bodies_in_range = scanner_.scan(entity, cone, offset);
+				for (auto& current_entity : bodies_in_range)
+				{
+					const auto pos_diff = dynamic_cast<physical_entity*>(cosmos.all_entities[current_entity].get())->get_physical_body()->GetPosition() - body->GetPosition();
+					const auto normal = b2Vec2{ cosf(pos_diff.x), sinf(pos_diff.y) };
+					auto msg = force_message{ false, 2, force_type::APPLY_IMPULS_TO_CENTER, {normal.x * power, normal.y * power}, current_entity };
+					force_queue.push_back(msg);
+				}
 			}
 		}
 		// we are still casting
@@ -175,3 +189,38 @@ void is_playable::die(sprite_entity* who)
 	who->get_current_animation().repeats(false);
 	died_ = true;
 }
+
+void is_playable::shoot(physical_entity* source)
+
+{
+	constexpr float speed = 15.f;
+	auto& force_queue = cosmos.message_queues.get_queue<force_message>();
+	const auto angle = bullet_pattern_(cosmos.rng);
+	const auto body = source->get_physical_body();
+	const auto offset = !inv_direction_ ? std::pair<float, float>{80.f, 0.f} : std::pair<float, float>{ -80.f, 0.f };
+	auto handle = cosmos.all_entities += new primitive_entity
+	(
+		create_circle(cosmos.world, 
+		body->GetPosition().x * SCALE + offset.first,
+		body->GetPosition().y * SCALE + offset.second,
+		14.f, 1.f, 0.7f),
+		"bullet", cosmos.resources.textures_["red_car"]
+	);
+	cosmos.all_entities[handle]->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
+	cosmos.all_entities[handle]->virtues.push_back(std::make_unique<hp_removal_upon_collision>(cosmos, damage_pattern_(cosmos.rng), 50, sprite_entity::category::ally));
+	auto bullet_body = dynamic_cast<primitive_entity*>(cosmos.all_entities[handle].get())->get_physical_body();
+	const auto dir = !inv_direction_ ? 1 : -1;
+	const auto force = b2Vec2{ dir * cosf(angle) * speed * bullet_body->GetMass(), sinf(angle) * speed * bullet_body->GetMass() };
+	force_queue.push_back
+	(
+		force_message
+		{
+			{
+				false, 2
+			},
+			force_type::APPLY_IMPULS_TO_CENTER, force, handle
+		}
+	);
+}
+
+

@@ -1,6 +1,8 @@
 #include "editor.h"
 #include "toolbox.h"
 #include "contacts.h"
+#include "sprite_entity.h"
+#include "behavior.h"
 
 void editor::send_message(abstract_entity* source)
 {
@@ -78,6 +80,17 @@ void editor::make_previews()
 
 	previews_data_[box] = std::unique_ptr<sf::Drawable>(box_shape.back().visual_object);
 	previews_data_[bomb] = std::unique_ptr<sf::Drawable>(bomb_shape.back().visual_object);
+	auto& ranger_texture = cosmos.resources.textures_["ranger_idle0"];
+	const auto size = sf::Vector2f(ranger_texture.getSize());
+	const auto scale = 3.f;
+	previews_data_[ranger] = std::make_unique<sf::ConvexShape>(4);
+	auto shape = dynamic_cast<sf::ConvexShape*>(previews_data_[ranger].get());
+	shape->setPoint(0, sf::Vector2f{ -size.x/2.f, size.y/2.f } * scale);
+	shape->setPoint(1, sf::Vector2f{ size.x/2.f, size.y/2.f } * scale);
+	shape->setPoint(2, sf::Vector2f{ size.x/2.f, -size.y/2.f } * scale);
+	shape->setPoint(3, sf::Vector2f{ -size.x/2.f, -size.y/2.f} * scale);
+	shape->setTexture(&ranger_texture);
+	shape->setFillColor(sf::Color::Green);
 	for (auto i = 0; i < previews_data_.size(); ++i)
 	{
 		const auto handle = cosmos.gui_resources += new image_entity(previews_data_[i].get(), { 0,0 }, "preview", image_entity::ILLUSION, win_ref_);
@@ -98,6 +111,7 @@ void editor::make_toolbox()
 	);
 	const auto spawner = dynamic_cast<toolbox*>(cosmos.gui_resources[spawner_gui_handle_].get());
 	spawner->add_item("Bomb");
+	spawner->add_item("Ranger");
 	spawner->add_item("Back...");
 	spawner->hidden(true);
 
@@ -143,6 +157,10 @@ void editor::navigate()
 			select_preview(bomb);
 			current_primitive_ = bomb;
 			break;
+		case ranger:
+			select_preview(ranger);
+			current_primitive_ = ranger;
+			break;
 		default: //exit
 			current_menu->hidden(true);
 			dynamic_cast<image_entity*>(cosmos.gui_resources[current_preview_].get())->hidden(true);
@@ -157,6 +175,7 @@ void editor::spawn_primitive()
 {
 	auto handle = 0;
 	primitive_entity* obj = nullptr;
+	sprite_entity* spr = nullptr;
 	switch(current_primitive_)
 	{
 	case box:
@@ -177,6 +196,13 @@ void editor::spawn_primitive()
 		obj = dynamic_cast<primitive_entity*>(cosmos.all_entities.access(handle).get());
 		obj->virtues.push_back(std::make_unique<destroys_upon_collision>(cosmos));
 		obj->virtues.push_back(std::make_unique<explodes_upon_collision>(cosmos, 200.f, 1e+5F ));
+		break;
+	case ranger:
+		handle = cosmos.all_entities += new sprite_entity(create_ranger(cosmos.world, cosmos.mouse_pos.x, cosmos.mouse_pos.y), cosmos.resources.anims_res_["ranger"], 3.f);
+		spr = dynamic_cast<sprite_entity*>(cosmos.all_entities.access(handle).get());
+		spr->virtues.push_back(
+			std::make_unique<ranger_behavior>(ranger_behavior{cosmos, cosmos.mouse_pos.x, 800.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true})
+		);
 		break;
 	default:
 		assert(false);
