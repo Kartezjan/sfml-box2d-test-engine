@@ -290,11 +290,13 @@ void ranger_behavior::shoot(physical_entity* source)
 			force_type::APPLY_IMPULS_TO_CENTER, force, handle
 		}
 	);
+	shooting_sound_.play();
 }
 
 void ranger_behavior::die(sprite_entity* who)
 {
 	who->select_animation_set(3);
 	who->get_current_animation().repeats(false);
+	who->get_physical_body()->DestroyFixture(who->get_physical_body()->GetFixtureList());
 	died_ = true;
 }

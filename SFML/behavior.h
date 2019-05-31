@@ -12,7 +12,10 @@ class ranger_behavior final : public virtue
 {
 public:
 	ranger_behavior(universe& uni_ref, const float center, const float range, const std::pair<float,float> angle_range, const bool direction)
-		: virtue(uni_ref), center_(center / SCALE), range_(range / SCALE), direction_(direction), angle_range_(angle_range), bullet_pattern_(angle_range_.first/2.f, angle_range_.second), damage_pattern_(-12, -4) { }
+		: virtue(uni_ref), center_(center / SCALE), range_(range / SCALE), direction_(direction), angle_range_(angle_range), bullet_pattern_(angle_range_.second * (-1), 0.f), damage_pattern_(-14, -8)
+	{
+		shooting_sound_.setBuffer(*cosmos.resources.sound_effects["lazer"]);
+	}
 	void send_message(abstract_entity* source) override;
 private:
 	void shoot(physical_entity* source);
@@ -27,6 +30,7 @@ private:
 	bool retreats_ = false;
 	bool obstacle_ = false;
 	bool died_ = false;
+	sf::Sound shooting_sound_;
 	std::vector<entity_id> targets_;
 	time_restriction decision_tick_{ cosmos.universe_clock, 200 };
 	time_restriction attack_duration_{ cosmos.universe_clock, 1200 };

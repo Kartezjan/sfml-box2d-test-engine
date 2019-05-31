@@ -18,7 +18,7 @@ void update_and_render_scene(sf::RenderWindow& window, b2World& world) {
 }
 
 
-void main()
+int main()
 {
 
 	//Prepare the window 
@@ -50,7 +50,23 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 	resources.font = sf::Font();
 	resources.font.loadFromFile(R"(C:\Windows\Fonts\arial.ttf)");
 
+	sf::Music theme;
+	if (!theme.openFromFile(R"(sfx\DOS88CityStomper.ogg)"))
+	{
+		printf("Cannot open file 'DOS88CityStomper.ogg'");
+		return 0;
+	}
+	theme.setLoop(true);
+	theme.setVolume(30);
+	theme.play();
+		
+	resources.add_sound_effect("lazer", R"(sfx\lazer.ogg)");
+	resources.add_sound_effect("walk", R"(sfx\step_metal.ogg)");
+	resources.add_sound_effect("force", R"(sfx\UnrelentingForce.ogg)");
+	resources.add_sound_effect("ball", R"(sfx\IceForm.ogg)");
+
 	test_animation(resources, window);
+
 
 	// Prepare the world
 	universe universe(b2Vec2(0.0f, 9.8f), resources);
@@ -87,6 +103,25 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 	universe.all_entities += new primitive_entity(create_ground(universe.world, 400.f, 700.f, 10000, 600), "ground", resources.textures_["ground_large"]);
 	universe.all_entities += new primitive_entity(create_ramp(universe.world, 400.f, 300.f), "ground", resources.textures_["ground_large"]);
 	universe.all_entities += new primitive_entity(create_ground(universe.world, 2000.f, 300.f,100.f, 750.f), "wall1", resources.textures_["wall1"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 3800.f, 0.f,100.f, 500.f), "wall2", resources.textures_["wall1"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 4800.f, 100.f,100.f, 750.f), "wall3", resources.textures_["wall1"]);
+
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 3875.f, -250.f, 150, 50), "ground", resources.textures_["ground_large"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 4725.f, -250.f, 150, 50), "ground", resources.textures_["ground_large"]);
+
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 3875.f, -950.f, 150, 50), "ground", resources.textures_["ground_large"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 4725.f, -950.f, 150, 50), "ground", resources.textures_["ground_large"]);
+
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 3875.f, -650.f, 150, 50), "ground", resources.textures_["ground_large"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 4725.f, -650.f, 150, 50), "ground", resources.textures_["ground_large"]);
+
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 3800.f, -750.f, 100.f, 1000.f), "wall2", resources.textures_["wall1"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 4800.f, -750.f, 100.f, 1000.f), "wall3", resources.textures_["wall1"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 4100.f, -1250.f, 800, 10), "ground", resources.textures_["ground_large"]);
+
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 5726.f, 154.f, 200, 150), "ground", resources.textures_["ground_large"]);
+	universe.all_entities += new primitive_entity(create_ground(universe.world, 6160.f, -132.f, 200, 150), "ground", resources.textures_["ground_large"]);
+	make_obstacles(universe);
 
 	trebuchet_spawn(universe);
 	auto hero_handle = hero_test(universe);
@@ -134,7 +169,7 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 		{
 			if(ev.type == sf::Event::Closed)
 			{
-				window.close();
+				return(0);
 			}
 
 		}

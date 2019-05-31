@@ -209,6 +209,26 @@ body_properties create_hero(b2World& world, float x, float y)
 	return hero;
 }
 
+body_properties create_static_circle(b2World& World, float X, float Y, float radius, float density, float friction) {
+	body_properties circle_properties(World);
+	b2BodyDef body_def;
+	body_def.position = b2Vec2(X / SCALE, Y / SCALE);
+	body_def.type = b2_staticBody;
+
+	b2CircleShape* shape_circle = new b2CircleShape;
+	shape_circle->m_radius = radius / SCALE;
+
+	b2FixtureDef fixture_def;
+	fixture_def.density = density;
+	fixture_def.friction = friction;
+	fixture_def.restitution = 0.4f;
+	fixture_def.shape = shape_circle;
+
+	circle_properties.body_def = body_def;
+	circle_properties.fixtures.push_back({ fixture_data{}, fixture_def });;
+	return circle_properties;
+}
+
 body_properties create_circle(b2World& World, float X, float Y, float radius, float density, float friction) {
 	body_properties circle_properties(World);
 	b2BodyDef body_def;

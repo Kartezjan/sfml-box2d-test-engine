@@ -7,6 +7,41 @@
 #include "camera.h"
 #include "behavior.h"
 
+void make_obstacle(universe& universe, const float x, const float y, const float rope_length = 200, const b2Vec2 block_offset = { -200.f, 100.f }, const b2Vec2 block_size = { 80.f, 80.f })
+{
+	auto hook_handle = universe.all_entities += new primitive_entity(create_static_circle(universe.world, x, y, 20.f, 500.f, 0.5f), "hook", universe.resources.textures_["black"]);
+	auto weight_handle = universe.all_entities += new primitive_entity(create_box(universe.world, x + block_offset.x, y + block_offset.y, block_size.x, block_size.y, 100.f, 0.5f), "box", universe.resources.textures_["box"]);
+	b2RopeJointDef rope;
+	rope.bodyA = dynamic_cast<physical_entity*>(universe.all_entities[hook_handle].get())->get_physical_body();
+	rope.bodyB = dynamic_cast<physical_entity*>(universe.all_entities[weight_handle].get())->get_physical_body();
+	rope.localAnchorA.Set(0, 0);
+	rope.localAnchorB.Set(0, 0);
+	rope.maxLength = rope_length / SCALE;
+	universe.world.CreateJoint(&rope);
+	//add rope visuals
+	sf::ConvexShape* rope_visual = new sf::ConvexShape;
+	float thickness = 10.0f / 2;
+	rope_visual->setPointCount(4);
+	rope_visual->setFillColor(sf::Color::Red);
+
+	visual_effect effect;
+	effect.type = visual_effect_type::ROPE_JOINT;
+	effect.visual_object = rope_visual;
+	effect.property = thickness;
+	
+	dynamic_cast<primitive_entity*>(universe.all_entities[hook_handle].get())->addVisualEffect(effect);
+}
+
+void make_obstacles(universe& universe)
+{
+	make_obstacle(universe, 4300.f, 0.f);
+	make_obstacle(universe, 4300.f, -300.f);
+	make_obstacle(universe, 4300.f, -600.f);
+	make_obstacle(universe, 4300.f, -900.f);
+	make_obstacle(universe, 4300.f, -1200.f);
+	make_obstacle(universe, 7400.f, -1040.f, 950.f, { 6600.f, 0.f }, { 120.f, 120.f });
+}
+
 void gui_test(universe& universe, sf::RenderWindow& window)
 {
 	auto handle = universe.gui_resources += new toolbox(universe.resources.font, window, { 200.f, 200.f }, "example", "figaro");
@@ -30,6 +65,20 @@ entity_id hero_test(universe& universe)
 		std::make_unique<ranger_behavior>(ranger_behavior{universe, 1970.f, 300.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true}));
 	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->set_category(sprite_entity::category::ally);
 
+	ranger_handle = universe.all_entities += new sprite_entity(create_ranger(universe.world, 3900, -675), universe.resources.anims_res_["ranger"], 3.f);
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->virtues.push_back(
+		std::make_unique<ranger_behavior>(ranger_behavior{universe, 3900.f, 300.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true}));
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->set_category(sprite_entity::category::ally);
+
+	ranger_handle = universe.all_entities += new sprite_entity(create_ranger(universe.world, 2300, 400), universe.resources.anims_res_["ranger"], 3.f);
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->virtues.push_back(
+		std::make_unique<ranger_behavior>(ranger_behavior{universe, 2300.f, 1200.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true}));
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->set_category(sprite_entity::category::ally);
+
+	ranger_handle = universe.all_entities += new sprite_entity(create_ranger(universe.world, 2400, 400), universe.resources.anims_res_["ranger"], 3.f);
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->virtues.push_back(
+		std::make_unique<ranger_behavior>(ranger_behavior{universe, 2400.f, 1200.f, {-15.f * DEG_TO_RADf, 15.f * DEG_TO_RADf}, true}));
+	dynamic_cast<sprite_entity*>(universe.all_entities[ranger_handle].get())->set_category(sprite_entity::category::ally);
 	return handle;
 }
 

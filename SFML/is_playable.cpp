@@ -71,6 +71,7 @@ void is_playable::send_message(abstract_entity* source)
 			entity->select_animation_set(5);
 			casts_magick_ = true;
 			magick_cast_duration_.can_use();
+			alternative_spell_ ? ball_sfx_.play() : force_sfx_.play();
 		}
 		else if(apply && !casts_magick_)
 		{
@@ -85,6 +86,10 @@ void is_playable::send_message(abstract_entity* source)
 			if (stands)
 			{
 				entity->select_animation_set(1);
+				if (walk_sfx_.getStatus() == sf::SoundSource::Status::Stopped)
+				{
+					walk_sfx_.play();
+				}
 			}
 		}
 		else if(jump && !casts_magick_)

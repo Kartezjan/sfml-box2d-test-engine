@@ -7,6 +7,7 @@
 #include <functional>
 
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 #include <Box2D\Box2D.h>
 
 constexpr auto SCALE = 30.f;

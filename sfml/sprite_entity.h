@@ -17,10 +17,6 @@ public:
 		shape_.setPoint(2, sf::Vector2f{ size.x/2, -size.y/2 } * scale);
 		shape_.setPoint(3, sf::Vector2f{ -size.x/2, -size.y/2} * scale);
 	}
-	~sprite_entity()
-	{
-		physical_body->GetWorld()->DestroyBody(physical_body);
-	}
 	void select_animation_set(std::size_t id) { animation_.select_animation(id); };
 	animation_element& get_current_animation() { return animation_.get_current_animation(); }
 	void flip(const bool opt) { flip_ = opt; }

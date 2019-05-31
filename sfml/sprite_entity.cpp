@@ -20,21 +20,22 @@ void sprite_entity::update()
 		position_sum += pos;
 		++count;
 	}
-	assert(count);
-	const auto mean_pos = to_sf_vec(position_sum) / static_cast<float>(count);
-	const auto mean_centroid = to_sf_vec(centroid_sum) / static_cast<float>(count);
-	animation_.update();
-	const auto size = shape_.getTextureRect();
-	if (flip_)
-	{
-		shape_.setScale(-1.f, 1.f);
-	}
-	else
-	{
-		shape_.setScale(1.f, 1.f);
+	if (count) {
+		const auto mean_pos = to_sf_vec(position_sum) / static_cast<float>(count);
+		const auto mean_centroid = to_sf_vec(centroid_sum) / static_cast<float>(count);
+		const auto size = shape_.getTextureRect();
+		if (flip_)
+		{
+			shape_.setScale(-1.f, 1.f);
+		}
+		else
+		{
+			shape_.setScale(1.f, 1.f);
+		}
+		shape_.setPosition(mean_pos * SCALE);
 	}
 	shape_.setTexture(&animation_.get_current_frame());
-	shape_.setPosition(mean_pos * SCALE);
+	animation_.update();
 }
 
 void sprite_entity::draw(sf::RenderTarget& target, sf::RenderStates states) const

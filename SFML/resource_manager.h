@@ -100,4 +100,14 @@ struct resource_manager {
 	textures textures_;
 	animation_resources anims_res_;
 	sf::Font font;
+	std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>> sound_effects;
+
+	void add_sound_effect(const std::string name, const std::string& path)
+	{
+		auto sound_buff = std::make_unique<sf::SoundBuffer>();
+		sound_buff->loadFromFile(path);
+		sound_effects.emplace(name, std::move(sound_buff));
+	}
+	private:
+		std::vector<std::unique_ptr<sf::SoundBuffer>> buffers_;
 };

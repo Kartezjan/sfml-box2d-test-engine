@@ -48,6 +48,7 @@ body_properties create_box(b2World& world, int X, int Y, float height, float wid
 body_properties create_kinematic_box(b2World& world, int X, int Y, float height, float width);
 
 body_properties create_circle(b2World& World, float X, float Y, float radius, float density, float friction);
+body_properties create_static_circle(b2World& World, float X, float Y, float radius, float density, float friction);
 
 body_properties create_ramp(b2World& world, float X, float Y);
 
