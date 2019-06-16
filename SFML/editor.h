@@ -26,12 +26,14 @@ public:
 		entity->sticky(true);
 		make_previews();
 		make_toolbox();
+		make_help_menu();
 	}
 	void send_message(abstract_entity* source) override;
 
 private:
 	void make_previews();
 	void make_toolbox();
+	void make_help_menu();
 	void navigate();
 	void spawn_primitive();
 	void remove_last_spawned_entity();
@@ -47,6 +49,7 @@ private:
 	entity_id spawner_gui_handle_;
 	entity_id menu_gui_handle_;
 	entity_id current_menu_handle_;
+	entity_id help_menu_;
 	sf::RenderWindow& win_ref_;
 	bool hidden_ = true;
 	entity_id current_preview_;

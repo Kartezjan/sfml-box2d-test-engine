@@ -73,6 +73,11 @@ void produces_user_input::send_message(abstract_entity* source) {
 		message.key = input_key::F1;
 		keyboard_events.push_back(message);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
+	{
+		message.key = input_key::F2;
+		keyboard_events.push_back(message);
+	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma))
 	{
 		message.key = input_key::Comma;

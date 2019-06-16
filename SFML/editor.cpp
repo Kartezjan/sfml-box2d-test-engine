@@ -11,6 +11,14 @@ void editor::send_message(abstract_entity* source)
 	{
 		switch (msg.key)
 		{
+		case input_key::F2:
+			if(navigation_.can_use())
+			{
+				auto current = dynamic_cast<toolbox*>(cosmos.gui_resources[help_menu_].get());
+				current->hidden(!current->is_hidden());
+			}
+			msg.delete_this_message = true;
+			break;
 		case input_key::F1:
 			if (navigation_.can_use())
 			{
@@ -103,13 +111,13 @@ void editor::make_previews()
 
 void editor::make_toolbox()
 {
-	auto toolbox_pos = sf::Vector2f{ static_cast<float>(win_ref_.getSize().x - 180), 30 };
+	auto toolbox_pos = sf::Vector2f{ static_cast<float>(win_ref_.getSize().x - 165), 30 };
 	spawner_gui_handle_ = cosmos.gui_resources += new toolbox
 	(
 		cosmos.resources.font, win_ref_, toolbox_pos, "Spawn Objects", "Box"
 
 	);
-	const auto spawner = dynamic_cast<toolbox*>(cosmos.gui_resources[spawner_gui_handle_].get());
+	auto spawner = dynamic_cast<toolbox*>(cosmos.gui_resources[spawner_gui_handle_].get());
 	spawner->add_item("Bomb");
 	spawner->add_item("Ranger");
 	spawner->add_item("Back...");
@@ -124,6 +132,23 @@ void editor::make_toolbox()
 	menu->add_item("Create Ground");
 	menu->hidden(true);
 	current_menu_handle_ = menu_gui_handle_;
+}
+
+void editor::make_help_menu()
+{
+	const auto pos = sf::Vector2f{50., 100. };
+	help_menu_ = cosmos.gui_resources += new toolbox
+	(
+		cosmos.resources.font, win_ref_, pos, "Help", "F2 - Toggle Help"
+	);
+	auto menu_ptr = dynamic_cast<toolbox*>(cosmos.gui_resources[help_menu_].get());
+	menu_ptr->add_item("F1 - Editor Mode/Pause");
+	menu_ptr->add_item("WSAD - Movement");
+	menu_ptr->add_item("RShift - Toggle Spell");
+	menu_ptr->add_item("Space - Cast Spell");
+	menu_ptr->add_item("Enter - Confirm Option in Menu");
+	menu_ptr->add_item(". - Cycle Through Menu");
+	menu_ptr->add_item("Q/E - Trebuchet Control");
 }
 
 void editor::navigate()

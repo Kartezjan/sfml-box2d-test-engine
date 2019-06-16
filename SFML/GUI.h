@@ -15,6 +15,7 @@ class updates_hit_points_status  : public virtue {
 public:
 	updates_hit_points_status(universe& uni_ref, entity_id target) : virtue(uni_ref), target_(target) {}
 	void send_message(abstract_entity* source) override;
+	void change_target(entity_id target) { target_ = target; }
 private:
 	entity_id target_;
 };

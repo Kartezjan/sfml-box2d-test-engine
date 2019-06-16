@@ -29,6 +29,10 @@ void updates_hit_points_status::send_message(abstract_entity* source)
 	auto text_holder = dynamic_cast<image_entity*>(source);
 	assert(text_holder);
 	auto text = dynamic_cast<sf::Text*>(text_holder->get_visual_object());
+	if (!dynamic_cast<sprite_entity*>(cosmos.all_entities[target_].get()))
+	{
+		return;
+	}
 	const auto hp = dynamic_cast<sprite_entity*>(cosmos.all_entities[target_].get())->hp();
 	text->setString(hp <= 0 ? "0" : std::to_string(hp));
 }

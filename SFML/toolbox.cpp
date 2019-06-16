@@ -3,6 +3,17 @@
 
 void toolbox::add_item(std::string name)
 {
+	if (name.length() * 8 > item_size_.x)
+	{
+		item_size_.x = name.length() * 8;
+		title_box_size_.x = item_size_.x + toolbox_border_.x;
+		item_list_size_.x = item_size_.x;
+		title_box_.setSize(title_box_size_);
+		for (auto& current : items_)
+		{
+			current.set_box_size(item_size_);
+		}
+	}
 	const auto item_pos = toolbox_position_ + static_cast<float>(items_.size()) * offset_ + toolbox_border_ / 2.f;
 	items_.emplace_back(toolbox_item(item_pos, item_size_, name, font_size_, font_));
 	item_list_size_ += offset_;

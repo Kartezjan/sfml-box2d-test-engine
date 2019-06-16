@@ -11,7 +11,7 @@ using entity_id = std::size_t;
 
 enum class force_type { APPLY_FORCE_TO_CENTER, APPLY_IMPULS_TO_CENTER };
 
-enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X, B, E, Q, F1, Comma, Period, Enter, SHIFT};
+enum class input_key { W, S, A, D, LMB, RMB, SPACE, LEFT, RIGHT, UP, DOWN, Z, X, B, E, Q, F1, F2, Comma, Period, Enter, SHIFT};
 
 enum class event_type { TRACKED_OBJECT_POS, FREE_CAMERA };
 

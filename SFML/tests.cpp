@@ -44,12 +44,6 @@ void make_obstacles(universe& universe)
 
 void gui_test(universe& universe, sf::RenderWindow& window)
 {
-	auto handle = universe.gui_resources += new toolbox(universe.resources.font, window, { 200.f, 200.f }, "example", "figaro");
-	auto foo = dynamic_cast<toolbox*>(universe.gui_resources[handle].get());
-	foo->add_item("dupa");
-	foo->add_item("test");
-	foo->add_item("foo");
-	foo->add_item("bar");
 }
 
 entity_id hero_test(universe& universe)

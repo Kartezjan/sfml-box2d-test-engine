@@ -69,7 +69,7 @@ resources.textures_ += {"ground_top", R"(gfx\ground_top.png)"};
 
 
 	// Prepare the world
-	universe universe(b2Vec2(0.0f, 9.8f), resources);
+	universe universe(b2Vec2(0.0f, 9.8f), resources, window);
 
 	abstract_entity user_input;
 	user_input.virtues.push_back(std::make_unique<produces_user_input>(universe, window));

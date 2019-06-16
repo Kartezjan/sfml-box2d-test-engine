@@ -3,12 +3,37 @@
 #include "animation.h"
 #include "scanner.h"
 #include "contacts.h"
+#include "camera.h"
+#include "GUI.h"
 
 void is_playable::send_message(abstract_entity* source)
 {
-	if (died_)
-		return;
 	auto entity = dynamic_cast<sprite_entity*>(source);
+	if (died_)
+	{
+		if(entity->get_current_animation().is_finished())
+		{
+			auto& death_queue = cosmos.message_queues.get_queue<death_message>();
+			death_queue.push_back(death_message{ false, 2, source->id() });
+			auto hero_handle = cosmos.all_entities += new sprite_entity(create_hero(cosmos.world, 1000, -250), cosmos.resources.anims_res_["hero"], 3.f);
+			dynamic_cast<sprite_entity*>(cosmos.all_entities[hero_handle].get())->virtues.push_back(std::make_unique<is_playable>(cosmos));
+			dynamic_cast<sprite_entity*>(cosmos.all_entities[hero_handle].get())->virtues.push_back(std::make_unique<center_of_attention>(cosmos));
+			dynamic_cast<sprite_entity*>(cosmos.all_entities[hero_handle].get())->set_category(sprite_entity::category::enemy);
+			for(auto& elem : cosmos.gui_resources)
+			{
+				if (elem.second->get_name() == "HP_STATUS")
+				{
+					death_queue.push_back(death_message{ false, 2, elem.second->id() });
+					auto health_status = new sf::Text("100", cosmos.resources.font, 40);
+					auto hp_status_handle = cosmos.gui_resources += new image_entity(health_status, { 50, 15 }, "HP_STATUS", image_entity::TEXT, cosmos.win_ref);
+					auto hp_status = dynamic_cast<image_entity*>(cosmos.gui_resources[hp_status_handle].get());
+					hp_status->sticky(true);
+					hp_status->virtues.emplace_back(std::make_unique<updates_hit_points_status>(cosmos, hero_handle));
+				}
+			}
+		}
+		return;
+	}
 	if(entity->hp() <= 0)
 	{
 		// bye, cruel world!
